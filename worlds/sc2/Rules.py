@@ -56,7 +56,7 @@ class SC2Logic:
         """
         return (state.has_any({ItemNames.VIKING, ItemNames.WRAITH, ItemNames.BANSHEE, ItemNames.BATTLECRUISER}, self.player) or self.advanced_tactics
                 and state.has_any({ItemNames.HERCULES, ItemNames.MEDIVAC}, self.player) and self.terran_common_unit(state)
-        )
+                )
 
     def terran_air_anti_air(self, state: CollectionState) -> bool:
         """
@@ -78,9 +78,9 @@ class SC2Logic:
         :return:
         """
         return (
-            state.has(ItemNames.GOLIATH, self.player)
-            or state.has(ItemNames.MARINE, self.player) and self.terran_bio_heal(state)
-            or self.advanced_tactics and state.has(ItemNames.CYCLONE, self.player)
+                state.has(ItemNames.GOLIATH, self.player)
+                or state.has(ItemNames.MARINE, self.player) and self.terran_bio_heal(state)
+                or self.advanced_tactics and state.has(ItemNames.CYCLONE, self.player)
         )
 
     def terran_competent_anti_air(self, state: CollectionState) -> bool:
@@ -178,7 +178,7 @@ class SC2Logic:
             )
             and self.terran_competent_anti_air(state)
         ) or (
-            state.has(ItemNames.BATTLECRUISER, self.player) and self.terran_common_unit(state)
+                state.has(ItemNames.BATTLECRUISER, self.player) and self.terran_common_unit(state)
         )
 
     def great_train_robbery_train_stopper(self, state: CollectionState) -> bool:
@@ -350,7 +350,8 @@ class SC2Logic:
 
     def zerg_basic_anti_air(self, state: CollectionState) -> bool:
         return self.zerg_competent_anti_air(state) or self.kerrigan_unit_available in kerrigan_unit_available or \
-               state.has_any({ItemNames.SWARM_QUEEN, ItemNames.SCOURGE}, self.player) or (self.advanced_tactics and state.has(ItemNames.SPORE_CRAWLER, self.player))
+               state.has_any({ItemNames.SWARM_QUEEN, ItemNames.SCOURGE}, self.player) or (self.advanced_tactics and state.has(
+                ItemNames.SPORE_CRAWLER, self.player))
     
     def morph_brood_lord(self, state: CollectionState) -> bool:
         return state.has_any({ItemNames.MUTALISK, ItemNames.CORRUPTOR}, self.player) \
@@ -389,7 +390,7 @@ class SC2Logic:
                 ) or (
                     self.advanced_tactics
                     and (self.morph_viper(state)
-                        or state.has(ItemNames.SPINE_CRAWLER, self.player))
+                         or state.has(ItemNames.SPINE_CRAWLER, self.player))
                 )
             )
         )
@@ -398,8 +399,8 @@ class SC2Logic:
         # One active ability that can be used to defeat enemies directly on Standard
         if not self.advanced_tactics and \
             not state.has_any({ItemNames.KERRIGAN_KINETIC_BLAST, ItemNames.KERRIGAN_LEAPING_STRIKE,
-                              ItemNames.KERRIGAN_CRUSHING_GRIP, ItemNames.KERRIGAN_PSIONIC_SHIFT,
-                              ItemNames.KERRIGAN_SPAWN_BANELINGS}, self.player):
+                               ItemNames.KERRIGAN_CRUSHING_GRIP, ItemNames.KERRIGAN_PSIONIC_SHIFT,
+                               ItemNames.KERRIGAN_SPAWN_BANELINGS}, self.player):
             return False
         # Two non-ultimate abilities
         count = 0
@@ -475,7 +476,7 @@ class SC2Logic:
     def protoss_basic_anti_air(self, state: CollectionState) -> bool:
         return self.protoss_competent_anti_air(state) \
             or state.has_any({ItemNames.PHOENIX, ItemNames.MIRAGE, ItemNames.CORSAIR, ItemNames.CARRIER, ItemNames.SCOUT,
-                             ItemNames.DARK_ARCHON, ItemNames.WRATHWALKER, ItemNames.MOTHERSHIP}, self.player) \
+                              ItemNames.DARK_ARCHON, ItemNames.WRATHWALKER, ItemNames.MOTHERSHIP}, self.player) \
             or state.has_all({ItemNames.WARP_PRISM, ItemNames.WARP_PRISM_PHASE_BLASTER}, self.player) \
             or self.advanced_tactics and state.has_any(
                 {ItemNames.HIGH_TEMPLAR, ItemNames.SIGNIFIER, ItemNames.ASCENDANT, ItemNames.DARK_TEMPLAR,
