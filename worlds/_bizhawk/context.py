@@ -215,7 +215,7 @@ async def _run_game(rom: str):
                 f"--lua={Utils.local_path('data', 'lua', 'connector_bizhawk_generic.lua')}",
                 os.path.realpath(rom),
             ],
-            cwd=Utils.local_path("."),
+            cwd=Utils.local_path(""),
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -228,7 +228,7 @@ async def _run_game(rom: str):
                 *shlex.split(auto_start),
                 os.path.realpath(rom)
             ],
-            cwd=Utils.local_path("."),
+            cwd=Utils.local_path(""),
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL

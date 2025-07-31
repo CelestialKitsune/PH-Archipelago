@@ -125,7 +125,7 @@ ITEMS_DATA = {
         "progressive": [(0x1ba646, 0x10), (0x1ba646, 0x80), (0x1ba647, 0x4)],
         "id": 14,
     },
-    "Spirit of Courage White": {  # Used to remove spirit from Temple of Courage
+    "Spirit of Courage (White)": {  # Used to remove spirit from Temple of Courage
         "classification": ItemClassification.progression,
         "address": 0x1BA647,
         "value": 0x20,
