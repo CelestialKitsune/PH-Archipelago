@@ -232,6 +232,7 @@ class PhantomHourglassClient(BizHawkClient):
         self.entered_entrance = False
         self.loading_scene = False
         self.backup_coord_read = None
+        self.prev_rupee_count = 0
 
         self.warp_to_start_flag = False
 
@@ -309,8 +310,6 @@ class PhantomHourglassClient(BizHawkClient):
             # Otherwise remove boomerang
             boomerang = ITEMS_DATA["Boomerang"]
             await write_memory_value(ctx, boomerang["address"], boomerang["value"], unset=True)
-
-            test = await read_memory_value(ctx, boomerang["address"], 1, "Main RAM", silent=True)
             return True
         else:
             return False
@@ -696,6 +695,7 @@ class PhantomHourglassClient(BizHawkClient):
                 print("Fully Loaded Room", current_scene)
                 self.loading_scene = False
                 self.backup_coord_read = None
+                self.prev_rupee_count = await read_memory_value(ctx, 0x1ba53e, 2)
                 await self.load_local_locations(ctx, current_scene)
                 await self.update_potion_tracker(ctx)
                 await self.update_treasure_tracker(ctx)
@@ -1372,9 +1372,12 @@ class PhantomHourglassClient(BizHawkClient):
 
                 item_value = prev_value + value
                 item_value = 0 if item_value <= 0 else item_value
+                if "Rupee" in item_name:
+                    item_value = min(item_value, 9999)
                 if "size" in item_data:
                     item_value = split_bits(item_value, item_data["size"])
                     # TODO if incremental goes above size it's a problem!
+
             elif "progressive" in item_data:
                 if "progressive_overwrite" in item_data and prog_received >= 1:
                     item_value = item_value  # Bomb upgrades need to overwrite of everything breaks
@@ -1489,6 +1492,12 @@ class PhantomHourglassClient(BizHawkClient):
                     await bizhawk.write(ctx.bizhawk_ctx, write_list)
                 else:
                     address, value = data["address"], data.get("value", 1)
+
+                if "Rupee" in item:
+                    if self.prev_rupee_count + value > 9999:
+                        print(f"Value {value}")
+                        value =  9999 - self.prev_rupee_count
+                        print(f"Rupee values {self.prev_rupee_count}, {value}")
 
                 await write_memory_value(ctx, address, value,
                                          incr=data.get('incremental', None), unset=True, size=data.get("size", 1))

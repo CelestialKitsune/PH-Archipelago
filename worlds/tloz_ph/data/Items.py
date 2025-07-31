@@ -673,7 +673,7 @@ ITEMS_DATA = {
     "Treasure Map #24 (Ruins W)": {
         "classification": ItemClassification.progression_skip_balancing,
         "address": 0x1ba653,
-        "value": 0x2,
+        "value": 0x20,
         "id": 90,
         "hint_on_receive": ["Ocean NE Salvage #24 Ruins W"],
     },
@@ -687,7 +687,7 @@ ITEMS_DATA = {
     "Treasure Map #26 (Ruins SW)": {
         "classification": ItemClassification.progression_skip_balancing,
         "address": 0x1ba653,
-        "value": 0x20,
+        "value": 0x2,
         "id": 92,
         "hint_on_receive": ["Ocean NE Salvage #26 Ruins SW"],
     },
