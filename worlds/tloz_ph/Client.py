@@ -573,10 +573,12 @@ class PhantomHourglassClient(BizHawkClient):
                 if not await read_memory_value(ctx, 0x1ba644, silent=True) & 1:
                     if ctx.items_received and ctx.items_received[-1].item != 1 and 1 in [i.item for i in
                                                                                          ctx.items_received]:
-                        for _ in range(20):
+                        for _ in range(9):
                             logger.warning("CRITICAL(ish) ERROR DETECTED!!!")
-                        logger.warning("CRITICAL ERROR DETECTED!!!\n"
+                        sword_read = await read_memory_value(ctx, 0x1ba644, silent=True)
+                        logger.warning("CRITICAL(ish) ERROR DETECTED!!!\n"
                                        f"Sword disappear on scene {hex(current_scene)}\n"
+                                       f"Sword read {hex(sword_read)}"
                                        f"Dynaflags {await self.set_dynamic_flags(ctx, current_scene)}\n"
                                        f"reads in scene {self.watches}\n"
                                        f"last 5 item {ctx.items_received[-5:]}"
@@ -1393,7 +1395,7 @@ class PhantomHourglassClient(BizHawkClient):
                 item_value = prev_value | item_data["value"]
 
             item_values = item_value if type(item_value) is list else [item_value]
-            item_values = [min(254, i) for i in item_values]
+            item_values = [min(255, i) for i in item_values]
             write_list.append((item_address, item_values, "Main RAM"))
 
             # Handle special item conditions
