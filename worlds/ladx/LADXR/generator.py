@@ -89,7 +89,7 @@ def generateRom(args, world: "LinksAwakeningWorld"):
         pymod.prePatch(rom)
 
     if world.ladxr_settings.gfxmod:
-        patches.aesthetics.gfxMod(rom, os.path.join("data", "sprites", "ladx", world.ladxr_settings.gfxmod))
+        worlds.ladx.LADXR.patches.aesthetics.gfxMod(rom, os.path.join("data", "sprites", "ladx", world.ladxr_settings.gfxmod))
 
     item_list = [item for item in world.ladxr_logic.iteminfo_list if not isinstance(item, KeyLocation)]
 
@@ -137,7 +137,7 @@ def generateRom(args, world: "LinksAwakeningWorld"):
     patches.enemies.fixArmosKnightAsMiniboss(rom)
     patches.bank3e.addBank3E(rom, world.multi_key, world.player, player_names)
     patches.bank3f.addBank3F(rom)
-    patches.bank34.addBank34(rom, item_list)
+    worlds.ladx.LADXR.patches.bank34.addBank34(rom, item_list)
     patches.core.removeGhost(rom)
     patches.core.fixMarinFollower(rom)
     patches.core.fixWrongWarp(rom)
@@ -199,15 +199,15 @@ def generateRom(args, world: "LinksAwakeningWorld"):
     patches.reduceRNG.fixHorseHeads(rom)
     patches.bomb.onlyDropBombsWhenHaveBombs(rom)
     if world.options.music_change_condition == MusicChangeCondition.option_always:
-        patches.aesthetics.noSwordMusic(rom)
-    patches.aesthetics.reduceMessageLengths(rom, world.random)
-    patches.aesthetics.allowColorDungeonSpritesEverywhere(rom)
+        worlds.ladx.LADXR.patches.aesthetics.noSwordMusic(rom)
+    worlds.ladx.LADXR.patches.aesthetics.reduceMessageLengths(rom, world.random)
+    worlds.ladx.LADXR.patches.aesthetics.allowColorDungeonSpritesEverywhere(rom)
     if world.ladxr_settings.music == 'random':
         patches.music.randomizeMusic(rom, world.random)
     elif world.ladxr_settings.music == 'off':
         patches.music.noMusic(rom)
     if world.ladxr_settings.noflash:
-        patches.aesthetics.removeFlashingLights(rom)
+        worlds.ladx.LADXR.patches.aesthetics.removeFlashingLights(rom)
     if world.ladxr_settings.hardmode == "oracle":
         patches.hardMode.oracleMode(rom)
     elif world.ladxr_settings.hardmode == "hero":
@@ -217,18 +217,18 @@ def generateRom(args, world: "LinksAwakeningWorld"):
     if world.ladxr_settings.superweapons:
         patches.weapons.patchSuperWeapons(rom)
     if world.ladxr_settings.textmode == 'fast':
-        patches.aesthetics.fastText(rom)
+        worlds.ladx.LADXR.patches.aesthetics.fastText(rom)
     if world.ladxr_settings.textmode == 'none':
-        patches.aesthetics.fastText(rom)
-        patches.aesthetics.noText(rom)
+        worlds.ladx.LADXR.patches.aesthetics.fastText(rom)
+        worlds.ladx.LADXR.patches.aesthetics.noText(rom)
     if not world.ladxr_settings.nagmessages:
-        patches.aesthetics.removeNagMessages(rom)
+        worlds.ladx.LADXR.patches.aesthetics.removeNagMessages(rom)
     if world.ladxr_settings.lowhpbeep == 'slow':
-        patches.aesthetics.slowLowHPBeep(rom)
+        worlds.ladx.LADXR.patches.aesthetics.slowLowHPBeep(rom)
     if world.ladxr_settings.lowhpbeep == 'none':
-        patches.aesthetics.removeLowHPBeep(rom)
+        worlds.ladx.LADXR.patches.aesthetics.removeLowHPBeep(rom)
     if 0 <= int(world.ladxr_settings.linkspalette):
-        patches.aesthetics.forceLinksPalette(rom, int(world.ladxr_settings.linkspalette))
+        worlds.ladx.LADXR.patches.aesthetics.forceLinksPalette(rom, int(world.ladxr_settings.linkspalette))
     if args.romdebugmode:
         # The default rom has this build in, just need to set a flag and we get this save.
         rom.patch(0, 0x0003, "00", "01")
@@ -339,7 +339,7 @@ def generateRom(args, world: "LinksAwakeningWorld"):
     if world.options.ap_title_screen:
         patches.titleScreen.setTitleGraphics(rom)
     patches.endscreen.updateEndScreen(rom)
-    patches.aesthetics.updateSpriteData(rom)
+    worlds.ladx.LADXR.patches.aesthetics.updateSpriteData(rom)
     if args.doubletrouble:
         patches.enemies.doubleTrouble(rom)
 

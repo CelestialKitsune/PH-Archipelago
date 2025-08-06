@@ -438,11 +438,14 @@ class ValidInventory:
                     ItemNames.TERRAN_INFANTRY_UPGRADE_PREFIX)
                         or item_name == ItemNames.ORBITAL_STRIKE)]
         if not FACTORY_UNITS & logical_inventory_set:
-            inventory = [item for item in inventory if not item.name.startswith(ItemNames.TERRAN_VEHICLE_UPGRADE_PREFIX)]
-            unused_items = [item_name for item_name in unused_items if not item_name.startswith(ItemNames.TERRAN_VEHICLE_UPGRADE_PREFIX)]
+            inventory = [item for item in inventory if not item.name.startswith(
+                ItemNames.TERRAN_VEHICLE_UPGRADE_PREFIX)]
+            unused_items = [item_name for item_name in unused_items if not item_name.startswith(
+                ItemNames.TERRAN_VEHICLE_UPGRADE_PREFIX)]
         if not STARPORT_UNITS & logical_inventory_set:
             inventory = [item for item in inventory if not item.name.startswith(ItemNames.TERRAN_SHIP_UPGRADE_PREFIX)]
-            unused_items = [item_name for item_name in unused_items if not item_name.startswith(ItemNames.TERRAN_SHIP_UPGRADE_PREFIX)]
+            unused_items = [item_name for item_name in unused_items if not item_name.startswith(
+                ItemNames.TERRAN_SHIP_UPGRADE_PREFIX)]
         # HotS
         # Baneling without sources => remove Baneling and upgrades
         if (ItemNames.ZERGLING_BANELING_ASPECT in self.logical_inventory
@@ -464,8 +467,10 @@ class ValidInventory:
             unused_items = [item_name for item_name in unused_items if item_name != ItemNames.BANELING_RAPID_METAMORPH]
         if not {ItemNames.MUTALISK, ItemNames.CORRUPTOR, ItemNames.SCOURGE} & logical_inventory_set:
             inventory = [item for item in inventory if not item.name.startswith(ItemNames.ZERG_FLYER_UPGRADE_PREFIX)]
-            locked_items = [item for item in locked_items if not item.name.startswith(ItemNames.ZERG_FLYER_UPGRADE_PREFIX)]
-            unused_items = [item_name for item_name in unused_items if not item_name.startswith(ItemNames.ZERG_FLYER_UPGRADE_PREFIX)]
+            locked_items = [item for item in locked_items if not item.name.startswith(
+                ItemNames.ZERG_FLYER_UPGRADE_PREFIX)]
+            unused_items = [item_name for item_name in unused_items if not item_name.startswith(
+                ItemNames.ZERG_FLYER_UPGRADE_PREFIX)]
         # T3 items removal rules - remove morph and its upgrades if the basic unit isn't in
         if not {ItemNames.MUTALISK, ItemNames.CORRUPTOR} & logical_inventory_set:
             inventory = [item for item in inventory if not item.name.endswith("(Mutalisk/Corruptor)")]

@@ -379,7 +379,7 @@ def get_locations(world: Optional[World]) -> Tuple[LocationData, ...]:
         LocationData("Devil's Playground", "Devil's Playground: East Reapers", SC2WOL_LOC_ID_OFFSET + 1307, LocationType.CHALLENGE,
                      lambda state: logic.terran_basic_anti_air(state) and
                                     (adv_tactics or
-                                           logic.terran_common_unit(state) or state.has(ItemNames.REAPER, player))),
+                                     logic.terran_common_unit(state) or state.has(ItemNames.REAPER, player))),
         LocationData("Devil's Playground", "Devil's Playground: Zerg Cleared", SC2WOL_LOC_ID_OFFSET + 1308, LocationType.CHALLENGE,
                      lambda state: logic.terran_competent_anti_air(state) and (
                                            logic.terran_common_unit(state) or state.has(ItemNames.REAPER, player))),
@@ -733,7 +733,7 @@ def get_locations(world: Optional[World]) -> Tuple[LocationData, ...]:
                      lambda state: logic.zerg_pass_vents(state)
                                    and (logic.story_tech_granted
                                         or state.has_any({ItemNames.ZERGLING_RAPTOR_STRAIN, ItemNames.ROACH,
-                                                         ItemNames.HYDRALISK, ItemNames.INFESTOR}, player))
+                                                          ItemNames.HYDRALISK, ItemNames.INFESTOR}, player))
                      ),
         LocationData("Enemy Within", "Enemy Within: Infest Giant Ursadon", SC2HOTS_LOC_ID_OFFSET + 601, LocationType.VANILLA,
                      lambda state: logic.zerg_pass_vents(state)),
@@ -880,7 +880,7 @@ def get_locations(world: Optional[World]) -> Tuple[LocationData, ...]:
         LocationData("Infested", "Infested: Victory", SC2HOTS_LOC_ID_OFFSET + 1300, LocationType.VICTORY,
                      lambda state: logic.zerg_common_unit(state) and
                                    ((logic.zerg_competent_anti_air(state) and state.has(ItemNames.INFESTOR, player)) or
-                                   (adv_tactics and logic.zerg_basic_anti_air(state)))),
+                                    (adv_tactics and logic.zerg_basic_anti_air(state)))),
         LocationData("Infested", "Infested: East Science Facility", SC2HOTS_LOC_ID_OFFSET + 1301, LocationType.VANILLA,
                      lambda state: logic.zerg_common_unit(state) and
                                    logic.zerg_basic_anti_air(state) and
