@@ -59,6 +59,7 @@ ITEMS_DATA = {
         "value": 0x4,
         "set_bit": [(0x1ba6bc, 0x1)],
         "id": 5,
+        "inventory_id": 2,
     },
     "Bombs (Progressive)": {
         "classification": ItemClassification.progression,
@@ -68,6 +69,7 @@ ITEMS_DATA = {
         "ammo_address": 0x1ba6c0,
         "set_bit": [(0x1ba644, 0x10)],
         "id": 6,
+        "inventory_id": 4,
     },
     "Bombchus (Progressive)": {
         "classification": ItemClassification.progression,
@@ -77,6 +79,7 @@ ITEMS_DATA = {
         "progressive_overwrite": True,
         "set_bit": [(0x1ba644, 0x80)],
         "id": 7,
+        "inventory_id": 7,
     },
     "Bow (Progressive)": {
         "classification": ItemClassification.progression,
@@ -86,6 +89,7 @@ ITEMS_DATA = {
         "progressive_overwrite": True,
         "set_bit": [(0x1ba644, 0x20)],
         "id": 8,
+        "inventory_id": 5,
     },
     "Grappling Hook": {
         "classification": ItemClassification.progression,
@@ -93,6 +97,7 @@ ITEMS_DATA = {
         "value": 0x40,
         "set_bit": [(0x1ba6c4, 0x1)],
         "id": 9,
+        "inventory_id": 6,
     },
     "Shovel": {
         "classification": ItemClassification.progression,
@@ -100,6 +105,7 @@ ITEMS_DATA = {
         "value": 0x8,
         "set_bit": [(0x1ba6be, 0x1)],
         "id": 10,
+        "inventory_id": 3,
     },
     "Hammer": {
         "classification": ItemClassification.progression,
@@ -107,6 +113,7 @@ ITEMS_DATA = {
         "value": 0x1,
         "set_bit": [(0x1ba6c8, 0x1)],
         "id": 11,
+        "inventory_id": 8,
     },
 
     # Spirits

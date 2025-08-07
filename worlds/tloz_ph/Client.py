@@ -71,6 +71,8 @@ POINTERS = {
     "ADDR_gMapManager": 0x0e60
 }
 
+EQUIP_TIMER_OFFSET = 0x20
+
 # gMapManager -> mCourse -> mSmallKeys
 SMALL_KEY_OFFSET = 0x260
 STAGE_FLAGS_OFFSET = 0x268
@@ -1396,6 +1398,9 @@ class PhantomHourglassClient(BizHawkClient):
             item_values = [min(254, i) for i in item_values]
             write_list.append((item_address, item_values, "Main RAM"))
 
+            if "inventory_id" in item_data:
+                await self.enable_items(ctx, item_data["inventory_id"])
+
             # Handle special item conditions
             if "give_ammo" in item_data:
                 write_list.append((item_data["ammo_address"], [item_data["give_ammo"][prog_received]], "Main RAM"))
@@ -1414,7 +1419,10 @@ class PhantomHourglassClient(BizHawkClient):
             await self.full_heal(ctx)
 
         # Write the new item to memory!
-        print(f"Write list: {write_list}")
+        print("Write list:")
+        for addr, value, domain in write_list:
+            print(f"  {hex(addr)}: {value} ({domain})")
+        # print(f"Write list: {write_list}")
         await bizhawk.write(ctx.bizhawk_ctx, write_list)
 
         # If treasure, update treasure tracker
@@ -1450,10 +1458,6 @@ class PhantomHourglassClient(BizHawkClient):
         print(ships, ship_write_list)
         await bizhawk.write(ctx.bizhawk_ctx, [(0x1BA564, ship_write_list, "Main RAM")])
         await write_memory_value(ctx, 0x1ba661, 0x80)
-
-
-
-
 
     async def remove_vanilla_item(self, ctx, num_received_items):
         print(f"Removing vanilla items {self.last_vanilla_item}")
@@ -1549,3 +1553,14 @@ class PhantomHourglassClient(BizHawkClient):
                 # ...because of their own incompetence, so let's make their mates pay for that
                 await ctx.send_death(ctx.player_names[ctx.slot] + " may have disappointed the Ocean King.")
                 self.last_deathlink = ctx.last_death_link
+
+    async def enable_items(self, ctx: "BizHawkClientContext", inventory_id: int):
+        equipped_item_pointer = await read_memory_value(ctx, POINTERS["ADDR_gItemManager"], size=4, domain="Data TCM", silent=True) - 0x02000000
+        equipped_item = await read_memory_value(ctx, equipped_item_pointer, size=4, silent=True)
+        if equipped_item == 0xffffffff:
+            print("Items menu not visible... enabling")
+            # Enable items menu
+            await write_memory_value(ctx, equipped_item_pointer + EQUIP_TIMER_OFFSET, 20, size=2, overwrite=True)
+            await write_memory_value(ctx, equipped_item_pointer, inventory_id, size=4, overwrite=True)
+            await write_memory_value(ctx, RAM_ADDRS["got_item_menu"][0], 1, overwrite=True) # To ensure boomerwatch runs
+            await self.boomerwatch(ctx)
