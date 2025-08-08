@@ -36,7 +36,7 @@ DYNAMIC_FLAGS = {
     },
     "Mercay yellow guy treasure map": {
         "on_scenes": [0xB03],
-        "not_has_locations": ["Mercay Chartreuse Guy Item"],
+        "not_has_locations": ["Mercay Ojibe (Docks Guy) Item"],
         "unset_if_true": [(0x1BA650, 0x02)]
     },
     "RESET Mercay yellow guy treasure map": {
@@ -386,36 +386,30 @@ DYNAMIC_FLAGS = {
     },
 
     # boat requires sea chart
-    "Despawn linebeck 2": {
+    "Always Despawn Linebeck 1": {
         "on_scenes": [0xB03],
-        "has_items": [("Sword (Progressive)", 2, "not_has")],
-        "unset_if_true": [(0x1B5580, 0x4)],
-    },
-    "Respawn linebeck 2": {
-        "on_scenes": [0xB03],
-        "has_items": [("Sword (Progressive)", 2)],
-        "set_if_true": [(0x1B5580, 0x4)],
-    },
-    "RESET despawn linebeck 2": {
-        "on_scenes": [0xB02, 0xB00],
-        "set_if_true": [(0x1B5580, 0x4)],
-    },
-    "Despawn Linebeck setting": {
-        "on_scenes": [0xB03],
-        "has_slot_data": [["boat_requires_sea_chart", 1]],
-        "has_items": [("SW Sea Chart", 0)],
         "unset_if_true": [(0x1B557E, 0x8)]
+    },
+    "Always Spawn linebeck 2 setting": {
+        "on_scenes": [0xB03],
+        "has_slot_data": [["boat_requires_sea_chart", 0]],
+        "set_if_true": [(0x1B5580, 0x4)],
     },
     "Spawn Linebeck setting": {
         "on_scenes": [0xB03],
         "has_slot_data": [["boat_requires_sea_chart", 1]],
         "has_items": [("SW Sea Chart", 1)],
-        "set_if_true": [(0x1B557E, 0x8)]
+        "set_if_true": [(0x1B5580, 0x4)],
     },
     "RESET Despawn Linebeck setting": {
         "on_scenes": [0xB02],
         "set_if_true": [(0x1B557E, 0x8)]
     },
+    "RESET despawn linebeck 2": {
+        "on_scenes": [0xB02, 0xB00],
+        "set_if_true": [(0x1B5580, 0x4)],
+    },
+    # Other linebeck settings
     "Mercay skip blow on map for Linebeck": {
         "on_scenes": [0xB03],
         "unset_if_true": [(0x1B557D, 0x2)]
