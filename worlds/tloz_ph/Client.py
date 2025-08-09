@@ -392,10 +392,8 @@ class PhantomHourglassClient(BizHawkClient):
 
             for name, pointer in death_link_pointers.items():
                 addr, offset = pointer
-                print("Read pointer:")
                 pointer_1 = await read_memory_value(ctx, POINTERS[addr], 4, "Data TCM")
                 death_link_reads[name] = (pointer_1 + offset - 0x2000000, 2, "Main RAM")
-                print(f"{await read_memory_value(ctx, pointer_1 + offset - 0x2000000, size=2)}")
             self.main_read_list = {k: v for k, v in RAM_ADDRS.items() if k in read_keys} | death_link_reads
         else:
             self.at_sea = None
@@ -759,6 +757,7 @@ class PhantomHourglassClient(BizHawkClient):
 
                 self.last_stage = current_stage
                 self.last_scene = current_scene
+                print(f"Updated last scene!")
 
             self.previous_game_state = in_game
 
@@ -964,7 +963,7 @@ class PhantomHourglassClient(BizHawkClient):
 
     # Called when a stage has fully loaded
     async def enter_stage(self, ctx, stage, scene_id):
-        self.stage_address = await get_address_from_heap(ctx)
+        self.stage_address = await get_address_from_heap(ctx, offset=STAGE_FLAGS_OFFSET)
         self.key_address = self.stage_address + SMALL_KEY_OFFSET
         if stage in STAGE_FLAGS:
             flags = STAGE_FLAGS[stage]
@@ -976,8 +975,8 @@ class PhantomHourglassClient(BizHawkClient):
                 flags = SPAWN_B3_REAPLING_FLAGS
 
             print(f"Setting Stage flags for {STAGES[stage]}, "
-                  f"adr: {hex(self.stage_address + STAGE_FLAGS_OFFSET)}")
-            await write_memory_values(ctx, self.stage_address + STAGE_FLAGS_OFFSET, flags)
+                  f"adr: {hex(self.stage_address)}")
+            await write_memory_values(ctx, self.stage_address, flags)
         # Give dungeon keys
         if stage in DUNGEON_KEY_DATA:
             # Change key read location if using TotOK midway
