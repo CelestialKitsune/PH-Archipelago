@@ -315,7 +315,11 @@ DYNAMIC_FLAGS = {
         "has_items": [("Courage Crest", 0)],
         "unset_if_true": [(0x1B558C, 0x04)]
     },
-
+    "Courage Crest room allow leaving": {
+        "on_scenes": [0x2508],
+        "has_locations": ["TotOK B6 Courage Crest"],
+        "set_if_true": [(0x1B558C, 0x04)]
+    },
     # Endgame
     "Spawn Phantoms in Totok B13": {
         "on_scenes": [0x2511],
@@ -395,11 +399,17 @@ DYNAMIC_FLAGS = {
         "has_slot_data": [["boat_requires_sea_chart", 0]],
         "set_if_true": [(0x1B5580, 0x4)],
     },
-    "Spawn Linebeck setting": {
+    "Spawn Linebeck if setting": {
         "on_scenes": [0xB03],
         "has_slot_data": [["boat_requires_sea_chart", 1]],
         "has_items": [("SW Sea Chart", 1)],
         "set_if_true": [(0x1B5580, 0x4)],
+    },
+    "Despawn Linebeck if setting": {
+        "on_scenes": [0xB03],
+        "has_slot_data": [["boat_requires_sea_chart", 1]],
+        "has_items": [("SW Sea Chart", 0)],
+        "unset_if_true": [(0x1B5580, 0x4)],
     },
     "RESET Despawn Linebeck setting": {
         "on_scenes": [0xB02],
