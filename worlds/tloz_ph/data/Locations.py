@@ -128,7 +128,7 @@ LOCATIONS_DATA = {
 		"vanilla_item": "Treasure Map #12 (Dee Ess N)",
 		"id": 12,
 	},
-	"Mercay Chartreuse Guy Item": {
+	"Mercay Ojibe (Docks Guy) Item": {
 		"region_id": "mercay yellow guy",
 		"stage_id": 0xb,
 		"floor_id": 0x3,
