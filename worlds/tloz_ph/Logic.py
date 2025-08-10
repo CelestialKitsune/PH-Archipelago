@@ -1,15 +1,15 @@
-from BaseClasses import MultiWorld, Item
+from BaseClasses import MultiWorld, Item, Entrance, EntranceType
 from .data import LOCATIONS_DATA
 from .data.LogicPredicates import *
 from .Options import PhantomHourglassOptions
-
+from .data.Entrances import ENTRANCES
 
 def make_overworld_logic(player: int, origin_name: str, options: PhantomHourglassOptions):
     overworld_logic = [
 
         # ====== Mercay Island ==============
 
-        ["mercay island", "mercay dig spot", False, lambda state: ph_has_shovel(state, player)],
+        ["mercay sw", "mercay dig spot", False, lambda state: ph_has_shovel(state, player)],
         ["mercay island", "mercay zora cave", False, lambda state: ph_has_explosives(state, player)],
         ["mercay zora cave", "mercay zora cave south", False, lambda state: ph_has_bow(state, player)],
         ["mercay island", "mercay zora cave south", False, lambda state: ph_can_sword_scroll_clip(state, player)],
@@ -17,11 +17,28 @@ def make_overworld_logic(player: int, origin_name: str, options: PhantomHourglas
         ["mercay island", "mercay freedle island", False, lambda state: ph_has_explosives(state, player)],
         ["mercay freedle island", "mercay freedle tunnel chest", False, lambda state: ph_has_range(state, player)],
         ["mercay freedle island", "mercay freedle gift", False, lambda state: ph_has_sea_chart(state, player, "SE")],
-        ["mercay island", "mercay yellow guy", False, lambda state: ph_has_courage_crest(state, player)],
-        ["post tow", "mercay oshus gem", False, None],
-        ["mercay island", "mercay oshus phantom blade", False, lambda state: ph_has_phantom_blade(state, player)],
+        ["mercay se", "mercay yellow guy", False, lambda state: ph_has_courage_crest(state, player)],
+        ["mercay oshus", "mercay oshus gem", False, lambda state: state.has("_beat_tow", player)],
+        ["mercay oshus", "mercay oshus phantom blade", False, lambda state: ph_has_phantom_blade(state, player)],
         ["mercay oshus phantom blade", "mercay oshus gem", False, None],
         ["mercay island", "sw ocean", False, lambda state: ph_has_sea_chart(state, player, "SW")],
+
+        # ER
+        ["mercay island", "mercay sw", False, None],
+        ["mercay sw", "mercay sw bridge", True, None],
+        ["mercay sw", "mercay oshus", True, None],
+        ["mercay sw", "mercay apricot", True, None],
+        ["mercay sw", "mercay sword cave", True, None],
+
+        ["mercay sw bridge", "mercay se", True, None],
+        ["mercay se", "mercay tuzi", True, None],
+        ["mercay se", "mercay milk bar", True, None],
+        ["mercay se", "mercay shop", True, None],
+        ["mercay se", "mercay shipyard", False, lambda state: state.has("_beat_tof", player)],
+        ["mercay shipyard", "mercay se", False, None],
+        ["mercay se", "mercay treasure teller", False, lambda state: ph_has_courage_crest(state, player)],
+        ["mercay treasure teller", "mercay se", False, None],
+
 
         # ======== Mountain Passage =========
 
@@ -531,6 +548,8 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
         make_overworld_logic(player, origin_name, options)
     ]
 
+    test_entrances = {(e["entrance_region"], e["exit_region"]): name for name, e in ENTRANCES.items()}
+
     # Create connections
     for logic_array in all_logic:
         for entrance_desc in logic_array:
@@ -542,3 +561,12 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
             region_1.connect(region_2, None, rule)
             if is_two_way:
                 region_2.connect(region_1, None, rule)
+
+            # Create entrance objects
+            if (region_1, region_2) in test_entrances:
+                name = test_entrances[(region_1, region_2)]
+                group = ENTRANCES[name]["type"] | ENTRANCES[name]["direction"]
+                connection_type = EntranceType.TWO_WAY if ENTRANCES[name].get("two_way", True) else EntranceType.ONE_WAY
+                new_entrance = Entrance(player, name, region_1, group, connection_type)
+                new_entrance.connect(region_2)
+                multiworld.worlds[player].entrances[name] = new_entrance

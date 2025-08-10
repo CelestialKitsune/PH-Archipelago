@@ -10,7 +10,7 @@ LOCATIONS_DATA = {
 	# ========== Mercay Island ============
 
 	"Mercay Sword Chest": {
-		"region_id": "mercay island",
+		"region_id": "mercay sword cave",
 		"item_override": "Sword (Progressive)",
 		"vanilla_item": "Oshus' Sword",
 		"stage_id": 0xb,
@@ -20,7 +20,7 @@ LOCATIONS_DATA = {
 		"id": 1,
 	},
 	"Mercay Clear Rocks": {
-		"region_id": "mercay island",
+		"region_id": "mercay sw",
 		"vanilla_item": "Green Rupee (1)",
 		"stage_id": 0xb,
 		"floor_id": 0x0,
@@ -39,7 +39,7 @@ LOCATIONS_DATA = {
 		"id": 3,
 	},
 	"Mercay Cuccoo Chest": {
-		"region_id": "mercay island",
+		"region_id": "mercay se",
 		"stage_id": 0xb,
 		"floor_id": 0x3,
 		"y": 0x1333,
@@ -138,7 +138,7 @@ LOCATIONS_DATA = {
 		"id": 13,
 	},
 	"Mercay Shipyard Chest": {
-		"region_id": "post tof",
+		"region_id": "mercay shipyard",
 		"stage_id": 0xb,
 		"floor_id": 0xd,
 		"vanilla_item": "Ship Part",

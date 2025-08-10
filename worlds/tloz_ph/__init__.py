@@ -3,10 +3,13 @@ import logging
 import random
 from math import ceil
 from typing import List, Union, ClassVar, Any, Optional, Tuple
+
+import entrance_rando
 import settings
 from BaseClasses import Tutorial, Region, Location, LocationProgressType, Item, ItemClassification
 from Fill import fill_restrictive, FillError
 from Options import Accessibility, OptionError
+from entrance_rando import randomize_entrances
 from worlds.AutoWorld import WebWorld, World
 
 from .Util import *
@@ -17,6 +20,7 @@ from .data.Constants import *
 from .data.Items import ITEMS_DATA
 from .data.Regions import REGIONS
 from .data.LogicPredicates import *
+from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS
 
 from .Client import PhantomHourglassClient  # Unused, but required to register with BizHawkClient
 
@@ -130,6 +134,9 @@ class PhantomHourglassWorld(World):
         self.ut_locations_to_exclude = set()
         self.extra_filler_items = []
         self.excluded_dungeons = []
+
+        self.entrances = {}
+        self.er_placement_state = None
 
     def generate_early(self):
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
@@ -346,6 +353,21 @@ class PhantomHourglassWorld(World):
         self.locations_to_exclude = locations_to_exclude
         for name in locations_to_exclude:
             self.multiworld.get_location(name, self.player).progress_type = LocationProgressType.EXCLUDED
+
+    def connect_entrances(self) -> None:
+        do_er = True
+        if do_er:
+            for entrance in self.entrances:
+                entrance_rando.disconnect_entrance_for_randomization(entrance)
+
+            def get_target_groups(group: int) -> list[int]:
+                direction = group & EntranceGroups.DIRECTION_MASK
+                area = group & EntranceGroups.AREA_MASK
+                return [OPPOSITE_ENTRANCE_GROUPS[direction] | area]
+
+            groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(1, 4) for area in range(1, 8)}
+            print(list(self.entrances.keys()))
+            self.er_placement_state = randomize_entrances(self, True, groups, er_targets=list(self.entrances.values()))
 
     def set_rules(self):
         create_connections(self.multiworld, self.player, self.origin_region_name, self.options)
@@ -651,6 +673,10 @@ class PhantomHourglassWorld(World):
         spoiler_handle.write(f"\n\nRequired Dungeons ({self.multiworld.player_name[self.player]}):\n")
         for dung in self.required_dungeons:
             spoiler_handle.write(f"\t- {dung}\n")
+
+        spoiler_handle.write(f"\n\n Entrance Rando")
+        for i in self.er_placement_state.pairings:
+            spoiler_handle.write(f"\t{i}")
 
     # UT stuff
     @staticmethod

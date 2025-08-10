@@ -613,6 +613,7 @@ class PhantomHourglassClient(BizHawkClient):
                     print("Receiving Item")
                     await self.process_checked_locations(ctx, None, detection_type=self.getting_location_type)
 
+
                 # Process received items
                 if num_received_items < len(ctx.items_received):
                     if self.just_entered_game:
