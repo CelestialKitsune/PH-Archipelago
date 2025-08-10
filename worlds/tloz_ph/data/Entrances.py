@@ -60,7 +60,6 @@ ENTRANCE_DATA = {
         "exit_region": "mercay sword cave",
         "type": EntranceGroups.CAVE,
         "direction": EntranceGroups.UP,
-        "two_way": True
     },
     "Mercay SW -> Mercay NW": {
         "entrance": (0xB, 0x0, 0xFC),
@@ -69,7 +68,6 @@ ENTRANCE_DATA = {
         "exit_region": "mercay nw",
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
-        "two_way": True
     },
     "Mercay SW -> Mercay SE": {
         "entrance": (0xB, 0x0, 0xFD),
@@ -78,7 +76,6 @@ ENTRANCE_DATA = {
         "exit_region": "mercay nw",
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
-        "two_way": True
     },
     "Mercay SE -> Milk Bar": {
         "entrance": (0xB, 0x3, 0x3),
@@ -87,17 +84,14 @@ ENTRANCE_DATA = {
         "exit_region": "mercay milk bar",
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
-        "two_way": True
     },
     "Mercay SE -> Shipyard": {
         "entrance": (0xB, 0x3, 0x4),
         "exit": (0xB, 0xD, 0x0),
-        "entrance_region": "mercay se post ->f",
+        "entrance_region": "mercay se",
         "exit_region": "mercay shipyard",
-        "reverse_entrance_region": "mercay se",
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
-        "two_way": True
     },
     "Mercay SE -> Tuzi": {
         "entrance": (0xB, 0x3, 0x5),
@@ -106,16 +100,14 @@ ENTRANCE_DATA = {
         "exit_region": "mercay tuzi",
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
-        "two_way": True
     },
     "Mercay SE -> Treasure Teller": {
         "entrance": (0xB, 0x3, 0x6),
         "exit": (0xB, 0xF, 0x0),
-        "entrance_region": "mercay se cc",
+        "entrance_region": "mercay se",
         "exit_region": "mercay treasure teller",
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
-        "two_way": False
     },
     "Mercay SE -> Mercay Shop": {
         "entrance": (0xB, 0x3, 0xFC),
@@ -163,8 +155,10 @@ i = 0
 for name, data in ENTRANCE_DATA.items():
     ENTRANCES[name] = data
     ENTRANCES[name]["id"] = i
+    print(f"{i} {ENTRANCES[name]['entrance_region']} -> {ENTRANCES[name]['exit_region']}")
     i += 1
-    if data.get("two_way", False):
+
+    if data.get("two_way", True):
         name_list = name.split(" -> ")
         reverse_name = name_list[1] + " -> " + name_list[0]
         reverse_data = {
@@ -177,8 +171,9 @@ for name, data in ENTRANCE_DATA.items():
             "type": data["type"],
             "direction": OPPOSITE_ENTRANCE_GROUPS[data["direction"]]
         }
-        i += 1
         ENTRANCES[reverse_name] = reverse_data
+        print(f"{i} {ENTRANCES[reverse_name]['entrance_region']} -> {ENTRANCES[reverse_name]['exit_region']}")
+        i += 1
 
 
 

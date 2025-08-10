@@ -544,11 +544,23 @@ def is_item(item: Item, player: int, item_name: str):
 
 
 def create_connections(multiworld: MultiWorld, player: int, origin_name: str, options):
+    def create_entrance(r1, r2):
+        entrance_key = (r1.name, r2.name)
+        if entrance_key in test_entrances:
+            name = test_entrances[entrance_key]
+            group = ENTRANCES[name]["type"] | ENTRANCES[name]["direction"]
+            connection_type = EntranceType.TWO_WAY if ENTRANCES[name].get("two_way", True) else EntranceType.ONE_WAY
+            print(f"got entrance {name} type {connection_type} group {bin(group)}")
+            new_entrance = Entrance(player, name, region_1, group, connection_type)
+            new_entrance.connect(region_2)
+            multiworld.worlds[player].entrances[name] = new_entrance
+
     all_logic = [
         make_overworld_logic(player, origin_name, options)
     ]
 
     test_entrances = {(e["entrance_region"], e["exit_region"]): name for name, e in ENTRANCES.items()}
+    print(test_entrances)
 
     # Create connections
     for logic_array in all_logic:
@@ -559,14 +571,12 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
             rule = entrance_desc[3]
 
             region_1.connect(region_2, None, rule)
+            create_entrance(region_1, region_2)
+
             if is_two_way:
                 region_2.connect(region_1, None, rule)
+                create_entrance(region_2, region_1)
 
-            # Create entrance objects
-            if (region_1, region_2) in test_entrances:
-                name = test_entrances[(region_1, region_2)]
-                group = ENTRANCES[name]["type"] | ENTRANCES[name]["direction"]
-                connection_type = EntranceType.TWO_WAY if ENTRANCES[name].get("two_way", True) else EntranceType.ONE_WAY
-                new_entrance = Entrance(player, name, region_1, group, connection_type)
-                new_entrance.connect(region_2)
-                multiworld.worlds[player].entrances[name] = new_entrance
+
+
+

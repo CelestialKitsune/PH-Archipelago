@@ -357,7 +357,8 @@ class PhantomHourglassWorld(World):
     def connect_entrances(self) -> None:
         do_er = True
         if do_er:
-            for entrance in self.entrances:
+            print(f"entrances {self.entrances}")
+            for entrance in self.entrances.values():
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
 
             def get_target_groups(group: int) -> list[int]:
@@ -367,7 +368,7 @@ class PhantomHourglassWorld(World):
 
             groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(1, 4) for area in range(1, 8)}
             print(list(self.entrances.keys()))
-            self.er_placement_state = randomize_entrances(self, True, groups, er_targets=list(self.entrances.values()))
+            self.er_placement_state = randomize_entrances(self, True, groups)
 
     def set_rules(self):
         create_connections(self.multiworld, self.player, self.origin_region_name, self.options)
