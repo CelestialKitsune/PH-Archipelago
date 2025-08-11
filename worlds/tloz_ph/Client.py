@@ -79,8 +79,9 @@ STAGE_FLAGS_OFFSET = 0x268
 
 # Addresses to read each cycle
 read_keys_always = ["game_state", "in_cutscene", "received_item_index", "stage", "room", "slot_id",
-                    "loading_room",
-                    "opened_clog"]
+                    "entrance",
+                    "loading_room", "opened_clog"]
+
 read_keys_deathlink = ["link_health"]
 read_keys_land = ["getting_item", "getting_ship_part"]
 read_keys_sea = ["shot_frog"]
@@ -193,6 +194,7 @@ class PhantomHourglassClient(BizHawkClient):
         self.location_area_to_watches = build_location_room_to_watches()
         self.scene_to_dynamic_flag = build_scene_to_dynamic_flag()
         self.hint_scene_to_watches = build_hint_scene_to_watches()
+        self.entrance_id_to_entrance, self.entrance_id_to_exits = build_entrance_id_to_data()
 
         self.local_checked_locations = set()
         self.local_scouted_locations = set()
@@ -237,6 +239,8 @@ class PhantomHourglassClient(BizHawkClient):
         self.log_recieved_items = False
 
         self.warp_to_start_flag = False
+        self.er_map: dict[int, dict[tuple, tuple]] = {}
+        self.er_in_scene: dict[tuple, tuple[int, int, int]] | None = None
 
         self.delay_pickup: list[str, list[list[str, str, int]]] or None = None
         self.last_key_count = 0
@@ -306,22 +310,6 @@ class PhantomHourglassClient(BizHawkClient):
             write_list += [(0x1B559A, [0x18], "Main RAM")]
 
         await bizhawk.write(ctx.bizhawk_ctx, write_list)
-
-    """
-    # Boomerang is set to enable item menu, called on s+q to remove it again.
-    async def boomerwatch(self, ctx) -> bool:
-        if await read_memory_value(ctx, *RAM_ADDRS["got_item_menu"]) > 0:
-            # Check if boomerang has been received
-            for item in ctx.items_received:
-                if item.item == ITEMS_DATA["Boomerang"]["id"]:
-                    return True
-            # Otherwise remove boomerang
-            boomerang = ITEMS_DATA["Boomerang"]
-            await write_memory_value(ctx, boomerang["address"], boomerang["value"], unset=True)
-            return True
-        else:
-            return False
-    """
 
     def update_metal_count(self, ctx):
         metal_ids = [ITEMS_DATA[i]["id"] for i in ITEM_GROUPS["Metals"]]
@@ -463,6 +451,28 @@ class PhantomHourglassClient(BizHawkClient):
         elif ctx.slot_data["goal_requirements"] == "triforce_door":
             self.goal_room = 0x2509
 
+    def generate_er_map(self, ctx):
+        # Creates a map
+        res = {}
+        print(ctx.slot_data["er_pairings"])
+        pairings = {int(k): v for k, v in ctx.slot_data["er_pairings"].items()}
+        print(f"ER Pairings {pairings}")
+        for data in ENTRANCES.values():
+            print(f"Generating ER Map for {data['entrance']}")
+            stage, room, entrance = data["entrance"]
+            detect_data = data["exit"]
+            scene = stage * 0x100 + room
+            res.setdefault(scene, dict())
+            if data["id"] in pairings:
+                exit_id = pairings[data["id"]]
+                exit_data = self.entrance_id_to_entrance[exit_id]
+                print(f"Exit data {exit_data}, {exit_id}, detect {detect_data}")
+                if not detect_data == exit_data:
+                    res[scene][detect_data] = exit_data
+
+        self.er_map = res
+        print(f"ER Map: {self.er_map}")
+
     # Main Loop
     async def game_watcher(self, ctx: "BizHawkClientContext") -> None:
         if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or ctx.slot is None or ctx.slot == 0:
@@ -516,6 +526,7 @@ class PhantomHourglassClient(BizHawkClient):
                 self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
                 self.get_ending_room(ctx)
                 self.update_metal_count(ctx)
+                self.generate_er_map(ctx)
                 print(f"Started Game")
 
             # If new file, set up starting flags
@@ -530,6 +541,7 @@ class PhantomHourglassClient(BizHawkClient):
             current_room = read_result["room"]
             current_room = 0 if current_room == 0xFF else current_room  # Resetting in a dungeon sets a special value
             current_scene = current_stage * 0x100 + current_room
+            current_entrance = read_result.get("entrance", 0)
 
             # This go true when link gets item
             if self.at_sea:
@@ -547,22 +559,21 @@ class PhantomHourglassClient(BizHawkClient):
             # Process on new room. As soon as it's triggered, changing the scene variable changes entrance destination
             # await bizhawk.lock(ctx.bizhawk_ctx)  # Lock to try and catch entrance warp
             if current_scene != self.last_scene and not self.entered_entrance and not self.loading_scene:
-                if self.last_scene is not None:
-                    print(f"New Room: {hex(current_scene)} last room {hex(self.last_scene)}")
-                else:
-                    print(f"New Room: {hex(current_scene)} last room {self.last_scene}")
+
+                # Trigger a different entrance to vanilla
+                current_scene = await self.entrance_warp(ctx, current_scene, current_entrance)
 
                 # Backup in case of missing loading
                 self.backup_coord_read = await self.get_coords(ctx, multi=True)
                 print("Backup: ", self.backup_coord_read)
 
-                # Trigger a different entrance to vanilla
-                current_scene = await self.entrance_warp(ctx, current_scene)
-
                 # Set dynamic flags on scene
                 await self.set_dynamic_flags(ctx, current_scene)
 
-                print(f"Entered new scene {hex(current_scene)}")
+                # Load potential entrance warp destinations
+                self.er_in_scene = self.er_map.get(current_scene, None)
+
+                print(f"Entered new scene {hex(current_scene)} with ER {self.er_in_scene}")
                 self.entered_entrance = time.time()  # Triggered first part of loading - setting new room
                 self.entering_dungeon = None
                 self.delay_reset = False
@@ -774,7 +785,7 @@ class PhantomHourglassClient(BizHawkClient):
             # Exit handler and return to main loop to reconnect
             print("Couldn't read data")
 
-    async def entrance_warp(self, ctx, going_to):
+    async def entrance_warp(self, ctx, going_to, entrance=0):
         write_list = []
         res = going_to
 
@@ -792,6 +803,17 @@ class PhantomHourglassClient(BizHawkClient):
                 logger.info("Warping to Start")
             else:
                 logger.info("Warp to start failed, warping from home scene")
+
+        elif self.er_in_scene:
+            true_going_to = ((going_to & 0xFF00)//0x100, going_to & 0xFF, entrance)
+            print(true_going_to, self.er_in_scene)
+            if true_going_to in self.er_in_scene:
+                exit_stage, exit_room, exit_entrance, *exit_coords = self.er_in_scene[true_going_to]
+                write_list += [(RAM_ADDRS["stage"][0], split_bits(exit_stage, 4), "Main RAM"),
+                               (RAM_ADDRS["room"][0], split_bits(exit_room, 1), "Main RAM"),
+                               (RAM_ADDRS["floor"][0], split_bits(0, 4), "Main RAM"),
+                               (RAM_ADDRS["entrance"][0], split_bits(exit_entrance, 1), "Main RAM")]
+                res = exit_stage * 0x100 + exit_room
 
         if write_list:
             await bizhawk.write(ctx.bizhawk_ctx, write_list)

@@ -1,7 +1,14 @@
 from typing import Dict
 from .data import LOCATIONS_DATA, ITEMS_DATA, DYNAMIC_FLAGS
 from .data.Hints import HINT_DATA
+from .data.Entrances import ENTRANCES
 
+def build_entrance_id_to_data():
+    entrances, exits = {}, {}
+    for i in ENTRANCES.values():
+        entrances[i["id"]] = i["entrance"]
+        exits[i["id"]] = i["exit"]
+    return entrances, exits
 
 def build_hint_scene_to_watches() -> dict[int, list[str]]:
     hint_room_to_watches: dict[int, list[str]] = {}

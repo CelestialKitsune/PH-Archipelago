@@ -21,7 +21,7 @@ def make_overworld_logic(player: int, origin_name: str, options: PhantomHourglas
         ["mercay oshus", "mercay oshus gem", False, lambda state: state.has("_beat_tow", player)],
         ["mercay oshus", "mercay oshus phantom blade", False, lambda state: ph_has_phantom_blade(state, player)],
         ["mercay oshus phantom blade", "mercay oshus gem", False, None],
-        ["mercay island", "sw ocean", False, lambda state: ph_has_sea_chart(state, player, "SW")],
+        ["mercay se", "sw ocean", False, lambda state: ph_has_sea_chart(state, player, "SW")],
 
         # ER
         ["mercay island", "mercay sw", False, None],
@@ -546,21 +546,23 @@ def is_item(item: Item, player: int, item_name: str):
 def create_connections(multiworld: MultiWorld, player: int, origin_name: str, options):
     def create_entrance(r1, r2):
         entrance_key = (r1.name, r2.name)
+        entrance = r1.connect(r2, None, rule)
+
         if entrance_key in test_entrances:
-            name = test_entrances[entrance_key]
-            group = ENTRANCES[name]["type"] | ENTRANCES[name]["direction"]
-            connection_type = EntranceType.TWO_WAY if ENTRANCES[name].get("two_way", True) else EntranceType.ONE_WAY
-            print(f"got entrance {name} type {connection_type} group {bin(group)}")
-            new_entrance = Entrance(player, name, region_1, group, connection_type)
-            new_entrance.connect(region_2)
-            multiworld.worlds[player].entrances[name] = new_entrance
+            # Set entrance data
+            entrance_data = ENTRANCES[test_entrances[entrance_key]]
+            rando_type_bool = entrance_data.get("two_way", True)
+            entrance.randomization_type = EntranceType.TWO_WAY if rando_type_bool else EntranceType.ONE_WAY
+            entrance.randomization_group = entrance_data["direction"] | (entrance_data["type"])
+            entrance.name = test_entrances[entrance_key]
+            print(f"create entrance {entrance.name} group {bin(entrance.randomization_group)}")
+            multiworld.worlds[player].entrances[entrance.name] = entrance
 
     all_logic = [
         make_overworld_logic(player, origin_name, options)
     ]
 
     test_entrances = {(e["entrance_region"], e["exit_region"]): name for name, e in ENTRANCES.items()}
-    print(test_entrances)
 
     # Create connections
     for logic_array in all_logic:
@@ -570,11 +572,8 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
             is_two_way = entrance_desc[2]
             rule = entrance_desc[3]
 
-            region_1.connect(region_2, None, rule)
             create_entrance(region_1, region_2)
-
             if is_two_way:
-                region_2.connect(region_1, None, rule)
                 create_entrance(region_2, region_1)
 
 

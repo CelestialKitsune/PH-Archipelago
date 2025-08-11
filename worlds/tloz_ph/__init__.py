@@ -20,7 +20,7 @@ from .data.Constants import *
 from .data.Items import ITEMS_DATA
 from .data.Regions import REGIONS
 from .data.LogicPredicates import *
-from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS
+from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS, ENTRANCES
 
 from .Client import PhantomHourglassClient  # Unused, but required to register with BizHawkClient
 
@@ -356,10 +356,12 @@ class PhantomHourglassWorld(World):
 
     def connect_entrances(self) -> None:
         do_er = True
+        coupled = True
         if do_er:
-            print(f"entrances {self.entrances}")
+            # Disconnect entrances to shuffle
             for entrance in self.entrances.values():
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
+                # print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
 
             def get_target_groups(group: int) -> list[int]:
                 direction = group & EntranceGroups.DIRECTION_MASK
@@ -367,8 +369,7 @@ class PhantomHourglassWorld(World):
                 return [OPPOSITE_ENTRANCE_GROUPS[direction] | area]
 
             groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(1, 4) for area in range(1, 8)}
-            print(list(self.entrances.keys()))
-            self.er_placement_state = randomize_entrances(self, True, groups)
+            self.er_placement_state = entrance_rando.randomize_entrances(self, coupled, groups)
 
     def set_rules(self):
         create_connections(self.multiworld, self.player, self.origin_region_name, self.options)
@@ -668,6 +669,13 @@ class PhantomHourglassWorld(World):
         # Used for dungeon hints in client
         slot_data["required_dungeon_locations"] = self.boss_reward_location_names  # for dungeon hints
         slot_data["boss_reward_items_pool"] = self.boss_reward_items_pool
+
+        # Create ER Pairings, as ids to save space
+        pairings = {}
+        for e1, e2 in self.er_placement_state.pairings:
+            pairings[ENTRANCES[e1]["id"]] = ENTRANCES[e2]["id"]
+        slot_data["er_pairings"] = pairings
+
         return slot_data
 
     def write_spoiler(self, spoiler_handle):
@@ -675,9 +683,14 @@ class PhantomHourglassWorld(World):
         for dung in self.required_dungeons:
             spoiler_handle.write(f"\t- {dung}\n")
 
-        spoiler_handle.write(f"\n\n Entrance Rando")
+        spoiler_handle.write(f"\n\n Entrance Rando\n")
+        prev = None
         for i in self.er_placement_state.pairings:
-            spoiler_handle.write(f"\t{i}")
+            if not (i[1], i[0]) == prev:
+                text = i[0] + " <=> " + i[1]
+                spoiler_handle.write(f"\t{text}\n")
+            prev = i
+
 
     # UT stuff
     @staticmethod

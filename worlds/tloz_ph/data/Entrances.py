@@ -14,6 +14,8 @@ class EntranceGroups(IntEnum):
     BOSS = 6 << 3
     DUNGEON_ROOM = 7 << 3
     WARP_PORTAL = 8 << 3
+    STAIRS = 9 << 3
+    HOLES = 10 << 3
     # Bitmasks
     DIRECTION_MASK = HOUSE - 1
     AREA_MASK = ~0 << 3
@@ -35,7 +37,8 @@ ENTRANCE_DATA = {
     #   "two_way": bool. generates a reciprocal entrance if the logic requirements are loose
     # }
 
-    "Mercay SW -> Oshus": {
+    "Mercay SW Oshus": {
+        "return_name": "Oshus House",
         "entrance": (0xB, 0, 2),
         "exit": (0xB, 0xA, 1),
         "entrance_region": "mercay sw",
@@ -44,7 +47,8 @@ ENTRANCE_DATA = {
         "direction": EntranceGroups.UP,
         "two_way": True
     },
-    "Mercay SW -> Apricot": {
+    "Mercay SW Apricot": {
+        "return_name": "Apricot House",
         "entrance": (0xB, 0x0, 3),
         "exit": (0xB, 0xB, 1),
         "entrance_region": "mercay sw",
@@ -53,7 +57,8 @@ ENTRANCE_DATA = {
         "direction": EntranceGroups.UP,
         "two_way": True
     },
-    "Mercay SW -> Sword Cave": {
+    "Mercay SW Sword Cave": {
+        "return_name": "Inside Sword Cave",
         "entrance": (0xB, 0x0, 4),
         "exit": (0xB, 0x13, 1),
         "entrance_region": "mercay sw",
@@ -61,7 +66,8 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.CAVE,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SW -> Mercay NW": {
+    "Mercay SW North": {
+        "return_name": "Mercay NW South",
         "entrance": (0xB, 0x0, 0xFC),
         "exit": (0xB, 0x1, 0xFB),
         "entrance_region": "mercay sw",
@@ -69,15 +75,17 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SW -> Mercay SE": {
+    "Mercay SW East": {
+        "return_name": "Mercay SE West",
         "entrance": (0xB, 0x0, 0xFD),
         "exit": (0xB, 0x3, 0xFE),
         "entrance_region": "mercay sw bridge",
-        "exit_region": "mercay nw",
+        "exit_region": "mercay se",
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
     },
-    "Mercay SE -> Milk Bar": {
+    "Mercay SE Milk Bar": {
+        "return_name": "Inside Milk Bar",
         "entrance": (0xB, 0x3, 0x3),
         "exit": (0xB, 0xC, 0x0),
         "entrance_region": "mercay se",
@@ -85,7 +93,8 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SE -> Shipyard": {
+    "Mercay SE Shipyard": {
+        "return_name": "Inside Shipyard",
         "entrance": (0xB, 0x3, 0x4),
         "exit": (0xB, 0xD, 0x0),
         "entrance_region": "mercay se",
@@ -93,7 +102,8 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SE -> Tuzi": {
+    "Mercay SE Tuzi": {
+        "return_name": "Tuzi House",
         "entrance": (0xB, 0x3, 0x5),
         "exit": (0xB, 0xE, 0x0),
         "entrance_region": "mercay se",
@@ -101,7 +111,8 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SE -> Treasure Teller": {
+    "Mercay SE Treasure Teller": {
+        "return_name": "Treasure Teller House",
         "entrance": (0xB, 0x3, 0x6),
         "exit": (0xB, 0xF, 0x0),
         "entrance_region": "mercay se",
@@ -109,9 +120,10 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
     },
-    "Mercay SE -> Mercay Shop": {
-        "entrance": (0xB, 0x3, 0xFC),
-        "exit": (0xB, 0x11, 0xFB),
+    "Mercay SE Shop": {
+        "return_name": "Inside Mercay Shop",
+        "entrance": (0xB, 0x3, 0x7),
+        "exit": (0xB, 0x11, 0x1),
         "entrance_region": "mercay se",
         "exit_region": "mercay shop",
         "type": EntranceGroups.HOUSE,
@@ -159,8 +171,7 @@ for name, data in ENTRANCE_DATA.items():
     i += 1
 
     if data.get("two_way", True):
-        name_list = name.split(" -> ")
-        reverse_name = name_list[1] + " -> " + name_list[0]
+        reverse_name = data.get("return_name", f"Unnamed Entrance {i}")
         reverse_data = {
             "entrance_region": data.get("reverse_exit_region", data["exit_region"]),
             "exit_region": data.get("reverse_entrance_region", data["entrance_region"]),
