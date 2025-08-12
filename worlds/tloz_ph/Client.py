@@ -241,6 +241,7 @@ class PhantomHourglassClient(BizHawkClient):
         self.warp_to_start_flag = False
         self.er_map: dict[int, dict[tuple, tuple]] = {}
         self.er_in_scene: dict[tuple, tuple[int, int, int]] | None = None
+        self.er_exit_coord_writes: list | None = None
 
         self.delay_pickup: list[str, list[list[str, str, int]]] or None = None
         self.last_key_count = 0
@@ -452,7 +453,8 @@ class PhantomHourglassClient(BizHawkClient):
             self.goal_room = 0x2509
 
     def generate_er_map(self, ctx):
-        # Creates a map
+        # Creates a map from scene to dict of
+        #   detect_exit (stage, scene, entrance, link_y) to er_exit (stage, scene, entrance, link_x | None, link_y, link_z)
         res = {}
         print(ctx.slot_data["er_pairings"])
         pairings = {int(k): v for k, v in ctx.slot_data["er_pairings"].items()}
@@ -460,7 +462,10 @@ class PhantomHourglassClient(BizHawkClient):
         for data in ENTRANCES.values():
             print(f"Generating ER Map for {data['entrance']}")
             stage, room, entrance = data["entrance"]
-            detect_data = data["exit"]
+            print(f"link_y  {data.get('coords', [0, None])}")
+            link_coords = data.get("coords", None)
+            link_y = link_coords[1] if link_coords else None
+            detect_data = tuple(list(data["exit"]) + [link_y])  # wow this is stupid
             scene = stage * 0x100 + room
             res.setdefault(scene, dict())
             if data["id"] in pairings:
@@ -476,9 +481,6 @@ class PhantomHourglassClient(BizHawkClient):
     # Main Loop
     async def game_watcher(self, ctx: "BizHawkClientContext") -> None:
         if not ctx.server or not ctx.server.socket.open or ctx.server.socket.closed or ctx.slot is None or ctx.slot == 0:
-            if ctx.slot == 0:
-                logger.warning("ctx.slot is zero for some reason, not okay")
-
             self.just_entered_game = True
             self.loaded_menu_read_list = False
             self.last_scene = None
@@ -717,6 +719,7 @@ class PhantomHourglassClient(BizHawkClient):
             if self.entered_entrance and loading_scene:
                 self.loading_scene = True  # Second phase of loading room
                 self.entered_entrance = False
+                await self.set_er_coords(ctx)
                 print("Loading Scene", current_scene)
 
             # Fully loaded room
@@ -805,19 +808,32 @@ class PhantomHourglassClient(BizHawkClient):
                 logger.info("Warp to start failed, warping from home scene")
 
         elif self.er_in_scene:
-            true_going_to = ((going_to & 0xFF00)//0x100, going_to & 0xFF, entrance)
-            print(true_going_to, self.er_in_scene)
+            link_y = await read_memory_value(ctx, 0x1B2ECC, signed=True, size=4) if entrance > 0xF0 else None
+            true_going_to = ((going_to & 0xFF00)//0x100, going_to & 0xFF, entrance, link_y)
+            print("True Going To", true_going_to)
             if true_going_to in self.er_in_scene:
                 exit_stage, exit_room, exit_entrance, *exit_coords = self.er_in_scene[true_going_to]
                 write_list += [(RAM_ADDRS["stage"][0], split_bits(exit_stage, 4), "Main RAM"),
                                (RAM_ADDRS["room"][0], split_bits(exit_room, 1), "Main RAM"),
                                (RAM_ADDRS["floor"][0], split_bits(0, 4), "Main RAM"),
                                (RAM_ADDRS["entrance"][0], split_bits(exit_entrance, 1), "Main RAM")]
+                if exit_coords[0] is not None:
+                    x, y, z = exit_coords
+                    print(f"exit coords {x} {y} {z}")
+                    self.er_exit_coord_writes = [(0x1B2EC8, split_bits(x, 4), "Main RAM"),
+                                                 (0x1B2ECC, split_bits(y, 4), "Main RAM"),
+                                                 (0x1B2ED0, split_bits(z, 4), "Main RAM"),]
+
                 res = exit_stage * 0x100 + exit_room
 
         if write_list:
             await bizhawk.write(ctx.bizhawk_ctx, write_list)
         return res
+
+    async def set_er_coords(self, ctx):
+        if self.er_exit_coord_writes:
+            await bizhawk.write(ctx.bizhawk_ctx, self.er_exit_coord_writes)
+            self.er_exit_coord_writes = None
 
     # Processes events defined in data\dynamic_flags.py
     async def set_dynamic_flags(self, ctx, scene):

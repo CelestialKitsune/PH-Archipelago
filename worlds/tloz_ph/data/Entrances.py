@@ -29,12 +29,18 @@ OPPOSITE_ENTRANCE_GROUPS = {
 }
 
 ENTRANCE_DATA = {
-    # "Name <self> -> <exit>": {
-    #   "entrance": tuple[int, int, int], stage room entrance.
-    #   "region": str. logic region that the entrance is in
-    #   "exit": int scene id. Scene it leads -> in vanilla
-    #   "region_return": str. if the entrance is logically one way, the region you exit ->.
-    #   "two_way": bool. generates a reciprocal entrance if the logic requirements are loose
+    # "Name": {
+    #   "return_name": str. what to call the vanilla connecting entrance that generates automatically
+    #   "entrance": tuple[int, int, int], stage room entrance. If you come from entrance
+    #   "exit": tuple[int, int, int], stage room entrance. What the vanilla game sends you on entering
+    #   "entrance_region": str. logic region that the entrance is in
+    #   "exit_region": str. logic region it leads to in
+    #   "coords": tuple[int, int, int]. x, y, z. Where to place link on a continuous transition. y value is also used
+    #       to differentiate transitions at different heights
+    #   "additional_boundaries": dict[str: int]. additional coordinate data for continuous boundaries, like "x_max" etc.
+    #   "type": EntranceGroup. Entrance group entrance type (house, cave, sea etc)
+    #   "direction": EntranceGroup. Entrance group direction
+    #   "two_way": bool=True. generates a reciprocal entrance, also used for ER generation
     # }
 
     "Mercay SW Oshus": {
@@ -70,6 +76,7 @@ ENTRANCE_DATA = {
         "return_name": "Mercay NW South",
         "entrance": (0xB, 0x0, 0xFC),
         "exit": (0xB, 0x1, 0xFB),
+        "coords": (-164000, -164, 16000),  # The coord that doesn't matter doesn't matter. Y level diferentiates exit
         "entrance_region": "mercay sw",
         "exit_region": "mercay nw",
         "type": EntranceGroups.OVERWORLD,
@@ -79,6 +86,7 @@ ENTRANCE_DATA = {
         "return_name": "Mercay SE West",
         "entrance": (0xB, 0x0, 0xFD),
         "exit": (0xB, 0x3, 0xFE),
+        "coords": (4780, -164, 53300),
         "entrance_region": "mercay sw bridge",
         "exit_region": "mercay se",
         "type": EntranceGroups.OVERWORLD,
@@ -180,7 +188,8 @@ for name, data in ENTRANCE_DATA.items():
             "exit": data["entrance"],
             "two_way": True,
             "type": data["type"],
-            "direction": OPPOSITE_ENTRANCE_GROUPS[data["direction"]]
+            "direction": OPPOSITE_ENTRANCE_GROUPS[data["direction"]],
+            "coords": data.get("coords", None)
         }
         ENTRANCES[reverse_name] = reverse_data
         print(f"{i} {ENTRANCES[reverse_name]['entrance_region']} -> {ENTRANCES[reverse_name]['exit_region']}")
