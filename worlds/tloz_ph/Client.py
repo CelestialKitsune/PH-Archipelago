@@ -141,10 +141,7 @@ async def write_memory_value(ctx, address: int, value: int, domain="Main RAM", i
             write_value = prev | value
         else:
             write_value = value
-    if size > 1:
         write_value = split_bits(write_value, size)
-    else:
-        write_value = [write_value]
     print(f"Writing Memory: {hex(address)}, {write_value}, {size}, {domain}, {incr}, {unset}")
     await bizhawk.write(ctx.bizhawk_ctx, [(address, write_value, domain)])
     return write_value
@@ -221,6 +218,7 @@ class PhantomHourglassClient(BizHawkClient):
         self.previous_game_state = False  # Updated every successful cycle
         self.just_entered_game = False  # Set when disconnected or on menu, unset after one full cycle of fully loaded
         self.loaded_menu_read_list = False  #
+        self.from_menu = True  # Last scene was menu
         self.current_stage = 0xB
         self.main_read_list = {}
         self.last_stage = None
@@ -484,6 +482,7 @@ class PhantomHourglassClient(BizHawkClient):
             self.just_entered_game = True
             self.loaded_menu_read_list = False
             self.last_scene = None
+            self.from_menu = True
             # print(f"NOT CONNECTED {ctx.server} {ctx.server.socket.open} {ctx.server.socket.closed} {ctx.slot}")
             return
 
@@ -514,26 +513,34 @@ class PhantomHourglassClient(BizHawkClient):
             # If player is on title screen, don't do anything else
             if not in_game or current_stage not in STAGES:
                 self.previous_game_state = False
+                self.from_menu = True
                 print("NOT IN GAME")
                 # Finished game?
                 if not ctx.finished_game:
                     await self.process_game_completion(ctx, current_stage)
                 return
 
-            # On entering game from main menu
+            # While game from main menu
             if in_game and not self.previous_game_state:
+                if await read_memory_value(ctx, 0x0574E4, silent=True):
+                    print("In Intro CS")
+                    return
                 self.just_entered_game = True
                 self.last_stage = None
                 self.last_scene = None
+                print(f"Started Game")
+
+
+            # Single call just entered from menu methods
+            if in_game and self.from_menu:
                 self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
                 self.get_ending_room(ctx)
                 self.update_metal_count(ctx)
                 self.generate_er_map(ctx)
-                print(f"Started Game")
+                self.from_menu = False
 
             # If new file, set up starting flags
             if slot_memory == 0 and not loading:
-                print(f"Slot memory reset {slot_memory}")
                 if await read_memory_value(ctx, 0x1b55a8, silent=True) & 2:  # Check if watched intro cs
                     await self.set_starting_flags(ctx)
                 else:
@@ -634,6 +641,11 @@ class PhantomHourglassClient(BizHawkClient):
                     await self.process_received_items(ctx, num_received_items, self.log_recieved_items)
                 else:
                     self.log_recieved_items = False
+
+                if num_received_items > len(ctx.items_received):
+                    await write_memory_value(ctx, RAM_ADDRS["received_item_index"], len(ctx.items_received), size=2)
+                    logger.info(f"Save file has more items than Multiworld. Probable cause: loaded wrong save file. \n"
+                                f"Reset item count to Multiworld's. If this is the wrong save file, you can safely quit without saving.")
 
                 # Exit location received cs
                 if self.receiving_location and not getting_location and not self.delay_reset:
@@ -1237,6 +1249,10 @@ class PhantomHourglassClient(BizHawkClient):
                     item_data["id"] not in [i.item for i in ctx.items_received]):
                 self.last_vanilla_item.append(item)
 
+                # Multiple sword items don't detect each other by default
+                if item in ["Oshus' Sword", "Phantom Sword"] and item_count(ctx, "Sword (Progressive)"):
+                    self.last_vanilla_item.pop()
+
                 # Don't remove heart containers if already at max
                 if item == "Heart Container" and item_count(ctx, item) >= 13:
                     self.last_vanilla_item.pop()
@@ -1372,12 +1388,13 @@ class PhantomHourglassClient(BizHawkClient):
             # TotOK Midway special data
             if "Temple of the Ocean King" in item_name:
                 if await read_memory_value(ctx, 0x1BA661) & 0x40:
-                    write_list.append(await write_keys_to_storage(ctx, 372))
+                    write_list.append(await write_keys_to_storage(372))
 
         # Handle ammo refills
         elif "refill" in item_data:
             refill_id = ITEMS_DATA[item_data["refill"]]["id"]
-            prog_received = sum([1 for i in ctx.items_received[:num_received_items] if i.item == refill_id]) - 1
+            prog_received = min(sum([1 for i in ctx.items_received[:num_received_items] if i.item == refill_id]),
+                                len(item_data["give_ammo"])) - 1
             if prog_received >= 0:
                 write_list.append((item_data["address"], [item_data["give_ammo"][prog_received]], "Main RAM"))
 
@@ -1385,9 +1402,8 @@ class PhantomHourglassClient(BizHawkClient):
             # Handle progressive items (not to be confused with progression items)
             prog_received = 0
             if "progressive" in item_data:
-                prog_received = sum([1 for i in ctx.items_received[:num_received_items] if i.item == next_item])
-                prog_received = len(item_data["progressive"]) - 1 if prog_received > len(
-                    item_data["progressive"]) - 1 else prog_received
+                prog_received = min(sum([1 for i in ctx.items_received[:num_received_items] if i.item == next_item]),
+                                    len(item_data["progressive"]) - 1)
                 item_address, item_value = item_data["progressive"][prog_received]
             else:
                 item_address = item_data["address"]
@@ -1558,11 +1574,14 @@ class PhantomHourglassClient(BizHawkClient):
                 else:
                     address, value = data["address"], data.get("value", 1)
 
+                # Catch vanilla rupees going over 9999
                 if "Rupee" in item:
                     if self.prev_rupee_count + value > 9999:
-                        print(f"Value {value}")
                         value =  9999 - self.prev_rupee_count
-                        print(f"Rupee values {self.prev_rupee_count}, {value}")
+
+                # Remove Sword Model
+                if "Oshus' Sword" in item:
+                    await write_memory_value(ctx, data["ammo_address"], 0, size=2, overwrite=True)
 
                 await write_memory_value(ctx, address, value,
                                          incr=data.get('incremental', None), unset=True, size=data.get("size", 1))

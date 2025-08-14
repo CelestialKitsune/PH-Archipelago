@@ -355,7 +355,7 @@ class PhantomHourglassWorld(World):
             self.multiworld.get_location(name, self.player).progress_type = LocationProgressType.EXCLUDED
 
     def connect_entrances(self) -> None:
-        do_er = True
+        do_er = False  # Sneaky beta setting
         coupled = True
         if do_er:
             # Disconnect entrances to shuffle
@@ -672,8 +672,9 @@ class PhantomHourglassWorld(World):
 
         # Create ER Pairings, as ids to save space
         pairings = {}
-        for e1, e2 in self.er_placement_state.pairings:
-            pairings[ENTRANCES[e1]["id"]] = ENTRANCES[e2]["id"]
+        if self.er_placement_state:
+            for e1, e2 in self.er_placement_state.pairings:
+                pairings[ENTRANCES[e1]["id"]] = ENTRANCES[e2]["id"]
         slot_data["er_pairings"] = pairings
 
         return slot_data
@@ -683,13 +684,14 @@ class PhantomHourglassWorld(World):
         for dung in self.required_dungeons:
             spoiler_handle.write(f"\t- {dung}\n")
 
-        spoiler_handle.write(f"\n\n Entrance Rando\n")
-        prev = None
-        for i in self.er_placement_state.pairings:
-            if not (i[1], i[0]) == prev:
-                text = i[0] + " <=> " + i[1]
-                spoiler_handle.write(f"\t{text}\n")
-            prev = i
+        if self.er_placement_state:
+            spoiler_handle.write(f"\n\n Entrance Rando\n")
+            prev = None
+            for i in self.er_placement_state.pairings:
+                if not (i[1], i[0]) == prev:
+                    text = i[0] + " <=> " + i[1]
+                    spoiler_handle.write(f"\t{text}\n")
+                prev = i
 
 
     # UT stuff

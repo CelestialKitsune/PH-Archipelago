@@ -175,7 +175,7 @@ i = 0
 for name, data in ENTRANCE_DATA.items():
     ENTRANCES[name] = data
     ENTRANCES[name]["id"] = i
-    print(f"{i} {ENTRANCES[name]['entrance_region']} -> {ENTRANCES[name]['exit_region']}")
+    # print(f"{i} {ENTRANCES[name]['entrance_region']} -> {ENTRANCES[name]['exit_region']}")
     i += 1
 
     if data.get("two_way", True):
@@ -192,7 +192,7 @@ for name, data in ENTRANCE_DATA.items():
             "coords": data.get("coords", None)
         }
         ENTRANCES[reverse_name] = reverse_data
-        print(f"{i} {ENTRANCES[reverse_name]['entrance_region']} -> {ENTRANCES[reverse_name]['exit_region']}")
+        # print(f"{i} {ENTRANCES[reverse_name]['entrance_region']} -> {ENTRANCES[reverse_name]['exit_region']}")
         i += 1
 
 

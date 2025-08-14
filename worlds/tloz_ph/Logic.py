@@ -555,7 +555,6 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
             entrance.randomization_type = EntranceType.TWO_WAY if rando_type_bool else EntranceType.ONE_WAY
             entrance.randomization_group = entrance_data["direction"] | (entrance_data["type"])
             entrance.name = test_entrances[entrance_key]
-            print(f"create entrance {entrance.name} group {bin(entrance.randomization_group)}")
             multiworld.worlds[player].entrances[entrance.name] = entrance
 
     all_logic = [
