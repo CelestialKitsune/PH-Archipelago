@@ -453,28 +453,29 @@ class PhantomHourglassClient(BizHawkClient):
     def generate_er_map(self, ctx):
         # Creates a map from scene to dict of
         #   detect_exit (stage, scene, entrance, link_y) to er_exit (stage, scene, entrance, link_x | None, link_y, link_z)
-        res = {}
-        print(ctx.slot_data["er_pairings"])
-        pairings = {int(k): v for k, v in ctx.slot_data["er_pairings"].items()}
-        print(f"ER Pairings {pairings}")
-        for data in ENTRANCES.values():
-            print(f"Generating ER Map for {data['entrance']}")
-            stage, room, entrance = data["entrance"]
-            print(f"link_y  {data.get('coords', [0, None])}")
-            link_coords = data.get("coords", None)
-            link_y = link_coords[1] if link_coords else None
-            detect_data = tuple(list(data["exit"]) + [link_y])  # wow this is stupid
-            scene = stage * 0x100 + room
-            res.setdefault(scene, dict())
-            if data["id"] in pairings:
-                exit_id = pairings[data["id"]]
-                exit_data = self.entrance_id_to_entrance[exit_id]
-                print(f"Exit data {exit_data}, {exit_id}, detect {detect_data}")
-                if not detect_data == exit_data:
-                    res[scene][detect_data] = exit_data
+        if ctx.slot_data.get("er_pairings", None):
+            res = {}
+            print(ctx.slot_data["er_pairings"])
+            pairings = {int(k): v for k, v in ctx.slot_data["er_pairings"].items()}
+            print(f"ER Pairings {pairings}")
+            for data in ENTRANCES.values():
+                print(f"Generating ER Map for {data['entrance']}")
+                stage, room, entrance = data["entrance"]
+                print(f"link_y  {data.get('coords', [0, None])}")
+                link_coords = data.get("coords", None)
+                link_y = link_coords[1] if link_coords else None
+                detect_data = tuple(list(data["exit"]) + [link_y])  # wow this is stupid
+                scene = stage * 0x100 + room
+                res.setdefault(scene, dict())
+                if data["id"] in pairings:
+                    exit_id = pairings[data["id"]]
+                    exit_data = self.entrance_id_to_entrance[exit_id]
+                    print(f"Exit data {exit_data}, {exit_id}, detect {detect_data}")
+                    if not detect_data == exit_data:
+                        res[scene][detect_data] = exit_data
 
-        self.er_map = res
-        print(f"ER Map: {self.er_map}")
+            self.er_map = res
+            print(f"ER Map: {self.er_map}")
 
     # Main Loop
     async def game_watcher(self, ctx: "BizHawkClientContext") -> None:
@@ -643,7 +644,7 @@ class PhantomHourglassClient(BizHawkClient):
                     self.log_recieved_items = False
 
                 if num_received_items > len(ctx.items_received):
-                    await write_memory_value(ctx, RAM_ADDRS["received_item_index"], len(ctx.items_received), size=2)
+                    await write_memory_value(ctx, RAM_ADDRS["received_item_index"][0], len(ctx.items_received), size=2, overwrite=True)
                     logger.info(f"Save file has more items than Multiworld. Probable cause: loaded wrong save file. \n"
                                 f"Reset item count to Multiworld's. If this is the wrong save file, you can safely quit without saving.")
 
