@@ -5,16 +5,16 @@ name: Build
 on:
   push:
     paths:
-      - '.github/workflows/build.yml'
-      - 'setup.py'
-      - 'requirements.txt'
-      - '*.iss'
+      - 'build.yml'
+      - '../../setup.py'
+      - '../../requirements.txt'
+      - '../../inno_setup.iss'
   pull_request:
     paths:
-      - '.github/workflows/build.yml'
-      - 'setup.py'
-      - 'requirements.txt'
-      - '*.iss'
+      - 'build.yml'
+      - '../../setup.py'
+      - '../../requirements.txt'
+      - '../../inno_setup.iss'
   workflow_dispatch:
 
 env:

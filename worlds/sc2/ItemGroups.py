@@ -36,7 +36,7 @@ unlisted_item_name_groups = {
 bracketless_duplicates: typing.Set[str]
 # This is a list of names in ItemNames with bracketed parts removed, for internal use
 _shortened_names = [(name[:name.find(' (')] if '(' in name else name)
-      for name in [ItemNames.__dict__[name] for name in ItemNames.__dir__() if not name.startswith('_')]]
+                    for name in [ItemNames.__dict__[name] for name in ItemNames.__dir__() if not name.startswith('_')]]
 # Remove the first instance of every short-name from the full item list
 bracketless_duplicates = set(_shortened_names)
 for name in bracketless_duplicates:
