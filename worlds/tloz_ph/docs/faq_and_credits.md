@@ -3,6 +3,7 @@
 - [Latest Release](https://github.com/carrotinator/Archipelago/releases)
 - [Setup Guide](https://github.com/carrotinator/Archipelago/blob/main/worlds/tloz_ph/docs/setup.md)
 - [Tricks and Skips](https://github.com/carrotinator/Archipelago/blob/main/worlds/tloz_ph/docs/tricks_and_skips.md)
+- [wiki](https://github.com/carrotinator/Archipelago/wiki), has detailed location info, item+location groups
 
 ## What is this?
 This is an Archipelago Randomizer for Zelda: Phantom Hourglass that doesn't use modding or romhacking to function. All randomization 
