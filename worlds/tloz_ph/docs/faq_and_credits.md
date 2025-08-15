@@ -1,4 +1,4 @@
-# FAQ and Credits for The Legend of Zelda: Phantom Hourglass for Archipelago
+# FAQ and Credits for The Legend of Zelda: Phantom Hourglass Archipelago
 
 - [Latest Release](https://github.com/carrotinator/Archipelago/releases)
 - [Setup Guide](https://github.com/carrotinator/Archipelago/blob/main/worlds/tloz_ph/docs/setup.md)
