@@ -1602,7 +1602,7 @@ class PhantomHourglassClient(BizHawkClient):
                         continue
                     address, value = data["progressive"][index]
                     if "give_ammo" in data:
-                        ammo_v = data["give_ammo"][min(max(index - 1, 0), len(data["give_ammo"]-1))]
+                        ammo_v = data["give_ammo"][min(max(index - 1, 0), len(data["give_ammo"])-1)]
                         write_list.append((data["ammo_address"], [ammo_v], "Main RAM"))
                     # Progressive overwrite fix
                     if "progressive_overwrite" in data and index > 1:
