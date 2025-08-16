@@ -1257,3 +1257,7 @@ EQUIPPED_SHIP_PARTS_ADDR = [
 ]
 
 TREASURE_READ_LIST = {i: (0x1BA5AC + i * 4, 4, "Main RAM") for i in range(8)}
+
+if __name__ == "__main__":
+    for group in LOCATION_GROUPS:
+        print("-", group)
