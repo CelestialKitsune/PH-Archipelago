@@ -17,120 +17,132 @@ DYNAMIC_FLAGS = {
     "Astrid's Basement Treasure Map": {
         "on_scenes": [0xD14],
         "not_has_locations": ["Isle of Ember Astrid's Basement Dig"],
-        "unset_if_true": [(0x1BA651, 0x20)]
+        "unset_if_true": [(0x1BA651, 0x20)],
+        "reset_flags": ["RESET Astrid's Basement Treasure Map"]
     },
     "RESET Astrid's Basement Treasure Map": {
-        "on_scenes": [0xD0A],
+        # "on_scenes": [0xD0A],
         "has_items": [("Treasure Map #3 (Gusts SW)", 1)],
         "set_if_true": [(0x1BA651, 0x20)]
     },
     "Ember summit treasure map": {
         "on_scenes": [0xD01],
         "not_has_locations": ["Isle of Ember Summit Dig"],
-        "unset_if_true": [(0x1BA651, 0x80)]
+        "unset_if_true": [(0x1BA651, 0x80)],
+        "reset_flags": ["RESET Ember summit treasure map"]
     },
     "RESET Ember summit treasure map": {
-        "on_scenes": [0xD00, 0x1C0],
+        # "on_scenes": [0xD00, 0x1C0],
         "has_items": [("Treasure Map #4 (Bannan SE)", 1)],
         "set_if_true": [(0x1BA651, 0x80)]
     },
     "Mercay yellow guy treasure map": {
         "on_scenes": [0xB03],
         "not_has_locations": ["Mercay Ojibe (Docks Guy) Item"],
-        "unset_if_true": [(0x1BA650, 0x02)]
+        "unset_if_true": [(0x1BA650, 0x02)],
+        "reset_flags": ["RESET Mercay yellow guy treasure map"]
     },
     "RESET Mercay yellow guy treasure map": {
-        "on_scenes": [0x000, 0xB00, 0xB02, 0xB0C, 0xB0D, 0xB0E, 0xB0F, 0xB11, 0x2701],
+        # "on_scenes": [0x000, 0xB00, 0xB02, 0xB0C, 0xB0D, 0xB0E, 0xB0F, 0xB11, 0x2701],
         "has_items": [("Treasure Map #9 (Cannon W)", 1)],
         "set_if_true": [(0x1BA650, 0x02)]
     },
     "Mercay freedle gift treasure map": {
         "on_scenes": [0xB02],
         "not_has_locations": ["Mercay Freedle Gift Item"],
-        "unset_if_true": [(0x1BA652, 0x20)]
+        "unset_if_true": [(0x1BA652, 0x20)],
+        "reset_flags": ["RESET Mercay freedle gift treasure map"]
     },
     "RESET Mercay freedle gift treasure map": {
-        "on_scenes": [0xB01, 0xB03, 0xB12],
+        # "on_scenes": [0xB01, 0xB03, 0xB12],
         "has_items": [("Treasure Map #12 (Dee Ess N)", 1)],
         "set_if_true": [(0x1BA652, 0x20)]
     },
     "Mercay oshus dig treasure map": {
         "on_scenes": [0xB00],
         "not_has_locations": ["Mercay Oshus Dig"],
-        "unset_if_true": [(0x1BA651, 0x10)]
+        "unset_if_true": [(0x1BA651, 0x10)],
+        "reset_flags": ["RESET Mercay oshus dig treasure map"]
     },
     "RESET Mercay oshus dig treasure map": {
-        "on_scenes": [0xB01, 0xB03, 0xB13, 0xB01, 0xB0A, 0xB0B],
+        # "on_scenes": [0xB01, 0xB03, 0xB13, 0xB01, 0xB0A, 0xB0B],
         "has_items": [("Treasure Map #10 (Gusts SE)", 1)],
         "set_if_true": [(0x1BA651, 0x10)]
     },
     "Molida Cuccoo dig map": {
         "on_scenes": [0xC00],
         "not_has_locations": ["Molida Island Cuccoo Grapple Tree Dig"],
-        "unset_if_true": [(0x1BA651, 0x40)]
+        "unset_if_true": [(0x1BA651, 0x40)],
+        "reset_flags": ["RESET Molida Cuccoo dig map"]
     },
     "RESET Molida Cuccoo dig map": {
-        "on_scenes": [0x000, 0xC01, 0xC0A, 0xC0B, 0xC0C,  0xC0D, 0xC0E,],
+        # "on_scenes": [0x000, 0xC01, 0xC0A, 0xC0B, 0xC0C,  0xC0D, 0xC0E,],
         "has_items": [("Treasure Map #20 (Bannan E)", 1)],
         "set_if_true": [(0x1BA651, 0x40)]
     },
     "Zauz Map": {
         "on_scenes": [0x1600],
         "not_has_locations": ["Zauz's Island Secret Dig"],
-        "unset_if_true": [(0x1BA650, 0x40)]
+        "unset_if_true": [(0x1BA650, 0x40)],
+        "reset_flags": ["RESET Zauz Map"]
     },
     "RESET Zauz Map": {
-        "on_scenes": [0x1],
+        # "on_scenes": [0x1],
         "has_items": [("Treasure Map #5 (Molida N)", 1)],
         "set_if_true": [(0x1BA650, 0x40)]
     },
     "Uncharted Island Map": {
         "on_scenes": [0x1A00],
         "not_has_locations": ["Uncharted Island Eye Dig"],
-        "unset_if_true": [(0x1BA651, 0x1)]
+        "unset_if_true": [(0x1BA651, 0x1)],
+        "reset_flags": ["RESET Uncharted Island Map"]
     },
     "RESET Uncharted Island Map": {
-        "on_scenes": [0x1],
+        # "on_scenes": [0x1],
         "has_items": [("Treasure Map #6 (Bannan W)", 1)],
         "set_if_true": [(0x1BA651, 0x1)]
     },
     "Frost Island Map": {
         "on_scenes": [0xF02],
         "not_has_locations": ["Isle of Frost Estate SW Island Dig"],
-        "unset_if_true": [(0x1BA651, 0x4)]
+        "unset_if_true": [(0x1BA651, 0x4)],
+        "reset_flags": ["RESET Frost Island Map"]
     },
     "RESET Frost Island Map": {
-        "on_scenes": [0xF00],
+        # "on_scenes": [0xF00],
         "has_items": [("Treasure Map #19 (Gusts NE)", 1)],
         "set_if_true": [(0x1BA651, 0x4)]
     },
     "Bannan Wayfarer Map": {
         "on_scenes": [0x1400],
         "not_has_locations": ["Bannan Island Wayfarers Dig"],
-        "unset_if_true": [(0x1BA650, 0x20)]
+        "unset_if_true": [(0x1BA650, 0x20)],
+        "reset_flags": ["RESET Bannan Wayfarer Map"]
     },
     "RESET Bannan Wayfarer Map": {
-        "on_scenes": [0x1],
+        # "on_scenes": [0x1],
         "has_items": [("Treasure Map #21 (Molida NW)", 1)],
         "set_if_true": [(0x1BA650, 0x20)]
     },
     "Bannan Island Map": {
         "on_scenes": [0x1400],
         "not_has_locations": ["Bannan Island East Grapple Dig"],
-        "unset_if_true": [(0x1BA652, 0x8)]
+        "unset_if_true": [(0x1BA652, 0x8)],
+        "reset_flags": ["RESET Bannan Island Map"]
     },
     "RESET Bannan Island Map": {
-        "on_scenes": [0x1],
+        # "on_scenes": [0x1],
         "has_items": [("Treasure Map #22 (Harrow S)", 1)],
         "set_if_true": [(0x1BA652, 0x8)]
     },
     "Rupoor cave map": {
         "on_scenes": [0x1502],
         "not_has_locations": ["Isle of the Dead Rupoor Cave 2"],
-        "unset_if_true": [(0x1BA653, 0x1)]
+        "unset_if_true": [(0x1BA653, 0x1)],
+        "reset_flags": ["RESET Rupoor cave map"]
     },
     "RESET Rupoor cave map": {
-        "on_scenes": [0x1501],
+        # "on_scenes": [0x1501],
         "has_items": [("Treasure Map #28 (Ruins NW)", 1)],
         "set_if_true": [(0x1BA653, 0x1)]
     },
@@ -157,25 +169,30 @@ DYNAMIC_FLAGS = {
         "not_has_locations": ["Cannon Island Salvage Arm"],
         "has_locations": ["Cannon Island Cannon"],
         "set_if_true": [(0x1B5582, 0x1)],
-        "unset_if_true": [(0x1BA649, 0x10), (0x1B558D, 0x10)],
+        "unset_if_true": [(0x1BA649, 0x10), (0x1B558D, 0x10)]
+    },
+    "Exit Cannon": {
+        "on_scenes": [0x130B],
+        "reset_flags": ["Exit Cannon: Have Cannon", "Exit Cannon: Have Salvage",
+                        "Exit Cannon: Not Have Cannon", "Exit Cannon: Not Have Salvage"]
     },
     "Exit Cannon: Have Cannon": {
-        "on_scenes": [0x1300, 0x130A],
+        # "on_scenes": [0x1300, 0x130A],
         "has_items": [("Cannon", 1)],
         "set_if_true": [(0x1B5582, 0x1)]
     },
     "Exit Cannon: Have Salvage": {
-        "on_scenes": [0x1300, 0x130A],
+        #"on_scenes": [0x1300, 0x130A],
         "has_items": [("Salvage Arm", 1)],
         "set_if_true": [(0x1BA649, 0x10), (0x1B558D, 0x10)]
     },
     "Exit Cannon: Not Have Cannon": {
-        "on_scenes": [0x1300, 0x130A],
+        # "on_scenes": [0x1300, 0x130A],
         "has_items": [("Cannon", 0)],
         "unset_if_true": [(0x1B5582, 0x1)]
     },
     "Exit Cannon: Not Have Salvage": {
-        "on_scenes": [0x1300, 0x130A],
+        # "on_scenes": [0x1300, 0x130A],
         "has_items": [("Salvage Arm", 0)],
         "unset_if_true": [(0x1BA649, 0x10), (0x1B558D, 0x10)]
     },
@@ -188,17 +205,17 @@ DYNAMIC_FLAGS = {
     "Spirit of Power 1": {
         "on_scenes": [0x1701],
         "not_has_locations": ["Spirit Island Power Upgrade Level 1"],
-        "unset_if_true": [(0x1BA647, 0x9)]
+        "unset_if_true": [(0x1BA647, 0x9)],
     },
     "Spirit of Wisdom 1": {
         "on_scenes": [0x1701],
         "not_has_locations": ["Spirit Island Wisdom Upgrade Level 1"],
-        "unset_if_true": [(0x1BA647, 0x12)]
+        "unset_if_true": [(0x1BA647, 0x12)],
     },
     "Spirit of Courage 1": {
         "on_scenes": [0x1701],
         "not_has_locations": ["Spirit Island Courage Upgrade Level 1"],
-        "unset_if_true": [(0x1BA646, 0x80), (0x1BA647, 0x04)]
+        "unset_if_true": [(0x1BA646, 0x80), (0x1BA647, 0x04)],
     },
     "Spirit of Power 2": {
         "on_scenes": [0x1701],
@@ -221,71 +238,80 @@ DYNAMIC_FLAGS = {
         "unset_if_true": [(0x1BA647, 0x4)],
         "set_if_true": [(0x1BA646, 0x80)],
     },
+    "Always reset spirit island": {
+        "on_scenes": [0x1701],
+        "reset_flags": ["RESET Spirit of power 0", "RESET Spirit of power 1", "RESET Spirit of power 2",
+                        "RESET Spirit of wisdom 0", "RESET Spirit of wisdom 1", "RESET Spirit of wisdom 2",
+                        "RESET Spirit of courage 0", "RESET Spirit of courage 1", "RESET Spirit of courage 2",
+                        "RESET Spirit of Wisdom boss flag", "RESET Spirit of Courage boss flag"]
+    },
     "RESET Spirit of power 0": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Power (Progressive)", 1, "has_exact")],
         "unset_if_true": [(0x1BA647, 0x9)]
     },
     "RESET Spirit of power 1": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Power (Progressive)", 2, "has_exact")],
         "set_if_true": [(0x1BA647, 0x1)],
         "unset_if_true": [(0x1BA647, 0x8)]
     },
     "RESET Spirit of power 2": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Power (Progressive)", 3)],
         "set_if_true": [(0x1BA647, 0x9)]
     },
     "RESET Spirit of wisdom 0": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Wisdom (Progressive)", 1, "has_exact")],
         "unset_if_true": [(0x1BA647, 0x12)]
     },
-    "RESET Spirit of Wisdom 1": {
-        "on_scenes": [0x1700],
+    "RESET Spirit of wisdom 1": {
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Wisdom (Progressive)", 2, "has_exact")],
         "set_if_true": [(0x1BA647, 0x02)],
         "unset_if_true": [(0x1BA647, 0x10)]
     },
-    "RESET Spirit of Wisdom 2": {
-        "on_scenes": [0x1700],
+    "RESET Spirit of wisdom 2": {
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Wisdom (Progressive)", 3)],
         "set_if_true": [(0x1BA647, 0x12)]
     },
     "RESET Spirit of courage 0": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Courage (Progressive)", 1, "has_exact")],
         "unset_if_true": [(0x1BA646, 0x80), (0x1BA647, 0x04)]
     },
-    "RESET Spirit of Courage 1": {
-        "on_scenes": [0x1700],
+    "RESET Spirit of courage 1": {
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Courage (Progressive)", 2, "has_exact")],
         "set_if_true": [(0x1BA646, 0x80)],
         "unset_if_true": [(0x1BA647, 0x4)]
     },
-    "RESET Spirit of Courage 2": {
-        "on_scenes": [0x1700],
+    "RESET Spirit of courage 2": {
+        # "on_scenes": [0x1700],
         "has_items": [("Spirit of Courage (Progressive)", 3)],
         "set_if_true": [(0x1BA646, 0x80), (0x1BA647, 0x04)]
     },
     "Spirit of Wisdom boss flag": {
         "on_scenes": [0x1701],
         "has_items": [("Spirit of Wisdom (Progressive)", 1)],
-        "set_if_true": [(0x1B557F, 0x40)]
+        "set_if_true": [(0x1B557F, 0x40)],
+        "reset_flags": ["RESET Spirit of Wisdom boss flag"]
     },
     "Spirit of Courage boss flag": {
         "on_scenes": [0x1701],
         "has_items": [("Spirit of Courage (Progressive)", 1)],
-        "set_if_true": [(0x1B557F, 0xC0)]
+        "set_if_true": [(0x1B557F, 0xC0)],
+        "reset_flags": ["RESET Spirit of Wisdom boss flag", "RESET Spirit of Courage boss flag"]
     },
     "RESET Spirit of Wisdom boss flag": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "not_has_locations": ["Temple of Wind Cyclok Dungeon Reward"],
         "unset_if_true": [(0x1B557F, 0x40)]
     },
     "RESET Spirit of Courage boss flag": {
-        "on_scenes": [0x1700],
+        # "on_scenes": [0x1700],
         "not_has_locations": ["Temple of Courage Crayk Dungeon Reward"],
         "unset_if_true": [(0x1B557F, 0x80)]
     },
@@ -293,69 +319,79 @@ DYNAMIC_FLAGS = {
     "Courage Crest room not salvaged it": {
         "on_scenes": [0x2508],
         "has_locations": ["Ocean SW Salvage Courage Crest"],
-        "unset_if_true": [(0x1B557E, 0x40)]
-    },
-    "RESET Courage Crest room not salvaged it": {
-        "on_scenes": [0x2600, 0x2507],
-        "has_locations": ["Ocean SW Salvage Courage Crest"],
-        "set_if_true": [(0x1B557E, 0x40)]
+        "unset_if_true": [(0x1B557E, 0x40)],
     },
     "Courage Crest room remove crest": {
         "on_scenes": [0x2508],
         "unset_if_true": [(0x1B558C, 0x04)],
         "not_has_locations": ["TotOK B6 Courage Crest"]
     },
-    "RESET Courage Crest room remove crest": {
-        "on_scenes": [0x2600, 0x2507],
-        "has_items": [("Courage Crest", 1)],
-        "set_if_true": [(0x1B558C, 0x04)]
-    },
-    "Courage Crest room remove crest if not got it": {
-        "on_scenes": [0x2600, 0x2507],
-        "has_items": [("Courage Crest", 0)],
-        "unset_if_true": [(0x1B558C, 0x04)]
-    },
     "Courage Crest room allow leaving": {
         "on_scenes": [0x2508],
         "has_locations": ["TotOK B6 Courage Crest"],
         "set_if_true": [(0x1B558C, 0x04)]
+    },
+    "Reset cc room": {
+        "on_scenes": [0x2508],
+        "reset_flags": ["RESET Courage Crest room not salvaged it", "RESET Courage Crest room remove crest",
+                        "RESET Courage Crest room remove crest if not got it"]
+    },
+    "RESET Courage Crest room not salvaged it": {
+        # "on_scenes": [0x2600, 0x2507],
+        "has_locations": ["Ocean SW Salvage Courage Crest"],
+        "set_if_true": [(0x1B557E, 0x40)]
+    },
+    "RESET Courage Crest room remove crest": {
+        # "on_scenes": [0x2600, 0x2507],
+        "has_items": [("Courage Crest", 1)],
+        "set_if_true": [(0x1B558C, 0x04)]
+    },
+    "RESET Courage Crest room remove crest if not got it": {
+        # "on_scenes": [0x2600, 0x2507],
+        "has_items": [("Courage Crest", 0)],
+        "unset_if_true": [(0x1B558C, 0x04)]
     },
     # Endgame
     "Spawn Phantoms in Totok B13": {
         "on_scenes": [0x2511],
         "has_items": [("Sword (Progressive)", 2)],
         "has_slot_data": [["bellum_access", 1]],
-        "set_if_true": [(0x1B5592, 0x40)]
+        "set_if_true": [(0x1B5592, 0x40)],
+        "reset_flags": ["RESET Spawn Phantoms in Totok B13"]
     },
     "Spawn Phantoms in Totok B13 2": {
         "on_scenes": [0x2511],
         "has_items": [("Sword (Progressive)", 2)],
         "has_slot_data": [["bellum_access", 2]],
-        "set_if_true": [(0x1B5592, 0x40)]
+        "set_if_true": [(0x1B5592, 0x40)],
+        "reset_flags": ["RESET Spawn Phantoms in Totok B13"]
     },
     "Spawn Phantoms in Totok B13 3": {
         "on_scenes": [0x2511],
         "has_items": [("Sword (Progressive)", 2)],
         "has_slot_data": [["bellum_access", 3]],
-        "set_if_true": [(0x1B5592, 0x40)]
+        "set_if_true": [(0x1B5592, 0x40)],
+        "reset_flags": ["RESET Spawn Phantoms in Totok B13"]
     },
     "Spawn Phantoms in Totok B13 door option": {
         "on_scenes": [0x2511],
         "has_items": [("Sword (Progressive)", 2)],
         "goal_requirement": True,
         "has_slot_data": [["bellum_access", 0]],
-        "set_if_true": [(0x1B5592, 0x40)]
+        "set_if_true": [(0x1B5592, 0x40)],
+        "reset_flags": ["RESET Spawn Phantoms in Totok B13"]
     },
     "RESET Spawn Phantoms in Totok B13": {
-        "on_scenes": [0x2600],
+        # "on_scenes": [0x2600],
         "unset_if_true": [(0x1B5592, 0x40)]
     },
     "Block Bellum Staircase": {
         "on_scenes": [0x2600],
-        "set_if_true": [(0x1B5595, 0x2)]
+        "set_if_true": [(0x1B5595, 0x2)],
+        "reset_flags": ["RESET Block Bellum Staircase"]
     },
     "RESET Block Bellum Staircase": {
-        "on_scenes": [0xB01],
+        # "on_scenes": [0xB01],
         "unset_if_true": [(0x1B5595, 0x2)]
     },
     "Unblock bellum staircase": {
@@ -411,12 +447,17 @@ DYNAMIC_FLAGS = {
         "has_items": [("SW Sea Chart", 0)],
         "unset_if_true": [(0x1B5580, 0x4)],
     },
+    "reset mercay": {
+        "on_scenes": [0xB03],
+        "reset_flags": ["RESET Despawn Linebeck setting", "RESET despawn linebeck 2",
+                        "RESET yellow guy fog to settings", "RESET yellow guy beat gs"]
+    },
     "RESET Despawn Linebeck setting": {
-        "on_scenes": [0xB02],
+        # "on_scenes": [0xB02],
         "set_if_true": [(0x1B557E, 0x8)]
     },
     "RESET despawn linebeck 2": {
-        "on_scenes": [0xB02, 0xB00],
+        # "on_scenes": [0xB02, 0xB00],
         "set_if_true": [(0x1B5580, 0x4)],
     },
     # Other linebeck settings
@@ -498,12 +539,12 @@ DYNAMIC_FLAGS = {
         "unset_if_true": [(0x1B5582, 0x80)]
     },
     "RESET yellow guy fog to settings": {
-        "on_scenes": [0x0],
+        # "on_scenes": [0x0],
         "has_slot_data": [("fog_settings", 0)],
         "set_if_true": [(0x1B5582, 0x80)]
     },
     "RESET yellow guy beat gs": {
-        "on_scenes": [0x0],
+        # "on_scenes": [0x0],
         "has_locations": ["Ghost Ship Rescue Tetra"],
         "unset_if_true": [(0x1B5582, 0x80)]
     },
