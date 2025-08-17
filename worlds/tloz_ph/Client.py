@@ -590,6 +590,7 @@ class PhantomHourglassClient(BizHawkClient):
                 print("Backup: ", self.backup_coord_read)
 
                 # Set dynamic flags on scene
+                await self.reset_dynamic_flags(ctx)
                 await self.set_dynamic_flags(ctx, current_scene)
 
                 # Load potential entrance warp destinations
@@ -984,22 +985,22 @@ class PhantomHourglassClient(BizHawkClient):
             return points >= d.get('beedle_points', 300)
 
         if not check_items(data):
-            print(f"{data['name']} does not have item reqs")
+            print(f"\t{data['name']} does not have item reqs")
             return False
         if not check_locations(data):
-            print(f"{data['name']} does not have location reqs")
+            print(f"\t{data['name']} does not have location reqs")
             return False
         if not check_slot_data(data):
-            print(f"{data['name']} does not have slot data reqs")
+            print(f"\t{data['name']} does not have slot data reqs")
             return False
         if not check_last_room(data):
-            print(f"{data['name']} came from wrong room {hex(self.last_scene)}")
+            print(f"\t{data['name']} came from wrong room {hex(self.last_scene)}")
             return False
         if not await check_bits(data):
-            print(f"{data['name']} is missing bits")
+            print(f"\t{data['name']} is missing bits")
             return False
         if not check_metals(data):
-            print(f"{data['name']} does not have enough metals")
+            print(f"\t{data['name']} does not have enough metals")
             return False
         if not check_beedle_points(data):
             return False
@@ -1020,15 +1021,13 @@ class PhantomHourglassClient(BizHawkClient):
                 read_addr.add(a)
                 # You can add an item name as a value, and it will set the value to it's count
                 if type(v) is str:
-                    print(f"value is item {v}")
                     v = item_count(ctx, v)
-                    print(f"value is count {v}")
                 set_bits[a] = set_bits.get(a, 0) | v
-                print(f"setting bit for {data['name']}")
+                print(f"\tsetting bit for {data['name']}")
             for a, v in data.get("unset_if_true", []):
                 read_addr.add(a)
                 unset_bits[a] = unset_bits.get(a, 0) | v
-                print(f"unsetting bit for {data['name']}")
+                print(f"\tunsetting bit for {data['name']}")
 
             # Special full heal condition
             if "full_heal" in data:
@@ -1036,7 +1035,7 @@ class PhantomHourglassClient(BizHawkClient):
 
             # Create list of flags to reset
             if reset:
-                self.dynamic_flags_to_reset += data["reset_flags"]
+                self.dynamic_flags_to_reset += data.get("reset_flags", [])
 
         # Write dynamic flags to memory
         read_list = {a: (a, 1, "Main RAM") for a in read_addr}
@@ -1064,7 +1063,9 @@ class PhantomHourglassClient(BizHawkClient):
         return []
 
     async def reset_dynamic_flags(self, ctx):
-        res = await self.process_dynamic_flags(ctx, self.dynamic_flags_to_reset)
+        print(f"resetting flags {self.dynamic_flags_to_reset}")
+        reset_data = [DYNAMIC_FLAGS[n] for n in self.dynamic_flags_to_reset]
+        res = await self.process_dynamic_flags(ctx, reset_data)
         self.dynamic_flags_to_reset.clear()
         return res
 
