@@ -13,7 +13,8 @@
 }
 """
 DYNAMIC_FLAGS = {
-    # Treasure Maps
+    # Treasure Maps don't spawn if you have them in your inventory, remove from inventory on scenes with maps, and give
+    # them back on the next scene
     "Astrid's Basement Treasure Map": {
         "on_scenes": [0xD14],
         "not_has_locations": ["Isle of Ember Astrid's Basement Dig"],
