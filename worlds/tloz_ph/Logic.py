@@ -13,7 +13,7 @@ def make_overworld_logic():
         ["mercay island", "mercay zora cave", False, "explosives"],
         ["mercay zora cave", "mercay zora cave south", False, "bow"],
         ["mercay island", "mercay zora cave south", False, "sword_scroll_clip"],
-        ["mercay island", "totok", False, None],
+        ["mercay island", "totok", True, None],
         ["mercay island", "mercay freedle island", False, "explosives"],
         ["mercay freedle island", "mercay freedle tunnel chest", False, "range"],
         ["mercay freedle island", "mercay freedle gift", False, "sea_chart", "SW"],
@@ -229,7 +229,8 @@ def make_overworld_logic():
         ["molida cave back dig", "molida cuccoo dig", False, "grapple"],
         ["molida dig", "molida north", False, "sun_key"],
         ["molida north", "molida north grapple", False, "grapple"],
-        ["molida north", "toc", True, "enter_toc"],
+        ["molida north", "toc gates", False, "enter_toc"],
+        ["toc gates", "toc", True, None],
         ["toc crayk", "post toc", False, None],
         ["post toc", "molida archery", False, None],
 
@@ -239,7 +240,7 @@ def make_overworld_logic():
         ["toc", "toc b1", False, "toc_door_1"],
         ["toc", "toc hammer clips", False, "hammer_clip"],
         ["toc b1", "toc b1 grapple", False, "toc_grapple"],
-        ["toc b1", "toc 1f west", False, "boom"],
+        ["toc b1", "toc 1f west", False, "toc_1f_west"],
         ["toc b1 grapple", "toc 1f west", False, "bow"],
         ["toc hammer clips", "toc 1f west", False, None],
         ["toc 1f west", "toc map room", False, "boom"],
@@ -362,10 +363,11 @@ def make_overworld_logic():
         ["goron north", "goron outside temple", False, "explosives"],
         ["goron", "goron outside temple", False, "hammer_clip"],
         ["goron outside temple", "goron north", False, "bombs"],
-        ["goron outside temple", "gt", True, "shovel"],
+        ["goron outside temple", "gt", True, None],
         ["gt dongo", "goron chief 2", False, "goron_chus"],
 
         # ================= Goron Temple ====================
+        ["gt", "gt 2", False, "goron_entrance"],
         ["gt", "gt bow", False, "bow"],
         ["gt", "gt b1", False, "gt_b1"],
         ["gt b1", "gt b2", False, "bombchu_switches"],
@@ -400,7 +402,7 @@ def make_overworld_logic():
         ["toi 2f", "toi 3f", False, "toi_3f"],
         ["toi 3f", "toi 3f switch", False, "toi_3f_switch"],
         ["toi 3f switch", "toi 3f boomerang", False, "toi_3f_boomerang"],
-        ["toi 3f boomerang", "toi 2f miniboss", False, "toi_key_1_ut"],
+        ["toi 3f boomerang", "toi 2f miniboss", False, "toi_miniboss"],
         ["toi 3f", "toi 2f miniboss", False, "toi_key_doors", 3, 1],
         ["toi 2f miniboss", "toi side path", False, "grapple"],
         ["toi", "toi side path", False, "toi_shortcut"],
@@ -441,7 +443,8 @@ def make_overworld_logic():
 
         # ================= Mutoh's Temple ====================
 
-        ["mutoh", "mutoh hammer", False, "hammer"],
+        ["mutoh", "mutoh landing", False, "mutoh_entrance"],
+        ["mutoh landing", "mutoh hammer", False, "hammer"],
         ["mutoh hammer", "mutoh water", False, "mutoh_water"],
         ["mutoh water", "mutoh bk chest", False, "mutoh_bk_chest"],
         ["mutoh water", "mutoh eox", False, "boss_key", "Mutoh's Temple"],

@@ -359,11 +359,18 @@ class PhantomHourglassWorld(World):
             self.multiworld.get_location(name, self.player).progress_type = LocationProgressType.EXCLUDED
 
     def connect_entrances(self) -> None:
-        do_er = False  # Sneaky beta setting
+        do_er = True  # Sneaky beta setting
         coupled = True
         if do_er:
+            # Filter entrances to disconnect by yaml settings
+            # Currently only dungeon entrance rando is supported
+            randomized_entrances = []
+            if self.options.shuffle_dungeon_entrances:
+
+                randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.DUNGEON_ENTRANCE]
+                print([e.name for e in randomized_entrances])
             # Disconnect entrances to shuffle
-            for entrance in self.entrances.values():
+            for entrance in randomized_entrances:
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
                 # print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
 

@@ -202,6 +202,7 @@ REGIONS = [
     "molida archery",
 
     # Temple of Courage
+    "toc gates",
     "toc",
     "toc bomb alcove",
     "toc b1",
@@ -307,6 +308,7 @@ REGIONS = [
 
     # Goron Temple
     "gt",
+    "gt 2",
     "gt bow",
     "gt b1",
     "gt b2",
@@ -372,6 +374,7 @@ REGIONS = [
 
     # Mutoh's Temple
     "mutoh",
+    "mutoh landing",
     "mutoh hammer",
     "mutoh water",
     "mutoh bk chest",

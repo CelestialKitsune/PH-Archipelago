@@ -1150,6 +1150,13 @@ def ph_can_enter_toc(state, player):
 def ph_toc_grapple_chest(state, player):
     return any([ph_has_grapple(state, player), ph_can_boomerang_return(state, player)])  # Hardhatt dboost
 
+# Can reach toc 1f west needing explosives and range
+def ph_toc_switch_1(state, player):
+    return all([
+        ph_has_explosives(state, player),
+        ph_has_mid_range(state, player)
+    ])
+
 def ph_toc_beamos_ut(state, player):
     return all([ph_is_ut(state, player), ph_has_bow(state, player)])
 
@@ -1162,7 +1169,9 @@ def ph_toc_spike_corridor(state, player):
     return all([ph_has_explosives(state, player), ph_has_bow(state, player)])
 
 def ph_toc_key_door_1(state, player):
-    return any([
+    return all([
+        ph_has_damage(state, player),
+        any([
         ph_toc_key_doors(state, player, 3, 1),
         # UT Keys
         all([
@@ -1174,6 +1183,7 @@ def ph_toc_key_door_1(state, player):
             ])
         ]),
     ])
+        ])
 
 
 def ph_toc_key_door_2(state, player):
@@ -1283,6 +1293,15 @@ def ph_beat_ghost_ship(state: CollectionState, player):
 
 # Goron
 
+def ph_goron_entrance(state, player):
+    return all([
+        ph_has_shovel(state, player),
+        any([
+            ph_has_explosives(state, player),
+            ph_has_hammer(state, player)
+        ])
+    ])
+
 def ph_goron_chus(state, player):
     return all([
         ph_has_shovel(state, player),
@@ -1368,6 +1387,9 @@ def ph_toi_b2(state, player):
         ])
     ])
 
+def ph_toi_miniboss(state, player):
+    return all([ph_toi_key_door_1_ut(state, player),
+                ph_has_damage(state, player)])
 
 def ph_toi_key_door_1_ut(state, player):
     return any([
@@ -1431,6 +1453,24 @@ def ph_toi_key_door_3(state, player):
 
 
 # Mutoh's
+
+def ph_mutoh_entrance(state, player):
+    return any([
+        ph_can_hammer_clip(state, player),
+        ph_has_explosives(state, player),
+        all([
+            ph_has_hammer(state, player),
+            ph_option_hard_logic(state, player)
+        ]),
+        all([
+            ph_has_boomerang(state, player),
+            any([
+                ph_has_bow(state, player),
+                ph_has_sword(state, player)
+            ])
+        ])
+
+    ])
 
 def ph_mutoh_water(state, player):
     return any([
@@ -2468,6 +2508,7 @@ RULE_DICT = {
     "toc_door_1": ph_toc_key_door_1,
     "toc_door_2": ph_toc_key_door_2,
     "toc_door_3": ph_toc_key_door_3,
+    "toc_1f_west": ph_toc_switch_1,
     "toc_grapple": ph_toc_grapple_chest,
     "toc_beamos_ut": ph_toc_beamos_ut,
     "toc_crystal_south": ph_toc_crystal_south,
@@ -2480,6 +2521,7 @@ RULE_DICT = {
     "gs_barrel": ph_ghost_ship_barrel,
     "beat_gs": ph_beat_ghost_ship,
     # GT
+    "goron_entrance": ph_goron_entrance,
     "goron_chus": ph_goron_chus,
     "gt_b1": ph_gt_b1,
     "gt_b2_back": ph_gt_b2_back,
@@ -2493,10 +2535,12 @@ RULE_DICT = {
     "toi_2f": ph_toi_2f,
     "toi_3f": ph_toi_3f,
     "toi_3f_switch": ph_toi_3f_switch,
+    "toi_miniboss": ph_toi_miniboss,
     "toi_shortcut": ph_toi_shortcut,
     "toi_b1": ph_toi_b1,
     "toi_key_1_ut": ph_toi_key_door_1_ut,
     # MT
+    "mutoh_entrance": ph_mutoh_entrance,
     "mutoh_water": ph_mutoh_water,
     "mutoh_key_doors": ph_mutoh_key_doors,
     "mutoh_bk_chest": ph_mutoh_bk_chest,

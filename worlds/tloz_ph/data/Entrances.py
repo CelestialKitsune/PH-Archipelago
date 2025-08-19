@@ -144,9 +144,9 @@ ENTRANCE_DATA = {
 
     # =========== TotOK ==============
     "Mercay NW TotOK": {
-        "return_name": "TotOK Lobby Exit",
-        "entrance": (0xB, 0x1, 0x0),
-        "exit": (0x26, 0x00, 0x0),
+        "return_name": "TotOK Lobby Entrance",
+        "entrance": (0xB, 0x1, 0x2),
+        "exit": (0x26, 0x00, 0x1),
         "entrance_region": "mercay island",
         "exit_region": "totok",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
@@ -281,7 +281,7 @@ ENTRANCE_DATA = {
 
     # ========== Temple of Fire ============
     "Ember Enter Temple": {
-        "return_name": "ToF Exit",
+        "return_name": "ToF Entrance",
         "entrance": (0xD, 0x1, 0x0),
         "exit": (0x1C, 0x0, 0x0),
         "entrance_region": "ember outside tof",
@@ -289,6 +289,15 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
         },
+    "ToF Blaaz Warp": {
+        "entrance": (0x2B, 0x0, 0x0),
+        "exit": (0xD, 0x1, 0x0),
+        "entrance_region": "tof blaaz",
+        "exit_region": "ember outside tof",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
+    },
     # ========== Gust ============
     "Ocean NW Isle of Gust": {
         "return_name": "Gust Disembark",
@@ -301,9 +310,10 @@ ENTRANCE_DATA = {
     },
 
 
+
         # ========== Temple of Wind ============
     "Gust Enter Temple": {
-        "return_name": "ToW Exit",
+        "return_name": "ToW Entrance",
         "entrance": (0xE, 0x1, 0x0),
         "exit": (0x1D, 0x0, 0x0),
         "entrance_region": "gust dig",
@@ -311,6 +321,15 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
         },
+    "ToW Cyclok Warp": {
+        "entrance": (0x2A, 0x0, 0x0),
+        "exit": (0xE, 0x1, 0x0),
+        "entrance_region": "tow cyclok",
+        "exit_region": "gust dig",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
+    },
     # ========== Molida ============
     "Molida Port House": {
         "return_name": "Molida Inside Port House",
@@ -324,13 +343,22 @@ ENTRANCE_DATA = {
 
         # ========== Temple of Courage ============
     "Molida Enter Temple": {
-        "return_name": "ToC Exit",
+        "return_name": "ToC Entrance",
         "entrance": (0xC, 0x1, 0x3),
         "exit": (0x1E, 0x0, 0x0),
-        "entrance_region": "molida north",
+        "entrance_region": "toc gates",
         "exit_region": "toc",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
+    },
+    "ToC Crayk Warp": {
+        "entrance": (0x2C, 0x0, 0x0),
+        "exit": (0xC, 0x1, 0x3),
+        "entrance_region": "toc crayk",
+        "exit_region": "toc gates",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
     },
 
     # ========== Goron ============
@@ -346,13 +374,22 @@ ENTRANCE_DATA = {
 
     # ========== Goron Temple ============
     "Goron Enter Temple": {
-        "return_name": "GT Exit",
+        "return_name": "GT Entrance",
         "entrance": (0x10, 0x0, 0x0),
         "exit": (0x20, 0x0, 0x0),
         "entrance_region": "goron outside temple",
         "exit_region": "gt",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
+    },
+    "GT Dongo Warp": {
+        "entrance": (0x20, 0xA, 0x0),
+        "exit": (0x10, 0x0, 0x0),
+        "entrance_region": "gt dongo",
+        "exit_region": "goron outside temple",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
     },
     # ========== Frost ============
     "Frost Smart House": {
@@ -368,13 +405,22 @@ ENTRANCE_DATA = {
 
     # ========== Temple of Ice ============
     "Frost Enter Temple": {
-        "return_name": "ToI Exit",
+        "return_name": "ToI Entrance",
         "entrance": (0xF, 0x1, 0x0),
         "exit": (0x1F, 0x0, 0x0),
         "entrance_region": "iof yook",
         "exit_region": "toi",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
+    },
+    "ToI Gleeok Warp": {
+        "entrance": (0x1f, 0x6, 0x0),
+        "exit": (0xF, 0x1, 0x0),
+        "entrance_region": "toi gleeok",
+        "exit_region": "iof yook",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
     },
     # ========== Ruins ============
     "Ruins Port Cave": {
@@ -390,13 +436,22 @@ ENTRANCE_DATA = {
 
     # ========== Mutoh's Temple ============
     "Ruins Enter Temple": {
-        "return_name": "MT Exit",
+        "return_name": "MT Entrance",
         "entrance": (0x12, 0x2, 0x2),
         "exit": (0x21, 0x0, 0x0),
         "entrance_region": "ruins water",
         "exit_region": "mutoh",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
+    },
+    "MT Eox Warp": {
+        "entrance": (0x21, 0x6, 0x0),
+        "exit": (0x12, 0x2, 0x2),
+        "entrance_region": "mutoh eox",
+        "exit_region": "ruins water",
+        "type": EntranceGroups.WARP_PORTAL,
+        "direction": EntranceGroups.NONE,
+        "two_way": False
     },
 
 
