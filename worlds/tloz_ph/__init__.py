@@ -121,6 +121,8 @@ class PhantomHourglassWorld(World):
     glitches_item_name = "_UT_Glitched_logic"
     ut_can_gen_without_yaml = True
     location_id_to_alias: Dict[int, str]
+    tracker_world = {"map_page_folder": "tracker", "map_page_maps": "maps/maps.json",
+                     "map_page_locations": "locations/locations.json"}
 
     def __init__(self, multiworld, player):
         super().__init__(multiworld, player)
