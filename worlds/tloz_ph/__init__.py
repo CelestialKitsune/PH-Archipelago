@@ -28,7 +28,6 @@ logger = logging.getLogger("Client")
 
 
 class PhantomHourglassWeb(WebWorld):
-    theme = "grass"
     setup_en = Tutorial(
         "Phantom Hourglass Setup Guide",
         "A guide to setting up Phantom Hourglass Archipelago Randomizer on your computer.",
@@ -55,6 +54,9 @@ class PhantomHourglassWeb(WebWorld):
     )
 
     tutorials = [setup_en, faq, tricks]
+    game = "The Legend of Zelda - Phantom Hourglass"
+    theme = "ocean"
+    option_groups = ph_option_groups
 
 
 # Adds a consistent count of items to pool, independent of how many are from locations
@@ -650,7 +652,7 @@ class PhantomHourglassWorld(World):
             # Beedle randomization
             "randomize_masked_beedle", "randomize_beedle_membership",
             # World Settings
-            "fog_settings", "skip_ocean_fights",
+            "fog_settings", "skip_ocean_fights", "dungeon_shortcuts",
             # Spirit Packs
             "spirit_gem_packs", "additional_spirit_gems",
             # Hint settings

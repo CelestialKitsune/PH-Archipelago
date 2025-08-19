@@ -191,6 +191,7 @@ REGIONS = [
 
     # Molida Island
     "molida island",
+    "molida port house",
     "molida dig",
     "molida grapple",
     "molida cave back",
@@ -295,6 +296,7 @@ REGIONS = [
 
     # Goron Island
     "goron",
+    "goron port house",
     "goron chus",
     "goron grapple",
     "goron quiz",
@@ -326,6 +328,7 @@ REGIONS = [
 
     # Isle of Frost
     "iof",
+    "iof smart house",
     "iof grapple",
     "iof dig",
     "iof grapple dig",
@@ -362,6 +365,8 @@ REGIONS = [
 
     # Isle of Ruins
     "ruins",
+    "ruins cave",
+    "ruins port",
     "ruins dig",
     "ruins water",
 

@@ -1,6 +1,8 @@
 from enum import IntEnum
 
 class EntranceGroups(IntEnum):
+    NONE = 0
+    # Directions
     LEFT = 1
     RIGHT = 2
     UP = 3
@@ -26,7 +28,8 @@ OPPOSITE_ENTRANCE_GROUPS = {
     EntranceGroups.LEFT: EntranceGroups.RIGHT,
     EntranceGroups.UP: EntranceGroups.DOWN,
     EntranceGroups.DOWN: EntranceGroups.UP,
-    0: 0
+    0: 0,
+    EntranceGroups.NONE: EntranceGroups.NONE
 }
 
 ENTRANCE_DATA = {
@@ -144,7 +147,7 @@ ENTRANCE_DATA = {
         "return_name": "TotOK Lobby Exit",
         "entrance": (0xB, 0x1, 0x0),
         "exit": (0x26, 0x00, 0x0),
-        "entrance_region": "mercay nw",
+        "entrance_region": "mercay island",
         "exit_region": "totok",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
         "direction": EntranceGroups.UP,
@@ -275,6 +278,130 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
     },
+
+    # ========== Temple of Fire ============
+    "Ember Enter Temple": {
+        "return_name": "ToF Exit",
+        "entrance": (0xD, 0x1, 0x0),
+        "exit": (0x1C, 0x0, 0x0),
+        "entrance_region": "ember outside tof",
+        "exit_region": "tof 1f",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+        },
+    # ========== Gust ============
+    "Ocean NW Isle of Gust": {
+        "return_name": "Gust Disembark",
+        "entrance": (0x0, 0x1, 0x0),
+        "exit": (0xE, 0x0, 0x0),
+        "entrance_region": "nw ocean",
+        "exit_region": "gust",
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.NONE,
+    },
+
+
+        # ========== Temple of Wind ============
+    "Gust Enter Temple": {
+        "return_name": "ToW Exit",
+        "entrance": (0xE, 0x1, 0x0),
+        "exit": (0x1D, 0x0, 0x0),
+        "entrance_region": "gust dig",
+        "exit_region": "tow",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+        },
+    # ========== Molida ============
+    "Molida Port House": {
+        "return_name": "Molida Inside Port House",
+        "entrance": (0xC, 0x0, 0x4),
+        "exit": (0xC, 0xC, 0x1),
+        "entrance_region": "molida island",
+        "exit_region": "molida port house",
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+
+        # ========== Temple of Courage ============
+    "Molida Enter Temple": {
+        "return_name": "ToC Exit",
+        "entrance": (0xC, 0x1, 0x3),
+        "exit": (0x1E, 0x0, 0x0),
+        "entrance_region": "molida north",
+        "exit_region": "toc",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+    },
+
+    # ========== Goron ============
+    "Goron Port House": {
+        "return_name": "Goron Inside Port House",
+        "entrance": (0x10, 0x2, 0x1),
+        "exit": (0x10, 0xB, 0x0),
+        "entrance_region": "goron",
+        "exit_region": "goron port house",
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+
+    # ========== Goron Temple ============
+    "Goron Enter Temple": {
+        "return_name": "GT Exit",
+        "entrance": (0x10, 0x0, 0x0),
+        "exit": (0x20, 0x0, 0x0),
+        "entrance_region": "goron outside temple",
+        "exit_region": "gt",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+    },
+    # ========== Frost ============
+    "Frost Smart House": {
+        "return_name": "Frost Inside Smart House",
+        "entrance": (0xF, 0x0, 0x2),
+        "exit": (0xF, 0xB, 0x0),
+        "entrance_region": "iof",
+        "exit_region": "iof smart house",
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+
+
+    # ========== Temple of Ice ============
+    "Frost Enter Temple": {
+        "return_name": "ToI Exit",
+        "entrance": (0xF, 0x1, 0x0),
+        "exit": (0x1F, 0x0, 0x0),
+        "entrance_region": "iof yook",
+        "exit_region": "toi",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+    },
+    # ========== Ruins ============
+    "Ruins Port Cave": {
+        "return_name": "Ruins Geozard Cave East Exit",
+        "entrance": (0x12, 0x0, 0x2),
+        "exit": (0x12, 0xA, 0x1),
+        "entrance_region": "ruins port",
+        "exit_region": "ruins cave",
+        "type": EntranceGroups.CAVE,
+        "direction": EntranceGroups.UP,
+    },
+
+
+    # ========== Mutoh's Temple ============
+    "Ruins Enter Temple": {
+        "return_name": "MT Exit",
+        "entrance": (0x12, 0x2, 0x2),
+        "exit": (0x21, 0x0, 0x0),
+        "entrance_region": "ruins water",
+        "exit_region": "mutoh",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+    },
+
+
+
+
 
     # "Mercay SE -> Mercay NE": {
     #     "entrance": (0xB, 0x3, 0x7),

@@ -913,6 +913,7 @@ class PhantomHourglassClient(BizHawkClient):
         def check_locations(d):
             for loc in d.get("has_locations", []):
                 if self.location_name_to_id[loc] not in ctx.checked_locations:
+                    print(f"missing location: {loc}")
                     return False
             for loc in d.get("not_has_locations", []):
                 if self.location_name_to_id[loc] in ctx.checked_locations:
@@ -920,6 +921,11 @@ class PhantomHourglassClient(BizHawkClient):
             if "any_not_has_locations" in d:
                 for loc in d.get("any_not_has_locations", []):
                     if self.location_name_to_id[loc] not in ctx.checked_locations:
+                        return True
+                return False
+            if "any_has_locations" in d:
+                for loc in d.get("any_has_locations", []):
+                    if self.location_name_to_id[loc] in ctx.checked_locations:
                         return True
                 return False
             return True
@@ -1073,11 +1079,11 @@ class PhantomHourglassClient(BizHawkClient):
         return res
 
     async def set_dynamic_entrances(self, ctx, scene):
-        print("Setting dynamic Entrances:")
+        print(f"Setting dynamic Entrances on {hex(scene)}:")
         for data in DYNAMIC_ENTRANCES_BY_SCENE.get(scene, dict()).values():
 
             # Check requirements
-            if not self.has_dynamic_requirements(ctx, data):
+            if not await self.has_dynamic_requirements(ctx, data):
                 continue
 
             # Overwrite er_in_scene with dynamic entrance
@@ -1350,8 +1356,8 @@ class PhantomHourglassClient(BizHawkClient):
                     option, value = args, [True]
                 else:
                     option, value = args
-                    value = [value] if type(value) is int else value
-                if ctx.slot_data[option] not in value:
+                    value = [value] if type(value) is int else value  # Support lists of values
+                if ctx.slot_data.get(option, "unknown_slot_data") not in value:
                     return False
             return True
 

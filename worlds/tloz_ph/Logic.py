@@ -222,13 +222,14 @@ def make_overworld_logic():
         # =========== Molida Island ===============
 
         ["molida island", "molida dig", False, "spade"],
+        ["molida island", "molida port house", True, None],
         ["molida island", "molida grapple", False, "grapple"],
         ["molida island", "molida cave back", False, "cave_damage"],
         ["molida cave back", "molida cave back dig", False, "spade"],
         ["molida cave back dig", "molida cuccoo dig", False, "grapple"],
         ["molida dig", "molida north", False, "sun_key"],
         ["molida north", "molida north grapple", False, "grapple"],
-        ["molida north", "toc", False, "enter_toc"],
+        ["molida north", "toc", True, "enter_toc"],
         ["toc crayk", "post toc", False, None],
         ["post toc", "molida archery", False, None],
 
@@ -277,7 +278,7 @@ def make_overworld_logic():
         ["sw ocean west", "nw ocean", False, "sea_chart", "NW"],
         ["sw ocean east", "nw ocean", False, "frog_n"],
         ["nw ocean", "nw ocean frog n", False, "cannon"],
-        ["nw ocean", "gust", False, None],
+        ["nw ocean", "gust", True, None],
         ["nw ocean", "bannan", False, None],
         ["nw ocean", "zauz", False, None],
         ["nw ocean", "uncharted", False, None],
@@ -290,7 +291,7 @@ def make_overworld_logic():
 
         ["gust", "gust combat", False, "cave_damage"],
         ["gust", "gust dig", False, "shovel"],
-        ["gust dig", "tow", False, None],
+        ["gust dig", "tow", True, None],
 
         # ================= Temple of Wind ====================
 
@@ -352,6 +353,7 @@ def make_overworld_logic():
 
         # ================= Goron Island ====================
 
+        ["goron", "goron port house", True, None],
         ["goron", "goron chus", False, "goron_chus"],
         ["goron", "goron grapple", False, "grapple"],
         ["goron chus", "goron quiz", False, None],
@@ -360,7 +362,7 @@ def make_overworld_logic():
         ["goron north", "goron outside temple", False, "explosives"],
         ["goron", "goron outside temple", False, "hammer_clip"],
         ["goron outside temple", "goron north", False, "bombs"],
-        ["goron outside temple", "gt", False, "shovel"],
+        ["goron outside temple", "gt", True, "shovel"],
         ["gt dongo", "goron chief 2", False, "goron_chus"],
 
         # ================= Goron Temple ====================
@@ -386,10 +388,11 @@ def make_overworld_logic():
         # ================= Isle of Frost ====================
 
         ["iof", "iof grapple", False, "grapple"],
+        ["iof", "iof smart house", True, None],
         ["iof", "iof dig", False, "shovel"],
         ["iof grapple", "iof grapple dig", False, "shovel"],
         ["iof", "iof yook", False, "damage"],
-        ["iof yook", "toi", False, None],
+        ["iof yook", "toi", True, None],
 
         # ================= Ice Temple ====================
 
@@ -419,7 +422,7 @@ def make_overworld_logic():
         ["ne ocean", "ne ocean combat", False, "can_kill_blue_chu"],
         ["ne ocean", "iotd", False, None],
         ["ne ocean", "maze", False, "sword"],
-        ["ne ocean", "ruins", False, "enter_ruins"],
+        ["ne ocean", "ruins port", False, "regal_necklace"],
         ["ne ocean", "pirate ambush", False, "beat_gs"],
 
         # ================= IotD ====================
@@ -430,9 +433,11 @@ def make_overworld_logic():
 
         # ================= Isle of Ruins ====================
 
+        ["ruins port", "ruins cave", True, None],
+        ["ruins cave", "ruins", True, "cave_damage"],
         ["ruins", "ruins dig", False, "shovel"],
         ["ruins", "ruins water", False, "kings_key"],
-        ["ruins water", "mutoh", False, None],
+        ["ruins water", "mutoh", True, None],
 
         # ================= Mutoh's Temple ====================
 
