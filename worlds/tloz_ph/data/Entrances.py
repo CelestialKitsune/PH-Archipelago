@@ -139,6 +139,17 @@ ENTRANCE_DATA = {
         "direction": EntranceGroups.UP,
     },
 
+    # =========== TotOK ==============
+    "Mercay NW TotOK": {
+        "return_name": "TotOK Lobby Exit",
+        "entrance": (0xB, 0x1, 0x0),
+        "exit": (0x26, 0x00, 0x0),
+        "entrance_region": "mercay nw",
+        "exit_region": "totok",
+        "type": EntranceGroups.DUNGEON_ENTRANCE,
+        "direction": EntranceGroups.UP,
+    },
+
     # =========== Ember Island ================
     "Ember Port House": {
         "return_name": "Inside Ember Port House",

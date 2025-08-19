@@ -9,6 +9,7 @@ from Utils import async_start
 from worlds._bizhawk.client import BizHawkClient
 from worlds.tloz_ph import LOCATIONS_DATA, ITEMS_DATA
 from .data.Constants import *
+from .data.DynamicEntrances import DYNAMIC_ENTRANCES_BY_SCENE
 from .Util import *
 
 if TYPE_CHECKING:
@@ -483,7 +484,7 @@ class PhantomHourglassClient(BizHawkClient):
                     print(f"Exit data {exit_data}, {exit_id}, detect {detect_data}")
 
                     # Don't save vanilla entrances. No fix for continuous cause exit data does not store extra_data
-                    if detect_data[3] is None or detect_data[:2] != exit_data[:2]:
+                    if detect_data[3] is None or detect_data[:2] != exit_data[:2]:  # TODO: This looks wrong
                         res[scene][detect_data] = exit_data
 
             self.er_map = res
@@ -593,8 +594,10 @@ class PhantomHourglassClient(BizHawkClient):
                 await self.reset_dynamic_flags(ctx)
                 await self.set_dynamic_flags(ctx, current_scene)
 
-                # Load potential entrance warp destinations
-                self.er_in_scene = self.er_map.get(current_scene, None)
+
+                # Load potential entrance warp destinations, and dynamic entrances
+                self.er_in_scene = self.er_map.get(current_scene, dict())
+                await self.set_dynamic_entrances(ctx, current_scene)
 
                 print(f"Entered new scene {hex(current_scene)} with ER {self.er_in_scene}")
                 self.entered_entrance = time.time()  # Triggered first part of loading - setting new room
@@ -1070,7 +1073,17 @@ class PhantomHourglassClient(BizHawkClient):
         return res
 
     async def set_dynamic_entrances(self, ctx, scene):
-        pass
+        print("Setting dynamic Entrances:")
+        for data in DYNAMIC_ENTRANCES_BY_SCENE.get(scene, dict()).values():
+
+            # Check requirements
+            if not self.has_dynamic_requirements(ctx, data):
+                continue
+
+            # Overwrite er_in_scene with dynamic entrance
+            detect_data = data["detect_data"]
+            self.er_in_scene[detect_data] = data["exit_data"]
+            print(f"\t{detect_data} => {data['exit_data']}")
 
     # Called when a stage has fully loaded
     async def enter_stage(self, ctx, stage, scene_id):
