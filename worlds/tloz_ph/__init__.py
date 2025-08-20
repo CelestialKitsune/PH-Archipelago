@@ -21,7 +21,6 @@ from .data.Items import ITEMS_DATA
 from .data.Regions import REGIONS
 from .data.LogicPredicates import *
 from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS, ENTRANCES
-from .EntranceRando import ut_plando
 
 from .Client import PhantomHourglassClient  # Unused, but required to register with BizHawkClient
 
@@ -160,7 +159,7 @@ class PhantomHourglassWorld(World):
             # Set randomized data that effects exclusions etc
             self.required_dungeons = slot_data["required_dungeons"]
             self.boss_reward_items_pool = slot_data["boss_reward_items_pool"]
-            self.ut_pairings = slot_data["er_pairings"]
+            self.ut_pairings = slot_data.get("er_pairings", {})
 
         else:
             self.pick_required_dungeons()
