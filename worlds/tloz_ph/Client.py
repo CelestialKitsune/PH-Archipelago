@@ -572,7 +572,7 @@ class PhantomHourglassClient(BizHawkClient):
 
             # Short CS skips, not release ready yet
             in_short_cs = read_result["in_short_cs"]
-            if in_short_cs or False:
+            if in_short_cs and False:
                 cs_type = await read_memory_value(ctx, 0x1B56C4)
                 blue_door_opening = cs_type == 0x8D and not await read_memory_value(ctx, 0x1BA8CC)
                 combat_door_opening = cs_type == 0x7E and await read_memory_value(ctx, 0x060698)
