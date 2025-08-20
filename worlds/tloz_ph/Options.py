@@ -465,16 +465,19 @@ class PhantomHourglassRandomizeBeedlePoints(Choice):
 
 class PhantomHourglassDungeonShortcuts(Toggle):
     """
+    EXPERIMENTAL!!! Use at your own risk!
     Adds shortcuts from the beginning of islands to their dungeons, often by entering the house nearest their port.
     Requires getting the first check in the respective dungeon to activate.
-    Disabled automatically with house ER or internal island ER
+    Disabled automatically with house ER or internal island ER (and dungeon ER until i add support for it)
     """
     display_name = "dungeon_shortcuts"
     default = 0
 
 class PhantomHourglassShuffleDungeonEntrances(Toggle):
     """
-    Shuffle what dungeon entrance leads where.
+    EXPERIMENTAL!!! Use at your own risk!
+    Shuffle what dungeon entrance leads to which dungeon interior.
+    Does not include ghost ship.
     Full entrance rando coming soon!
     """
     display_name = "shuffle_dungeon_entrances"

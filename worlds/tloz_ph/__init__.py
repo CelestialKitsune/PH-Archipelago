@@ -21,6 +21,7 @@ from .data.Items import ITEMS_DATA
 from .data.Regions import REGIONS
 from .data.LogicPredicates import *
 from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS, ENTRANCES
+from .EntranceRando import ut_plando
 
 from .Client import PhantomHourglassClient  # Unused, but required to register with BizHawkClient
 
@@ -138,6 +139,7 @@ class PhantomHourglassWorld(World):
         self.ut_locations_to_exclude = set()
         self.extra_filler_items = []
         self.excluded_dungeons = []
+        self.ut_pairings = {}
 
         self.entrances = {}
         self.er_placement_state = None
@@ -158,9 +160,12 @@ class PhantomHourglassWorld(World):
             # Set randomized data that effects exclusions etc
             self.required_dungeons = slot_data["required_dungeons"]
             self.boss_reward_items_pool = slot_data["boss_reward_items_pool"]
+            self.ut_pairings = slot_data["er_pairings"]
 
         else:
             self.pick_required_dungeons()
+            if self.options.shuffle_dungeon_entrances:
+                self.options.dungeon_shortcuts.value = 0
         self.restrict_non_local_items()
 
     def restrict_non_local_items(self):
@@ -366,9 +371,8 @@ class PhantomHourglassWorld(World):
             # Currently only dungeon entrance rando is supported
             randomized_entrances = []
             if self.options.shuffle_dungeon_entrances:
-
                 randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.DUNGEON_ENTRANCE]
-                print([e.name for e in randomized_entrances])
+                # print([e.name for e in randomized_entrances])
             # Disconnect entrances to shuffle
             for entrance in randomized_entrances:
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
@@ -380,8 +384,16 @@ class PhantomHourglassWorld(World):
                 return list({OPPOSITE_ENTRANCE_GROUPS[direction] | area, area, OPPOSITE_ENTRANCE_GROUPS[direction]})
 
             groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(0, 5) for area in range(0, 11)}
-
-            self.er_placement_state = entrance_rando.randomize_entrances(self, coupled, groups)
+            # Manually connect entrances if UT
+            if getattr(self.multiworld, "generation_is_fake", False):
+                entrance_id_to_region = {data["id"]: data["entrance_region"] for data in ENTRANCES.values()}
+                for plando_entrance, plando_exit in self.ut_pairings.items():
+                    reg1 = self.get_region(entrance_id_to_region[int(plando_entrance)])
+                    reg2 = self.get_region(entrance_id_to_region[plando_exit])
+                    reg1.connect(reg2)
+            # Do ER!
+            else:
+                self.er_placement_state = entrance_rando.randomize_entrances(self, coupled, groups)
 
     def set_rules(self):
         create_connections(self.multiworld, self.player, self.origin_region_name, self.options)
@@ -668,6 +680,8 @@ class PhantomHourglassWorld(World):
             "ph_time_logic", "ph_starting_time", "ph_time_increment", "ph_heart_time", "ph_required",
             # Cosmetic
             "additional_metal_names",
+            # ER
+            "shuffle_dungeon_entrances",
             # Deathlink
             "death_link"
         ]

@@ -2102,7 +2102,7 @@ LOCATIONS_DATA = {
     # ========== Goron Temple ============
 
     "Goron Temple 1F Switch Chest": {
-        "region_id": "gt",
+        "region_id": "gt 2",
         "stage_id": 0x20,
         "floor_id": 0x0,
         "vanilla_item": "Treasure Map #17 (Frost S)",

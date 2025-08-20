@@ -368,8 +368,8 @@ def make_overworld_logic():
 
         # ================= Goron Temple ====================
         ["gt", "gt 2", False, "goron_entrance"],
-        ["gt", "gt bow", False, "bow"],
-        ["gt", "gt b1", False, "gt_b1"],
+        ["gt 2", "gt bow", False, "bow"],
+        ["gt 2", "gt b1", False, "gt_b1"],
         ["gt b1", "gt b2", False, "bombchu_switches"],
         ["gt b2", "gt b3", False, None],
         ["gt b2", "gt b2 back", False, "gt_b2_back"],

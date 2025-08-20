@@ -61,6 +61,8 @@ RAM_ADDRS = {
     "opened_clog": (0x0FC5BC, 1, "Main RAM"),
     "flipped_clog": (0x0FA37B, 1, "Main RAM"),
 
+    "in_short_cs": (0x1B6FE8, 1, "Main RAM"),
+
 }
 
 POINTERS = {
@@ -80,7 +82,7 @@ STAGE_FLAGS_OFFSET = 0x268
 
 # Addresses to read each cycle
 read_keys_always = ["game_state", "in_cutscene", "received_item_index", "stage", "room", "slot_id",
-                    "entrance",
+                    "entrance", "in_short_cs",
                     "loading_room", "opened_clog"]
 
 read_keys_deathlink = ["link_health"]
@@ -248,6 +250,8 @@ class PhantomHourglassClient(BizHawkClient):
         self.key_value = 0
         self.metal_count = 0
         self.goal_room = 0x3600
+
+        self.tried_short_cs = False
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         try:
@@ -565,6 +569,25 @@ class PhantomHourglassClient(BizHawkClient):
             current_room = 0 if current_room == 0xFF else current_room  # Resetting in a dungeon sets a special value
             current_scene = current_stage * 0x100 + current_room
             current_entrance = read_result.get("entrance", 0)
+
+            # Short CS skips
+            in_short_cs = read_result["in_short_cs"]
+            if in_short_cs:
+                cs_type = await read_memory_value(ctx, 0x1B56C4)
+                blue_door_opening = cs_type == 0x8D and not await read_memory_value(ctx, 0x1BA8CC)
+                combat_door_opening = cs_type == 0x7E and await read_memory_value(ctx, 0x060698)
+                self.tried_short_cs = True
+                if cs_type and cs_type in [0x2c, 0x4B] or blue_door_opening or combat_door_opening:
+                    write_list = [(0x1B6FE8, [0], "Main RAM"), # good detector
+                                  #(0x1B55D8, [0], "Main RAM"),  # Stuck in cs mode
+                                  (0x1B55DC, [0], "Main RAM"),  # cs lock
+                                  #(0x1B6FE8, [0], "Main RAM"),
+                                  #(0x1BA450, [0], "Main RAM"),
+                                  ]
+                    await bizhawk.write(ctx.bizhawk_ctx, write_list)
+
+            # if self.tried_short_cs and in_short_cs:
+            #     self.tried_short_cs = False
 
             # This go true when link gets item
             if self.at_sea:
