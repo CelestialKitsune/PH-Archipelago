@@ -316,6 +316,34 @@ DYNAMIC_FLAGS = {
         "not_has_locations": ["Temple of Courage Crayk Dungeon Reward"],
         "unset_if_true": [(0x1B557F, 0x80)]
     },
+    # Spirit Island cap spirit gems to 20 on enter
+    "Power Gem cap": {
+        "on_scenes": [0x1701],
+        "has_items": [("Power Gem", 20)],
+        "overwrite_if_true": [(0x1BA541, 0x14)],
+        "reset_flags": ["RESET Power Gem cap"]
+    },
+    "Courage Gem cap": {
+        "on_scenes": [0x1701],
+        "has_items": [("Courage Gem", 20)],
+        "overwrite_if_true": [(0x1BA542, 0x14)],
+        "reset_flags": ["RESET Courage Gem cap"]
+    },
+    "Wisdom Gem cap": {
+        "on_scenes": [0x1701],
+        "has_items": [("Wisdom Gem", 20)],
+        "overwrite_if_true": [(0x1BA540, 0x14)],
+        "reset_flags": ["RESET Wisdom Gem cap"]
+    },
+    "RESET Power Gem cap": {
+        "overwrite_if_true": [(0x1BA541, "Power Gem")],
+    },
+    "RESET Courage Gem cap": {
+        "overwrite_if_true": [(0x1BA542, "Courage Gem")]
+    },
+    "RESET Wisdom Gem cap": {
+        "overwrite_if_true": [(0x1BA540, "Wisdom Gem")]
+    },
     # Courage Crest Room
     "Courage Crest room not salvaged it": {
         "on_scenes": [0x2508],
