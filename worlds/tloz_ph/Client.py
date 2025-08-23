@@ -1060,6 +1060,13 @@ class PhantomHourglassClient(BizHawkClient):
                 read_addr.add(a)
                 unset_bits[a] = unset_bits.get(a, 0) | v
                 print(f"\tunsetting bit for {data['name']}")
+            for a, v in data.get("overwrite_if_true", []):
+                read_addr.add(a)
+                if type(v) is str:
+                    v = item_count(ctx, v)
+                set_bits[a] = v
+                unset_bits[a] = ~v
+                print(f"\toverwriting bit for {data['name']}")
 
             # Special full heal condition
             if "full_heal" in data:

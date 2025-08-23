@@ -10,6 +10,7 @@
 ## Recommended Software
 
 * [Universal Tracker](https://github.com/FarisTheAncient/Archipelago/releases)
+* [Item Tracker](https://github.com/ZobeePlays/PH-AP-Item-Tracker/tree/main) (poptracker pack by @ZobeePlays. No map tracking)
 
 ## Setup
 
@@ -25,3 +26,4 @@
 
 - [FAQ and Credits](https://github.com/carrotinator/Archipelago/blob/main/worlds/tloz_ph/docs/faq_and_credits.md)
 - [Tricks and Skips](https://github.com/carrotinator/Archipelago/blob/main/worlds/tloz_ph/docs/tricks_and_skips.md)
+- [wiki](https://github.com/carrotinator/Archipelago/wiki) contains locations, maps, groupings and stuff
