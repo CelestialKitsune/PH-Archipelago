@@ -241,15 +241,14 @@ class DSZeldaClient(BizHawkClient):
         """
         pass
 
-    async def get_coords(self, ctx, multi=False):
-        coords = await read_memory_values(ctx, self.get_coord_address(multi=multi), signed=True)
-        if not multi:
-            return {
-                "x": coords.get("link_x", coords.get("boat_x", 0)),
-                "y": coords.get("link_y", 0),
-                "z": coords.get("link_z", coords.get("boat_z", 0))
-            }
-        return coords
+    async def get_coords(self, ctx, multi=False) -> dict:
+        """
+        organize the coords in a neat dictionary
+        :param ctx:
+        :param multi: gives all coords
+        :return:
+        """
+        pass
 
     async def get_main_read_list(self, ctx: "BizHawkClientContext", stage: int, in_game=True):
         """
@@ -270,20 +269,25 @@ class DSZeldaClient(BizHawkClient):
         """
         pass
 
+    async def watched_intro_cs(self, ctx):
+        """
+        you know how it's random whether niko talks or not at the beginning?
+        this tries to fix that. make it read a memory value or something
+        :param ctx:
+        :return:
+        """
+        return False
+
     def _generate_er_map(self, ctx):
         # Creates a map from scene to dict of
         #   detect_exit (stage, scene, entrance, link_y, extra_data) to er_exit (stage, scene, entrance, link_x | None, link_y, link_z)
         if ctx.slot_data.get("er_pairings", None):
             res = {}
-            print(ctx.slot_data["er_pairings"])
             pairings = {int(k): v for k, v in ctx.slot_data["er_pairings"].items()}
-            print(f"ER Pairings {pairings}")
 
             # Loop through entrance data, format data
             for data in ENTRANCES.values():
-                print(f"Generating ER Map for {data['entrance']}")
                 stage, room, entrance = data["entrance"]
-                print(f"link_y  {data.get('coords', [0, None])}")
                 link_coords = data.get("coords", None)
 
                 # Handle extra data
@@ -300,7 +304,6 @@ class DSZeldaClient(BizHawkClient):
                 if data["id"] in pairings:
                     exit_id = pairings[data["id"]]
                     exit_data = self.entrance_id_to_entrance[exit_id]
-                    print(f"Exit data {exit_data}, {exit_id}, detect {detect_data}")
 
                     # Don't save vanilla entrances. No fix for continuous cause exit data does not store extra_data
                     if detect_data[3] is None or detect_data[:2] != exit_data[:2]:  # TODO: This looks wrong
@@ -311,39 +314,57 @@ class DSZeldaClient(BizHawkClient):
 
     async def process_read_list(self, ctx: "BizHawkClientContext", read_list: dict):
         """
-        Game watcher just read self.main_read_list. What do you do with the data?
+        called every cycle in game, even while loading
+        Game watcher just read self.main_read_list. process data to set up key variables
         :param ctx: BizHawkClientContext
         :param read_list: dict of address name to read value
         :return:
         """
 
+    async def process_enter_game(self, ctx):
+        """
+        called once on entering game from menu
+        :param ctx:
+        :return:
+        """
+        pass
+
     async def process_on_room_load(self, ctx, current_scene, read_result: dict):
+        """
+        called once when room is fully loaded, early in the sequence
+        :param ctx:
+        :param current_scene:
+        :param read_result:
+        :return:
+        """
+        pass
+
+    async def process_hard_coded_rooms(self, ctx, current_scene):
+        """
+        called when room has fully loaded, after most of the obligate methods
+        :param ctx:
+        :param current_scene:
+        :return:
+        """
         pass
 
     async def process_when_loaded(self, ctx, read_result: dict):
+        """
+        called every cycle in game, not while loading
+        :param ctx:
+        :param read_result:
+        :return:
+        """
         pass
+
 
     async def detect_warp_to_start(self, ctx, read_result: dict):
-        pass
-
-    async def process_enter_game(self, ctx):
         """
-        called on entering game from menu
+        called every cycle in game. detect warp to start, and cancel any nasty conflicts
         :param ctx:
+        :param read_result:
         :return:
         """
-        pass
-
-    async def watched_intro_cs(self, ctx):
-        """
-        you know how it's random whether niko talks or not at the beginning?
-        this tries to fix that. make it read a memory value or something
-        :param ctx:
-        :return:
-        """
-        return False
-
-    async def process_hard_coded_rooms(self, ctx, current_scene):
         pass
 
     # Main Loop
@@ -472,7 +493,6 @@ class DSZeldaClient(BizHawkClient):
                     self._receiving_location = True
                     print("Receiving Item")
                     await self._process_checked_locations(ctx, None, detection_type=self.getting_location_type)
-
 
                 # Process received items
                 if num_received_items < len(ctx.items_received):
@@ -617,8 +637,8 @@ class DSZeldaClient(BizHawkClient):
 
         elif self.er_in_scene:
 
-            def write_er(exit_data):
-                exit_stage, exit_room, exit_entrance, *exit_coords = exit_data
+            def write_er(exit_d):
+                exit_stage, exit_room, exit_entrance, *exit_coords = exit_d
                 write_res = write_entrance(exit_stage, exit_room, exit_entrance)
                 if exit_coords[0] is not None:
                     x, y, z = exit_coords
@@ -665,6 +685,13 @@ class DSZeldaClient(BizHawkClient):
             self.er_exit_coord_writes = None
 
     async def has_special_dynamic_requirements(self, ctx, data) -> bool:
+        """
+        for adding game specific dynamic parameters
+        ph uses this for beedle points and metal counters
+        :param ctx:
+        :param data:
+        :return:
+        """
         return True
 
     async def _has_dynamic_requirements(self, ctx, data) -> bool:
@@ -841,7 +868,8 @@ class DSZeldaClient(BizHawkClient):
 
     async def enter_special_key_room(self, ctx, stage, scene_id) -> bool:
         """
-        where you put special key processes on entering a new stage
+        called on entering a new stage, to set small keys in a different way to default
+        used in ph to give totok keys without resetting the counter
         :param ctx:
         :param stage:
         :param scene_id:
@@ -905,8 +933,8 @@ class DSZeldaClient(BizHawkClient):
 
     async def update_special_key_count(self, ctx, current_stage: int, new_keys:int, key_data: dict, key_values: dict, key_address: int) -> tuple[int, bool]:
         """
-        runs on enter stage if you want to change the number of keys written based on a parameter.
-        used in ph for removing totok key after opening the door on 1f
+        called on enter stage if you want to change the number of keys written based on a parameter.
+        used in ph for removing a totok key after opening the door on 1f
         :param ctx:
         :param current_stage:
         :param new_keys: number of keys in memory
@@ -918,10 +946,21 @@ class DSZeldaClient(BizHawkClient):
         return new_keys, True
 
     async def get_small_key_address(self, ctx) -> int:
+        """
+        in ph small keys are tied to map data, in st there is a consistent address for them
+        :param ctx:
+        :return:
+        """
         return 0
 
-    # Updates key count based on a tracker counter in memory. Called when entering a dungeon
     async def update_key_count(self, ctx, current_stage: int) -> None:
+        """
+        Called when entering a dungeon. Updates key count based on a tracker counter in memory,
+        specified in self.dungeon_key_data
+        :param ctx:
+        :param current_stage:
+        :return:
+        """
         key_address = self.key_address = await self.get_small_key_address(ctx)
         key_data = self.dungeon_key_data.get(current_stage, None)
         read_list = {"dungeon": (key_address, 1, "Main RAM"),
@@ -956,7 +995,7 @@ class DSZeldaClient(BizHawkClient):
             loc_id = self.location_name_to_id[pre_process]
             location = LOCATIONS_DATA[pre_process]
             if r or (loc_id not in all_checked_locations):
-                await self.set_vanilla_item(ctx, location, loc_id)
+                await self._set_vanilla_item(ctx, location)
                 local_checked_locations.add(loc_id)
             print(f"pre-processed {pre_process}, vanill {self.last_vanilla_item}")
         else:
@@ -990,7 +1029,7 @@ class DSZeldaClient(BizHawkClient):
                             await self._set_delay_pickup(ctx, loc_name, location)
                             break
                     local_checked_locations.add(loc_bytes)
-                    await self.set_vanilla_item(ctx, location, loc_bytes)
+                    await self._set_vanilla_item(ctx, location)
                     print(f"Got location {loc_name}! with vanilla {self.last_vanilla_item} id {loc_bytes}")
                     break
                 location = None
@@ -1047,8 +1086,27 @@ class DSZeldaClient(BizHawkClient):
         print(f"Delay pickup {self.delay_pickup}")
 
     # Called during location processing to determine what vanilla item to remove
-    async def set_vanilla_item(self, ctx, location, loc_id):
-        # TODO: There's some code that is duplicated
+    async def _set_vanilla_item(self, ctx, location):
+        item = location.get("vanilla_item", None)
+        item_data = ITEMS_DATA[item]
+        print(f"Setting vanilla for {item_data}")
+        if item is not None and not item_data.get("dummy", False):
+            if ("incremental" in item_data or "progressive" in item_data or
+                    item_data["id"] not in [i.item for i in ctx.items_received]):
+                self.last_vanilla_item.append(item)
+
+                await self.unset_special_vanilla_items(ctx, location, item)
+
+    async def unset_special_vanilla_items(self, ctx, location, item):
+        """
+        called after _set_vanilla_item if it was successful.
+        self.last_vanilla_item.pop() any item/location combinations you don't want to remove
+        used for farmable rupee spots, or overlap between progressive and non progressive variants of the same item
+        :param ctx:
+        :param location:
+        :param item:
+        :return:
+        """
         pass
 
     async def _process_scouted_locations(self, ctx: "BizHawkClientContext", scene):
@@ -1106,6 +1164,12 @@ class DSZeldaClient(BizHawkClient):
             }])
 
     async def scout_location(self, ctx: "BizHawkClientContext", locations):
+        """
+        sends a hint for the requested locations
+        :param ctx:
+        :param locations:
+        :return:
+        """
         local_scouted_locations = set(ctx.locations_scouted)
         for loc in locations:
             local_scouted_locations.add(LOCATIONS_DATA[loc]["id"])
@@ -1229,7 +1293,8 @@ class DSZeldaClient(BizHawkClient):
                     item_value = min(item_value, 9999)
                 if "size" in item_data:
                     item_value = split_bits(item_value, item_data["size"])
-
+                if "max" in item_data:
+                    item_value = min(item_data["max"], item_value)
             elif "progressive" in item_data:
                 if "progressive_overwrite" in item_data and prog_received >= 1:
                     item_value = item_value  # Bomb upgrades need to overwrite of everything breaks

@@ -448,6 +448,7 @@ ITEMS_DATA = {
         "address": 0x1ba661,
         "value": 0x1,
         "id": 57,
+        "max": 0x7
     },
     "Refill: Health": {
         "classification": ItemClassification.filler,

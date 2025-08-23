@@ -150,6 +150,16 @@ class PhantomHourglassClient(DSZeldaClient):
 
         return write_list
 
+    async def get_coords(self, ctx, multi=False):
+        coords = await read_memory_values(ctx, self.get_coord_address(multi=multi), signed=True)
+        if not multi:
+            return {
+                "x": coords.get("link_x", coords.get("boat_x", 0)),
+                "y": coords.get("link_y", 0),
+                "z": coords.get("link_z", coords.get("boat_z", 0))
+            }
+        return coords
+
     def update_metal_count(self, ctx):
         metal_ids = [ITEMS_DATA[i]["id"] for i in ITEM_GROUPS["Metals"]]
         self.metal_count = sum(1 for i in ctx.items_received if i.item in metal_ids)
@@ -330,8 +340,9 @@ class PhantomHourglassClient(DSZeldaClient):
 
     async def process_hard_coded_rooms(self, ctx, current_scene):
         # Yellow warp in TotOK saves keys
+        # TODO: allow this to work with ER
         if self.last_scene is not None:
-            if current_scene == 0x2509 and self.last_scene == 0x2507:  # TODO: set constants for these rooms
+            if current_scene == 0x2509 and self.last_scene == 0x2507:
                 await self.write_totok_midway_keys(ctx)
 
         # Repair salvage arm in certain rooms
@@ -485,29 +496,21 @@ class PhantomHourglassClient(DSZeldaClient):
         return await get_address_from_heap(ctx, self.ADDR_gMapManager, SMALL_KEY_OFFSET)
 
     # Called during location processing to determine what vanilla item to remove
-    async def set_vanilla_item(self, ctx, location, loc_id):
-        item = location.get("vanilla_item", None)
-        item_data = ITEMS_DATA[item]
-        print(f"Setting vanilla for {item_data}")
-        if item is not None and not item_data.get("dummy", False):
-            if ("incremental" in item_data or "progressive" in item_data or
-                    item_data["id"] not in [i.item for i in ctx.items_received]):
-                self.last_vanilla_item.append(item)
+    async def unset_special_vanilla_items(self, ctx, location, item):
+        # Multiple sword items don't detect each other by default
+        if item in ["Oshus' Sword", "Phantom Sword"] and item_count(ctx, "Sword (Progressive)"):
+            self.last_vanilla_item.pop()
 
-                # Multiple sword items don't detect each other by default
-                if item in ["Oshus' Sword", "Phantom Sword"] and item_count(ctx, "Sword (Progressive)"):
-                    self.last_vanilla_item.pop()
+        # Don't remove heart containers if already at max
+        if item == "Heart Container" and item_count(ctx, item) >= 13:
+            self.last_vanilla_item.pop()
 
-                # Don't remove heart containers if already at max
-                if item == "Heart Container" and item_count(ctx, item) >= 13:
-                    self.last_vanilla_item.pop()
-
-                # Farmable locations don't remove vanilla
-                if "farmable" in location and loc_id in ctx.checked_locations:
-                    if item == "Ship Part":
-                        await self.give_random_treasure(ctx)
-                    else:
-                        self.last_vanilla_item.pop()
+        # Farmable locations don't remove vanilla
+        if "farmable" in location and location["id"] in ctx.checked_locations:
+            if item == "Ship Part":
+                await self.give_random_treasure(ctx)
+            else:
+                self.last_vanilla_item.pop()
 
     async def receive_key_in_own_dungeon(self, ctx, item_name: str, write_keys_to_storage):
         # TotOK - adds to key increment if you get it in the dungeon, otherwise do as usual
