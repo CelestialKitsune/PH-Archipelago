@@ -547,12 +547,10 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
     ]
 
     test_entrances = {(e["entrance_region"], e["exit_region"]): name for name, e in ENTRANCES.items()}
-    # [print(i) for i in test_entrances]
 
     # Create connections
     for logic_array in all_logic:
         for entrance_desc in logic_array:
-            args = None
             reg1, reg2, is_two_way, rule_lookup, *args = entrance_desc
             region_1 = multiworld.get_region(reg1, player)
             region_2 = multiworld.get_region(reg2, player)

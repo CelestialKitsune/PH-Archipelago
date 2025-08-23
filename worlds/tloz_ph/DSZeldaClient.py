@@ -179,18 +179,37 @@ class DSZeldaClient(BizHawkClient):
         self.key_address = 0
         self.key_value = 0
         self.metal_count = 0
-        self.goal_room = 0x3600
 
         self.tried_short_cs = False
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
-        print("Validating in dszelda client")
+        """
+        return true if using a valid rom.
+        can also be used to set version specific variables
+        :param ctx:
+        :return:
+        """
         return False
+
+    async def _validate_rom(self, ctx: "BizHawkClientContext") -> bool:
+        try:
+            if not await self.validate_rom(ctx):
+                return False
+        except bizhawk.RequestFailedError:
+            print("Invalid rom")
+            return False
+
+        ctx.game = self.game
+        ctx.items_handling = 0b111
+        ctx.want_slot_data = True
+        ctx.watcher_timeout = 0.5
+        return True
+
 
     def on_package(self, ctx, cmd, args):
         if cmd == 'Connected':
             if 'death_link' in args['slot_data'] and args['slot_data']['death_link']:
-                self.set_deathlink = True
+                self._set_deathlink = True
                 self.last_deathlink = time.time()
         super().on_package(ctx, cmd, args)
 
@@ -205,15 +224,21 @@ class DSZeldaClient(BizHawkClient):
 
     async def set_special_starting_flags(self, ctx: "BizHawkClientContext") -> list[tuple[int, list, str]]:
         """
-        Game specific starting flag logic.
-        Flags defined in STARTING_FLAGS are set automatically
-        :param ctx: BizhawkClientContext
-        :return: write_list
-        """
+         gets called on entering a new save file. flags defined in `self.starting_flags` are set automatically. intended
+         to be used for conditional flags.
+         :param ctx:
+         :return: write_list
+         """
         write_list = []
         return write_list
 
     def get_coord_address(self, at_sea=None, multi=False) -> dict[str, tuple[int, int, str]]:
+        """
+
+        :param at_sea: guess this still exists, for switching between vehicular and human coords
+        :param multi: for when you want to return all possible coord addresses. used as a backup load detector
+        :return: dict of link_coord to write_data
+        """
         pass
 
     async def get_coords(self, ctx, multi=False):
@@ -226,30 +251,24 @@ class DSZeldaClient(BizHawkClient):
             }
         return coords
 
-    async def get_main_read_list(self, ctx, stage, in_game=True):
-        pass
-
-    async def full_heal(self, ctx, bonus=0):
-        pass
-
-    async def refill_ammo(self, ctx):
-        pass
-
-    def get_progress(self, ctx, scene=0):
+    async def get_main_read_list(self, ctx: "BizHawkClientContext", stage: int, in_game=True):
         """
-        Figure out how many goal items you have.
-        Used in ph for oshus hints
+        decide what addresses to read each client cycle. needs to set
         :param ctx:
-        :param scene:
+        :param stage: useful to read different flags when in vehicle
+        :param in_game: for setting flags to read before in game, to be able to detect when in game
         :return:
         """
         pass
 
-    def get_ending_room(self, ctx):
-        if ctx.slot_data["goal_requirements"] == "beat_bellumbeck":
-            self.goal_room = 0x3600
-        elif ctx.slot_data["goal_requirements"] == "triforce_door":
-            self.goal_room = 0x2509
+    async def full_heal(self, ctx, bonus=0):
+        """
+        full heals the player. Called when getting heart containers, but can be called elsewhere too
+        :param ctx:
+        :param bonus:
+        :return:
+        """
+        pass
 
     def _generate_er_map(self, ctx):
         # Creates a map from scene to dict of
@@ -308,9 +327,20 @@ class DSZeldaClient(BizHawkClient):
         pass
 
     async def process_enter_game(self, ctx):
+        """
+        called on entering game from menu
+        :param ctx:
+        :return:
+        """
         pass
 
     async def watched_intro_cs(self, ctx):
+        """
+        you know how it's random whether niko talks or not at the beginning?
+        this tries to fix that. make it read a memory value or something
+        :param ctx:
+        :return:
+        """
         return False
 
     async def process_hard_coded_rooms(self, ctx, current_scene):
@@ -323,6 +353,7 @@ class DSZeldaClient(BizHawkClient):
             self._loaded_menu_read_list = False
             self.last_scene = None
             self._from_menu = True
+            ctx.watcher_timeout = 0.5
             return
 
         # Enable "DeathLink" tag if option was enabled
@@ -353,6 +384,7 @@ class DSZeldaClient(BizHawkClient):
             if not in_game or current_stage not in STAGES:
                 self._previous_game_state = False
                 self._from_menu = True
+                ctx.watcher_timeout = 0.5
                 print("NOT IN GAME")
                 # Finished game?
                 if not ctx.finished_game:
@@ -367,15 +399,14 @@ class DSZeldaClient(BizHawkClient):
                 self._just_entered_game = True
                 self.last_stage = None
                 self.last_scene = None
-                print(f"Started Game")
-
 
             # Single call just entered from menu methods
             if in_game and self._from_menu:
-                self.get_ending_room(ctx)
                 self._generate_er_map(ctx)
                 self._from_menu = False
+                ctx.watcher_timeout = 0.15  # 9 frame interval to catch 11 frame ER windows
                 await self.process_enter_game(ctx)
+                print(f"Started Game")
 
             # If new file, set up starting flags
             if slot_memory == 0 and not loading:

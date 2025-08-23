@@ -91,6 +91,7 @@ class PhantomHourglassClient(DSZeldaClient):
 
     def __init__(self) -> None:
         super().__init__()
+        # Required variables from inherit
         self.starting_flags = STARTING_FLAGS
         self.dungeon_key_data = DUNGEON_KEY_DATA
         self.slot_id_addr = RAM_ADDRS["slot_id"][0]
@@ -103,34 +104,21 @@ class PhantomHourglassClient(DSZeldaClient):
         self.ADDR_gMapManager = POINTERS["ADDR_gMapManager"]
         self.stage_flag_offset = STAGE_FLAGS_OFFSET
 
-
+        # Ph variables
         self.goal_room = 0x3600
         self.last_treasures = 0
         self.last_potions = [0, 0]
         self.last_ship_parts = []
+        self.at_sea = False
 
     async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
-        print("Validating in ph client")
-        try:
-            # Check ROM name/patch version
-            rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [ROM_ADDRS["game_identifier"]]))[0]
-            rom_name = bytes([byte for byte in rom_name_bytes if byte != 0]).decode("ascii")
-            print(f"Rom Name: {rom_name}")
-            if rom_name != "ZELDA_DS:PHAZEP":  # EU
-                if rom_name == "ZELDA_DS:PHAZEE":  # US
-                    self.version_offset = -64
-                    return False
-                else:
-                    return False
-        except bizhawk.RequestFailedError:
-            print("Invalid rom")
+        rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [ROM_ADDRS["game_identifier"]]))[0]
+        rom_name = bytes([byte for byte in rom_name_bytes if byte != 0]).decode("ascii")
+        print(f"Rom Name: {rom_name}")
+        if rom_name != "ZELDA_DS:PHAZEP":  # EU
+            if rom_name == "ZELDA_DS:PHAZEE":  # US
+                self.version_offset = -64
             return False
-
-        ctx.game = self.game
-        ctx.items_handling = 0b111
-        ctx.want_slot_data = True
-        ctx.watcher_timeout = 0.15
-
         return True
 
     async def set_special_starting_flags(self, ctx: "BizHawkClientContext") -> list[tuple[int, list, str]]:
@@ -226,8 +214,7 @@ class PhantomHourglassClient(DSZeldaClient):
             self.main_read_list = {k: v for k, v in RAM_ADDRS.items() if k in read_keys} | death_link_reads
         else:
             self.at_sea = None
-        # print(f"Read kwys {read_keys}, {death_link_reads}, {stage}")
-        # print(self.main_read_list)
+        return self.main_read_list
 
     async def full_heal(self, ctx, bonus=0):
         if not self.at_sea:
@@ -336,6 +323,7 @@ class PhantomHourglassClient(DSZeldaClient):
     async def process_enter_game(self, ctx):
         self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
         self.update_metal_count(ctx)
+        self.set_ending_room(ctx)
 
     async def watched_intro_cs(self, ctx):
         return await read_memory_value(ctx, 0x1b55a8, silent=True) & 2
@@ -626,7 +614,7 @@ class PhantomHourglassClient(DSZeldaClient):
             return False
         return True  # Removed vanilla item, don't do more processing
 
-    def get_ending_room(self, ctx):
+    def set_ending_room(self, ctx):
         if ctx.slot_data["goal_requirements"] == "beat_bellumbeck":
             self.goal_room = 0x3600
         elif ctx.slot_data["goal_requirements"] == "triforce_door":
