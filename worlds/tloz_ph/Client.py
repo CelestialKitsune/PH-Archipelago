@@ -111,7 +111,7 @@ class PhantomHourglassClient(DSZeldaClient):
         self.last_ship_parts = []
         self.at_sea = False
 
-    async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
+    async def check_game_version(self, ctx: "BizHawkClientContext") -> bool:
         rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [ROM_ADDRS["game_identifier"]]))[0]
         rom_name = bytes([byte for byte in rom_name_bytes if byte != 0]).decode("ascii")
         print(f"Rom Name: {rom_name}")
@@ -613,6 +613,9 @@ class PhantomHourglassClient(DSZeldaClient):
             print(f"Pots {self.last_potions}")
             if not all(self.last_potions):
                 await write_memory_values(ctx, 0x1BA5D8, self.last_potions, overwrite=True)
+        elif "Oshus' Sword" in vanilla_item:
+            data = ITEMS_DATA[vanilla_item]
+            await write_memory_value(ctx, data["ammo_address"], 0, size=2, overwrite=True)
         else:
             return False
         return True  # Removed vanilla item, don't do more processing
@@ -633,20 +636,19 @@ class PhantomHourglassClient(DSZeldaClient):
             game_clear = (current_scene == self.goal_room)  # Enter End Credits
         return game_clear
 
-    async def process_deathlink(self, ctx: "BizHawkClientContext", *args):
-        is_dead = self.is_dead
-        stage = self.current_stage
-        if ctx.last_death_link > self.last_deathlink and not is_dead:
-            # A death was received from another player, make our player die as well
-            if stage == 0:
-                await write_memory_value(ctx, RAM_ADDRS["boat_health"][0], 0, overwrite=True)
-            elif stage == 3:
-                await write_memory_value(ctx, RAM_ADDRS["salvage_health"][0], 0, overwrite=True)
-            else:
-                await write_memory_value(ctx, RAM_ADDRS["link_health"][0], 0, size=2, overwrite=True)
+    async def process_deathlink(self, ctx: "BizHawkClientContext", is_dead, stage, read_result):
+        if not read_result.get("drawing_sea_route", False) and not read_result["in_cutscene"]:
+            if ctx.last_death_link > self.last_deathlink and not is_dead:
+                # A death was received from another player, make our player die as well
+                if stage == 0:
+                    await write_memory_value(ctx, RAM_ADDRS["boat_health"][0], 0, overwrite=True)
+                elif stage == 3:
+                    await write_memory_value(ctx, RAM_ADDRS["salvage_health"][0], 0, overwrite=True)
+                else:
+                    await write_memory_value(ctx, RAM_ADDRS["link_health"][0], 0, size=2, overwrite=True)
 
-            self.is_expecting_received_death = True
-            self.last_deathlink = ctx.last_death_link
+                self.is_expecting_received_death = True
+                self.last_deathlink = ctx.last_death_link
 
         if not self.was_alive_last_frame and not is_dead:
             # We revived from any kind of death

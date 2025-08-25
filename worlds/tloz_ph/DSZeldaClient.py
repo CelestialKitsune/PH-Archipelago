@@ -182,18 +182,17 @@ class DSZeldaClient(BizHawkClient):
 
         self.tried_short_cs = False
 
-    async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
+    async def check_game_version(self, ctx: "BizHawkClientContext") -> bool:
         """
-        return true if using a valid rom.
-        can also be used to set version specific variables
+        DSZeldaClient calls validate rom, this is for detecting game version and setting game specific variables
         :param ctx:
-        :return:
+        :return: valid rom
         """
         return False
 
-    async def _validate_rom(self, ctx: "BizHawkClientContext") -> bool:
+    async def validate_rom(self, ctx: "BizHawkClientContext") -> bool:
         try:
-            if not await self.validate_rom(ctx):
+            if not await self.check_game_version(ctx):
                 return False
         except bizhawk.RequestFailedError:
             print("Invalid rom")
@@ -203,6 +202,7 @@ class DSZeldaClient(BizHawkClient):
         ctx.items_handling = 0b111
         ctx.want_slot_data = True
         ctx.watcher_timeout = 0.5
+        print(f"validation: {ctx.game}, {ctx.items_handling}")
         return True
 
 
@@ -234,7 +234,7 @@ class DSZeldaClient(BizHawkClient):
 
     def get_coord_address(self, at_sea=None, multi=False) -> dict[str, tuple[int, int, str]]:
         """
-
+        get a dictionary for link/ship/boat coordinate read data of the current scene
         :param at_sea: guess this still exists, for switching between vehicular and human coords
         :param multi: for when you want to return all possible coord addresses. used as a backup load detector
         :return: dict of link_coord to write_data
@@ -1315,8 +1315,8 @@ class DSZeldaClient(BizHawkClient):
                     bit_prev = await read_memory_value(ctx, adr)
                     write_list.append((adr, [bit | bit_prev], "Main RAM"))
 
-        else:
-            write_list += await self.receive_special_items(ctx, item_name, item_data)
+        # Special game-specific items
+        write_list += await self.receive_special_items(ctx, item_name, item_data)
 
         # Write the new item to memory!
         print("Write list:")
@@ -1387,6 +1387,13 @@ class DSZeldaClient(BizHawkClient):
                 "status": ClientStatus.CLIENT_GOAL
             }])
 
-    async def process_deathlink(self, ctx: "BizHawkClientContext", *args):
-        pass
+    async def process_deathlink(self, ctx: "BizHawkClientContext", is_dead, stage, read_result):
+        """
+        process deathlink, both sending and receiving.
+        :param ctx:
+        :param is_dead:
+        :param stage:
+        :param read_result:
+        :return:
+        """
 

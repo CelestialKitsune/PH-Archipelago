@@ -16,7 +16,7 @@ def make_overworld_logic():
         ["mercay island", "totok", True, None],
         ["mercay island", "mercay freedle island", False, "explosives"],
         ["mercay freedle island", "mercay freedle tunnel chest", False, "range"],
-        ["mercay freedle island", "mercay freedle gift", False, "sea_chart", "SW"],
+        ["mercay freedle island", "mercay freedle gift", False, "sea_chart", "SE"],
         ["mercay se", "mercay yellow guy", False, "courage_crest"],
         ["mercay oshus", "mercay oshus gem", False, "oshus_gem"],
         ["mercay oshus", "mercay oshus phantom blade", False, "can_make_phantom_sword"],
