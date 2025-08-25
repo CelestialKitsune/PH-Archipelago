@@ -606,12 +606,22 @@ DYNAMIC_FLAGS = {
         "not_has_locations": ["Goron Island Chief Post Dungeon Item"],
         "has_locations": ["Goron Temple Dongorongo Dungeon Reward", "Goron Island Goron Quiz"],
         "set_if_true": [(0x1B558B, 0x40)],
-        "reset_flags": ["RESET Beat goron temple goron chief metal"]
+        "reset_flags": ["RESET remove Crimzonine"]
     },
-    "RESET Beat goron temple goron chief metal": {
+    "Goron Island Crimzonine": {
+        "on_scenes": [0x1002, 0x1003],
+        "unset_if_true": [(0x1B558B, 0x40)],
+        "reset_flags": ["RESET give Crimzonine"]
+    },
+    "RESET remove Crimzonine": {
         # "on_scenes": [0x1003],
-        "not_has_items": [("Crimzonine", 1)],
+        "has_items": [("Crimzonine", 0)],
         "unset_if_true": [(0x1B558B, 0x40)]
+    },
+    "RESET give Crimzonine": {
+        # "on_scenes": [0x1003],
+        "has_items": [("Crimzonine", 1)],
+        "set_if_true": [(0x1b558B, 0x40)]
     },
     "RESET Beat goron temple goron chief": {
         # "on_scenes": [0x1003],
