@@ -334,6 +334,7 @@ class PhantomHourglassClient(DSZeldaClient):
         self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
         self.update_metal_count(ctx)
         self.set_ending_room(ctx)
+        await write_memory_value(ctx,0x0EC754, 2, overwrite=True)  # Set text speed to fast, no matter settings
 
     async def watched_intro_cs(self, ctx):
         return await read_memory_value(ctx, 0x1b55a8, silent=True) & 2
