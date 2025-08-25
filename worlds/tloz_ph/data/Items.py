@@ -10,7 +10,7 @@ try:
     DEPRIORITIZED_FALLBACK = ItemClassification.progression_deprioritized
 except AttributeError as e:
     DEPRIORITIZED_SKIP_BALANCING_FALLBACK = ItemClassification.progression_skip_balancing
-    DEPRIORITIZED_FALLBACK = ItemClassification.progression_deprioritized
+    DEPRIORITIZED_FALLBACK = ItemClassification.progression
 
 ITEMS_DATA = {
     #   "Item Name": {
