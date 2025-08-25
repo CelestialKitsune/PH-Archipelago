@@ -323,7 +323,7 @@ class PhantomHourglassClient(DSZeldaClient):
         if self.warp_to_start_flag:
             # Cyclone slate warp to start crashes, prevent that from working
             if self.at_sea:
-                if await read_memory_value(ctx, 0x1B636C):
+                if await read_memory_value(ctx, 0x1B636C) == 1:  # is 0x65 if never used cyclone slate
                     self.warp_to_start_flag = False
                     logger.info("Canceled warp to start, Cyclone Slate is not a valid warp method")
             if self.is_dead:
@@ -564,14 +564,16 @@ class PhantomHourglassClient(DSZeldaClient):
 
     async def receive_special_items(self, ctx, item_name, item_data) -> list[tuple[int, list, str]]:
         # Set ship
+        res = []
         if "ship" in item_data:
             if not (await read_memory_value(ctx, 0x1ba661) & 0x80):
                 for addr in EQUIPPED_SHIP_PARTS_ADDR:
-                    return [(addr, [item_data["ship"]], "Main RAM")]
+                    res += [(addr, [item_data["ship"]], "Main RAM")]
 
         elif item_name == "Refill: Health":
             await self.full_heal(ctx)
-        return []
+
+        return res
 
     async def receive_item_post_processing(self, ctx, item_name, item_data):
         # If treasure, update treasure tracker
