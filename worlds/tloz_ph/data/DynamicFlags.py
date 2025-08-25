@@ -978,12 +978,10 @@ DYNAMIC_FLAGS = {
     "Frogs show glyph": {
         "on_scenes": [0, 1, 2, 3],
         "has_slot_data": [("randomize_frogs", 0)],
-        "set_if_true": [(0x1B55A2, 0x40)],
-        "reset_flags": ["RESET Frogs show glyph"]
+        "set_if_true": [(0x1B55A2, 0x40)]
     },
-    "RESET Frogs show glyph": {
-        # "on_scenes": [0x1A00],
-        "not_has_locations": ["Uncharted Island Cyclone Slate"],
+    "Uncharted unset frog flag": {
+        "on_scenes": [0x1a00],
         "unset_if_true": [(0x1B55A2, 0x40)]
     },
     # Doyland
