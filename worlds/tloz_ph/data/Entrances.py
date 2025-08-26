@@ -353,7 +353,7 @@ ENTRANCE_DATA = {
     },
     "ToC Crayk Warp": {
         "entrance": (0x2C, 0x0, 0x0),
-        "exit": (0xC, 0x1, 0x3),
+        "exit": (0xC, 0x1, 0x4),
         "entrance_region": "toc crayk",
         "exit_region": "toc gates",
         "type": EntranceGroups.WARP_PORTAL,

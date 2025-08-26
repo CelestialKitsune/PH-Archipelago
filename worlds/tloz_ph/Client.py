@@ -188,7 +188,7 @@ class PhantomHourglassClient(DSZeldaClient):
                 return {k: v for k, v in RAM_ADDRS.items() if k in ["link_x", "link_y", "link_z"]}
         return {k: v for k, v in RAM_ADDRS.items() if k in ["link_x", "link_y", "link_z"] + ["boat_x", "boat_z"]}
 
-    async def get_main_read_list(self, ctx, stage, in_game=True):
+    async def update_main_read_list(self, ctx, stage, in_game=True):
         read_keys = read_keys_always.copy()
         death_link_keys = []
         death_link_reads = {}
@@ -304,7 +304,7 @@ class PhantomHourglassClient(DSZeldaClient):
         await self.update_potion_tracker(ctx)
         await self.update_treasure_tracker(ctx)
 
-    async def process_when_loaded(self, ctx, read_result: dict):
+    async def process_in_game(self, ctx, read_result: dict):
         pass
 
     async def detect_warp_to_start(self, ctx, read_result: dict):
@@ -330,7 +330,7 @@ class PhantomHourglassClient(DSZeldaClient):
                 self.warp_to_start_flag = False
                 logger.info("Canceled warp to start, death is not a valid warp method")
 
-    async def process_enter_game(self, ctx):
+    async def enter_game(self, ctx):
         self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
         self.update_metal_count(ctx)
         self.set_ending_room(ctx)
@@ -528,7 +528,7 @@ class PhantomHourglassClient(DSZeldaClient):
             return [(data["address"], [new_value], "Main RAM")]
         return []
 
-    async def receive_special_small_keys(self, ctx, item_name, write_keys_to_storage):
+    async def received_special_small_keys(self, ctx, item_name, write_keys_to_storage):
         # TotOK Midway special data
         if "Temple of the Ocean King" in item_name:
             if await read_memory_value(ctx, 0x1BA661) & 0x40:
@@ -603,7 +603,7 @@ class PhantomHourglassClient(DSZeldaClient):
             await write_memory_value(ctx, equipped_item_pointer + EQUIP_TIMER_OFFSET, 20, size=2, overwrite=True)
             await write_memory_value(ctx, equipped_item_pointer, inventory_id, size=4, overwrite=True)
 
-    async def remove_vanilla_item(self, ctx, vanilla_item: str):
+    async def remove_special_vanilla_item(self, ctx, vanilla_item: str):
         if vanilla_item == "Treasure":
             treasure_write_list = split_bits(self.last_treasures, 8)
             print(f"Treasure Write List: {treasure_write_list}")
@@ -653,17 +653,17 @@ class PhantomHourglassClient(DSZeldaClient):
                 self.is_expecting_received_death = True
                 self.last_deathlink = ctx.last_death_link
 
-        if not self.was_alive_last_frame and not is_dead:
-            # We revived from any kind of death
-            self.was_alive_last_frame = True
-        elif self.was_alive_last_frame and is_dead:
-            # Our player just died...
-            self.was_alive_last_frame = False
-            if self.is_expecting_received_death:
-                # ...because of a received deathlink, so let's not make a circular chain of deaths please
-                self.is_expecting_received_death = False
-            else:
-                # ...because of their own incompetence, so let's make their mates pay for that
-                await ctx.send_death(ctx.player_names[ctx.slot] + " may have disappointed the Ocean King.")
-                self.last_deathlink = ctx.last_death_link
+            if not self.was_alive_last_frame and not is_dead:
+                # We revived from any kind of death
+                self.was_alive_last_frame = True
+            elif self.was_alive_last_frame and is_dead:
+                # Our player just died...
+                self.was_alive_last_frame = False
+                if self.is_expecting_received_death:
+                    # ...because of a received deathlink, so let's not make a circular chain of deaths please
+                    self.is_expecting_received_death = False
+                else:
+                    # ...because of their own incompetence, so let's make their mates pay for that
+                    await ctx.send_death(ctx.player_names[ctx.slot] + " may have disappointed the Ocean King.")
+                    self.last_deathlink = ctx.last_death_link
 
