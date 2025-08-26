@@ -375,7 +375,7 @@ ENTRANCE_DATA = {
     # ========== Goron Temple ============
     "Goron Enter Temple": {
         "return_name": "GT Entrance",
-        "entrance": (0x10, 0x0, 0x0),
+        "entrance": (0x10, 0x0, 0x1),
         "exit": (0x20, 0x0, 0x0),
         "entrance_region": "goron outside temple",
         "exit_region": "gt",
@@ -384,7 +384,7 @@ ENTRANCE_DATA = {
     },
     "GT Dongo Warp": {
         "entrance": (0x20, 0xA, 0x0),
-        "exit": (0x10, 0x0, 0x0),
+        "exit": (0x10, 0x0, 0x1),
         "entrance_region": "gt dongo",
         "exit_region": "goron outside temple",
         "type": EntranceGroups.WARP_PORTAL,

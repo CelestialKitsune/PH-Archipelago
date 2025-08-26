@@ -1058,7 +1058,7 @@ class DSZeldaClient(BizHawkClient):
     async def check_location_post_processing(self, ctx, location: dict):
         """
         for running code on specific locations
-        ín st, this is used for sending goal on location
+        in st, this is used for sending goal on location
         :param ctx:
         :param location:
         :return:
