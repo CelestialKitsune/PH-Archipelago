@@ -1,5 +1,5 @@
 from random import randint
-from .DSZeldaClient import *
+from .DSZeldaClient.DSZeldaClient import *
 
 if TYPE_CHECKING:
     from worlds._bizhawk.context import BizHawkClientContext
