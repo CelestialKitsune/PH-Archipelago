@@ -512,7 +512,7 @@ class PhantomHourglassClient(DSZeldaClient):
     async def receive_key_in_own_dungeon(self, ctx, item_name: str, write_keys_to_storage):
         # TotOK - adds to key increment if you get it in the dungeon, otherwise do as usual
         if "Temple of the Ocean King" in item_name:
-            return [await write_keys_to_storage(ctx, 37)]
+            return [await write_keys_to_storage(37)]
         return []
 
     async def write_totok_keys_lol(self, ctx, item_name, item_data):
