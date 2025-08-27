@@ -204,3 +204,6 @@ fuzz.py
 /worlds/tloz_oos
 /worlds/tloz_ph/test
 /worlds/ladx_beta/
+
+# Pycashe
+__pycashe__

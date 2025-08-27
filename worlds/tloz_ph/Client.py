@@ -96,6 +96,8 @@ class PhantomHourglassClient(DSZeldaClient):
         self.er_y_offest = 164  # In ph i use coords who's y is 164 off the entrance y
         self.ADDR_gMapManager = POINTERS["ADDR_gMapManager"]
         self.stage_flag_offset = STAGE_FLAGS_OFFSET
+        self.hint_data = HINT_DATA
+        self.entrances = ENTRANCES
 
         # Ph variables
         self.goal_room = 0x3600
@@ -276,7 +278,8 @@ class PhantomHourglassClient(DSZeldaClient):
             zauz_required = ctx.slot_data["zauz_required_metals"]
             logger.info(f"Zauz needs {zauz_required} rare metals to give an item. You have {progress}/{total} metals.")
 
-    # Game Watcher
+    def process_loading_variable(self, read_result) -> bool:
+        return read_result["loading_room"]
 
     async def process_read_list(self, ctx: "BizHawkClientContext", read_result: dict):
         """
