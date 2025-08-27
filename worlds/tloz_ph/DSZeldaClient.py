@@ -1274,26 +1274,30 @@ class DSZeldaClient(BizHawkClient):
         """
         return False
 
+    async def set_stage_flags(self, ctx, stage):
+        """
+        called on entering a new stage. sets stage flags. ST doesn't do this yet
+        :param ctx:
+        :param stage:
+        :return:
+        """
+        pass
+
     async def _enter_stage(self, ctx, stage, scene_id):
-        self.stage_address = await get_address_from_heap(ctx, self.ADDR_gMapManager, offset=self.stage_flag_offset)
-        self.key_address = await self.get_small_key_address(ctx)
-        if stage in STAGE_FLAGS:
-            flags = STAGE_FLAGS[stage]
-
-            # Change certain stage flags based on options
-            if stage == 0 and ctx.slot_data["skip_ocean_fights"] == 1:
-                flags = SKIP_OCEAN_FIGHTS_FLAGS
-            if stage == 41 and ctx.slot_data["logic"] <= 1:
-                flags = SPAWN_B3_REAPLING_FLAGS
-
-            print(f"Setting Stage flags for {STAGES[stage]}, "
-                  f"adr: {hex(self.stage_address)}")
-            await write_memory_values(ctx, self.stage_address, flags)
+        await self.set_stage_flags(ctx, stage)
         # Give dungeon keys
         if stage in self.dungeon_key_data:
             if not await self.enter_special_key_room(ctx, stage, scene_id):
                 await self.update_key_count(ctx, stage)
         self.entering_from = scene_id
+
+    async def set_special_stage_flags(self, ctx, stage, flags) -> list:
+        # Change certain stage flags based on options
+        if stage == 0 and ctx.slot_data["skip_ocean_fights"] == 1:
+            flags = SKIP_OCEAN_FIGHTS_FLAGS
+        if stage == 41 and ctx.slot_data["logic"] <= 1:
+            flags = SPAWN_B3_REAPLING_FLAGS
+        return flags
 
     async def _load_local_locations(self, ctx, scene):
         # Load locations in room into loop

@@ -81,13 +81,6 @@ read_keys_deathlink_salvage = ["salvage_health"]
 class PhantomHourglassClient(DSZeldaClient):
     game = "The Legend of Zelda - Phantom Hourglass"
     system = "NDS"
-    local_checked_locations: Set[int]
-    local_scouted_locations: Set[int]
-    local_tracker: Dict[str, Any]
-    item_id_to_name: Dict[int, str]
-    location_name_to_id: Dict[str, int]
-    location_area_to_watches: Dict[int, dict[str, dict]]
-    watches: Dict[str, tuple[int, int, str]]
 
     def __init__(self) -> None:
         super().__init__()
