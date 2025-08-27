@@ -474,6 +474,22 @@ class PhantomHourglassClient(DSZeldaClient):
             return False
         return True
 
+    async def set_stage_flags(self, ctx, stage):
+        self.stage_address = await get_address_from_heap(ctx, self.ADDR_gMapManager, offset=STAGE_FLAGS_OFFSET)
+        self.key_address = self.stage_address + SMALL_KEY_OFFSET
+        if stage in STAGE_FLAGS:
+            flags = STAGE_FLAGS[stage]
+
+            # Change certain stage flags based on options
+            if stage == 0 and ctx.slot_data["skip_ocean_fights"] == 1:
+                flags = SKIP_OCEAN_FIGHTS_FLAGS
+            if stage == 41 and ctx.slot_data["logic"] <= 1:
+                flags = SPAWN_B3_REAPLING_FLAGS
+
+            print(f"Setting Stage flags for {STAGES[stage]}, "
+                  f"adr: {hex(self.stage_address)}")
+            await write_memory_values(ctx, self.stage_address, flags)
+
     # Enter stage
     async def enter_special_key_room(self, ctx, stage, scene_id) -> bool:
         if self.entering_from == 0x2600 and scene_id == 0x2509:
