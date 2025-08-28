@@ -472,6 +472,12 @@ class PhantomHourglassWorld(World):
             if item_name == "Triforce Crest" and not self.options.randomize_triforce_crest:
                 filler_item_count += 1
                 continue
+            # Goal locations are for UT, and should not have actual items
+            if "GOAL" in item_name:
+                forced_item = self.create_item(item_name)
+                self.multiworld.get_location(loc_name, self.player).place_locked_item(forced_item)
+                continue
+
             if (item_name in ["Treasure", "Ship Part", "Nothing!", "Potion", "Red Potion", "Purple Potion",
                               "Yellow Potion", "Power Gem", "Wisdom Gem", "Courage Gem", "Heart Container",
                               "Bombs (Progressive)", "Bow (Progressive)", "Bombchus (Progressive)",
