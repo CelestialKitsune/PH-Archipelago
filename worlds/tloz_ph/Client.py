@@ -631,6 +631,7 @@ class PhantomHourglassClient(DSZeldaClient):
         elif "Oshus' Sword" in vanilla_item:
             data = ITEMS_DATA[vanilla_item]
             await write_memory_value(ctx, data["ammo_address"], 0, size=2, overwrite=True)
+            return False
         else:
             return False
         return True  # Removed vanilla item, don't do more processing
