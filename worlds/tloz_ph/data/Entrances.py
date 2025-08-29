@@ -375,7 +375,7 @@ ENTRANCE_DATA = {
     # ========== Goron Temple ============
     "Goron Enter Temple": {
         "return_name": "GT Entrance",
-        "entrance": (0x10, 0x0, 0x1),
+        "entrance": (0x10, 0x0, 0x0),
         "exit": (0x20, 0x0, 0x0),
         "entrance_region": "goron outside temple",
         "exit_region": "gt",

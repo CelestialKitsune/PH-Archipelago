@@ -345,6 +345,21 @@ DYNAMIC_FLAGS = {
         "overwrite_if_true": [(0x1BA540, 0x14)],
         "reset_flags": ["RESET Wisdom Gem cap"]
     },
+    "Power Gem cap packs": {
+        "on_scenes": [0x1701],
+        "count_gems": "Power",
+        "overwrite_if_true": [(0x1BA541, 0x14)],
+    },
+    "Courage Gem cap packs": {
+        "on_scenes": [0x1701],
+        "count_gems": "Courage",
+        "overwrite_if_true": [(0x1BA542, 0x14)],
+    },
+    "Wisdom Gem cap packs": {
+        "on_scenes": [0x1701],
+        "count_gems": "Wisdom",
+        "overwrite_if_true": [(0x1BA540, 0x14)],
+    },
     "RESET Power Gem cap": {
         "overwrite_if_true": [(0x1BA541, "Power Gem")],
     },
@@ -1019,7 +1034,7 @@ DYNAMIC_FLAGS = {
     },
     "Doylan post temple item": {
         "on_scenes": [0x2201],
-        "unset_if_true": [(0x1B55A9, 0x20)],
+        "unset_if_true": [(0x1B55A9, 0x30)],
     },
     "Ice Field pre-dungeon": {
         "on_scenes": [0xF03, 0xF01],

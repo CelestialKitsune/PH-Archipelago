@@ -466,11 +466,24 @@ class PhantomHourglassClient(DSZeldaClient):
             print(f"Beedle points {d.get('beedle_points')} >= {points}")
             return points >= d.get('beedle_points', 300)
 
+        def count_spirit_gems(d):
+            if "count_gems" in d:
+                pack_size = ctx.slot_data["spirit_gem_packs"]
+                gem_count = item_count(ctx, f"{d['count_gems']} Gem Pack")
+                count = pack_size * gem_count
+                print(count, d["count_gems"])
+                if count <= 20:
+                    return False
+            return True
+
         # Checks
         if not check_metals(data):
             print(f"\t{data['name']} does not have enough metals")
             return False
         if not check_beedle_points(data):
+            return False
+        if not count_spirit_gems(data):
+            print(f"\t{data['name']} does not have enough spirit packs")
             return False
         return True
 
