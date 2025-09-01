@@ -327,11 +327,15 @@ class PhantomHourglassWorld(World):
         self.create_event("post tof", "_beat_tof")
         self.create_event("post toc", "_beat_toc")
         self.create_event("post tow", "_beat_tow")
+        self.create_event("post gt", "_beat_gt")
         self.create_event("spawn pirate ambush", "_beat_ghost_ship")
         # Farmable minigame events
         self.create_event("bannan cannon game", "_can_play_cannon_game")
         self.create_event("harrow dig", "_can_play_harrow")
         self.create_event("ds race", "_can_play_goron_race")
+        # Shop stuff
+        self.create_event("mercay treasure teller", "_has_treasure_teller")
+
         # Goal
         self.create_event("goal", "_beaten_game")
 

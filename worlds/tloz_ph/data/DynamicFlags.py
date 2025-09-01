@@ -853,7 +853,7 @@ DYNAMIC_FLAGS = {
         "set_if_true": [(0x1B558B, 0x40)]
     },
     "Ice temple metals": {
-        "on_scenes": [0x1F00],
+        "on_scenes": [0x1F00, 0x1F03, 0x1F06],
         "unset_if_true": [(0x1B558B, 0x20)],
         "reset_flags": ["RESET Ice Field pre-dungeon",
                         "RESET Ice Field post-dungeon"]

@@ -316,6 +316,7 @@ REGIONS = [
     "gt b3",
     "gt bk chest",
     "gt dongo",
+    "post gt",
 
     # Harrow Island
     "harrow",

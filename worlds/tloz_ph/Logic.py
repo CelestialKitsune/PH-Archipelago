@@ -217,7 +217,7 @@ def make_overworld_logic():
         ["tof 3f", "tof 3f key drop", False, "boomerang"],
         ["tof 3f key drop", "tof 3f boss key", False, "tof_3f_bk"],  # All 3F checks need boomerang, UT included
         ["tof 3f boss key", "tof blaaz", False, "tof_blaaz"],  # Includes UT
-        ["tof blaaz", "post tof", False, None],
+        ["tof blaaz", "post tof", False, None],  # Used for events
 
         # =========== Molida Island ===============
 
@@ -231,8 +231,7 @@ def make_overworld_logic():
         ["molida north", "molida north grapple", False, "grapple"],
         ["molida north", "toc gates", False, "enter_toc"],
         ["toc gates", "toc", True, None],
-        ["toc crayk", "post toc", False, None],
-        ["post toc", "molida archery", False, None],
+        ["molida island", "molida archery", False, "has", "_beat_toc"],
 
         # =============== Temple of Courage ================
 
@@ -264,6 +263,7 @@ def make_overworld_logic():
         ["toc bk chest", "toc before boss", False, "simple_boss_key", "Temple of Courage"],
         ["toc before boss", "toc before boss chest", False, "boom"],
         ["toc before boss", "toc crayk", False, "bow"],
+        ["toc crayk", "post toc", False, None],  # Used for events
 
         # ================ Spirit Island =====================
 
@@ -277,6 +277,8 @@ def make_overworld_logic():
 
         # ============ Ocean NW ===============
         ["sw ocean west", "nw ocean", False, "sea_chart", "NW"],
+        ["nw ocean", "sw ocean west", False, "sea_chart", "SW"],
+        ["nw ocean", "sw ocean east", False, None],
         ["sw ocean east", "nw ocean", False, "frog_n"],
         ["nw ocean", "nw ocean frog n", False, "cannon"],
         ["nw ocean", "gust", True, None],
@@ -364,7 +366,7 @@ def make_overworld_logic():
         ["goron", "goron outside temple", False, "hammer_clip"],
         ["goron outside temple", "goron north", False, "bombs"],
         ["goron outside temple", "gt", True, None],
-        ["gt dongo", "goron chief 2", False, "goron_chus"],
+        ["goron quiz", "goron chief 2", False, "has", "_beat_gt"],
 
         # ================= Goron Temple ====================
         ["gt", "gt 2", False, "goron_entrance"],
@@ -375,6 +377,7 @@ def make_overworld_logic():
         ["gt b2", "gt b2 back", False, "gt_b2_back"],
         ["gt b2 back", "gt bk chest", False, "chus"],
         ["gt b2", "gt dongo", False, "gt_dongo"],
+        ["gt dongo", "post gt", False, None],
 
         # ================= Harrow Island ====================
 
@@ -385,7 +388,7 @@ def make_overworld_logic():
 
         ["ds", "ds dig", False, "shovel"],
         ["ds", "ds combat", False, "can_kill_eye_brute"],
-        ["gt dongo", "ds race", False, None],
+        ["ds", "ds race", False, "has", "_beat_gt"],
 
         # ================= Isle of Frost ====================
 
@@ -420,6 +423,7 @@ def make_overworld_logic():
 
         ["sw ocean", "ne ocean", False, "frog_square"],
         ["se ocean", "ne ocean", False, "sea_chart", "NE"],
+        ["ne ocean", "se ocean", False, "sea_chart", "SE"],
         ["ne ocean", "ne ocean frog", False, "cannon"],
         ["ne ocean", "ne ocean combat", False, "can_kill_blue_chu"],
         ["ne ocean", "iotd", False, None],

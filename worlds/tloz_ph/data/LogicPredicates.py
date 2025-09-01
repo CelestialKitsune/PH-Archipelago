@@ -211,11 +211,11 @@ def ph_has_frog_x(state: CollectionState, player: int):
 def ph_has_frog_phi(state: CollectionState, player: int):
     return all([
         ph_has_frog(state, player, "Phi", "SW"),
-        any([
-            ph_has_cannon(state, player),
-            ph_has_frog_x(state, player),
-            ph_has_sea_chart(state, player, "NW")
-        ])
+        # any([  # Remove cause warp to start
+        #     ph_has_cannon(state, player),
+        #     ph_has_frog_x(state, player),
+        #     ph_has_sea_chart(state, player, "NW")
+        # ])
     ])
 
 
@@ -232,15 +232,7 @@ def ph_has_frog_w(state: CollectionState, player: int):
 
 
 def ph_has_frog_square(state: CollectionState, player: int):
-    return all([
-        ph_has_frog(state, player, "Square", "NE"),
-        any([
-            ph_has_sea_chart(state, player, "SE"),
-            ph_has_frog_phi(state, player),
-            ph_has_frog_n(state, player),
-            ph_has_frog_x(state, player)
-        ])
-    ])
+    return ph_has_frog(state, player, "Square", "NE")
 
 
 def ph_has_treasure_map(state, player, number):
@@ -453,7 +445,7 @@ def ph_has_rupees(state: CollectionState, player: int, cost: int):
 def ph_can_farm_rupees(state: CollectionState, player: int):
     return any([
         all([
-            ph_has_courage_crest(state, player),  # Can Sell Treasure
+            state.has("_has_treasure_teller", player),  # Can Sell Treasure
             any([
                 all([  # Can Farm Phantoms in TotOK
                     ph_has_phantom_sword(state, player),
@@ -472,7 +464,8 @@ def ph_can_farm_rupees(state: CollectionState, player: int):
         all([  # Can farm harrow (and chooses to play with harrow)
             state.has("_can_play_harrow", player),
             ph_option_randomize_harrow(state, player)
-        ])
+        ]),
+
     ])
 
 
@@ -1054,9 +1047,7 @@ def ph_can_enter_ocean_sw_west(state, player):
     ])
 
 def ph_enter_se_ocean(state, player):
-    return all([
-            ph_has_sea_chart(state, player, "SE"),
-            ph_has_sea_chart(state, player, "SW")])
+    return ph_has_sea_chart(state, player, "SE")
 
 def ph_enter_ruins(state, player):
     return all([ph_has_regal_necklace(state, player), ph_has_cave_damage(state, player)])
