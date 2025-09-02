@@ -2633,6 +2633,7 @@ LOCATIONS_DATA = {
         "floor_id": 0x0,
         "y": 0x2666,
         "id": 249,
+        "delay_reset": True
     },
 
     # ========== Ruins Island ============

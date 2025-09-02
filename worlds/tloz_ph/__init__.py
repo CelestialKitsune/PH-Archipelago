@@ -165,6 +165,9 @@ class PhantomHourglassWorld(World):
             self.pick_required_dungeons()
             if self.options.shuffle_dungeon_entrances:
                 self.options.dungeon_shortcuts.value = 0
+            if self.options.shuffle_island_entrances:
+                self.options.boat_requires_sea_chart.value = 0
+
         self.restrict_non_local_items()
 
     def restrict_non_local_items(self):
@@ -333,6 +336,7 @@ class PhantomHourglassWorld(World):
         self.create_event("bannan cannon game", "_can_play_cannon_game")
         self.create_event("harrow dig", "_can_play_harrow")
         self.create_event("ds race", "_can_play_goron_race")
+        self.create_event("totok b1 phantom", "_can_farm_totok")
         # Shop stuff
         self.create_event("mercay treasure teller", "_has_treasure_teller")
 
@@ -367,26 +371,30 @@ class PhantomHourglassWorld(World):
             self.multiworld.get_location(name, self.player).progress_type = LocationProgressType.EXCLUDED
 
     def connect_entrances(self) -> None:
-        do_er = True  # Sneaky beta setting
+        do_er = True   # Sneaky beta setting
         coupled = True
         if do_er:
             # Filter entrances to disconnect by yaml settings
-            # Currently only dungeon entrance rando is supported
+            print(f"island? {self.options.shuffle_island_entrances}")
             randomized_entrances = []
             if self.options.shuffle_dungeon_entrances:
                 randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.DUNGEON_ENTRANCE]
-                # print([e.name for e in randomized_entrances])
+            if self.options.shuffle_island_entrances:
+                randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.ISLAND]
+
             # Disconnect entrances to shuffle
             for entrance in randomized_entrances:
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
-                # print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
+                print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
 
-            def get_target_groups(group: int) -> list[int]:
-                direction = group & EntranceGroups.DIRECTION_MASK
-                area = group & EntranceGroups.AREA_MASK
-                return list({OPPOSITE_ENTRANCE_GROUPS[direction] | area, area, OPPOSITE_ENTRANCE_GROUPS[direction]})
+            def get_target_groups(g: int) -> list[int]:
+                direction = g & EntranceGroups.DIRECTION_MASK
+                area = g & EntranceGroups.AREA_MASK
+                return list({OPPOSITE_ENTRANCE_GROUPS[direction] | area})
 
-            groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(0, 5) for area in range(0, 11)}
+            groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(0, 7) for area in range(0, 11)}
+            for i in groups.items():
+                print(f"\t{i}")
             # Manually connect entrances if UT
             if getattr(self.multiworld, "generation_is_fake", False):
                 entrance_id_to_region = {data["id"]: data["entrance_region"] for data in ENTRANCES.values()}
@@ -689,7 +697,7 @@ class PhantomHourglassWorld(World):
             # Cosmetic
             "additional_metal_names",
             # ER
-            "shuffle_dungeon_entrances",
+            "shuffle_dungeon_entrances", "shuffle_island_entrances",
             # Deathlink
             "death_link"
         ]

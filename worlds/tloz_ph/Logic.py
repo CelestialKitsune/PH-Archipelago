@@ -151,12 +151,13 @@ def make_overworld_logic():
         # ============ SW Ocean =================
 
         ["mercay se", "sw ocean east", False, "boat_access"],
-        ["sw ocean east", "cannon island", False, None],
+        ["sw ocean east", "mercay se", False, None],
+        ["sw ocean east", "cannon island", True, None],
         ["sw ocean east", "ember port", True, None],
         ["sw ocean east", "sw ocean crest salvage", False, "salvage_courage_crest"],
         ["sw ocean east", "sw ocean west", False, "ocean_sw_west"],
-        ["sw ocean west", "molida island", False, None],
-        ["sw ocean west", "spirit island", False, None],
+        ["sw ocean west", "molida island", True, None],
+        ["sw ocean west", "spirit island", True, None],
         ["sw ocean west", "sw ocean nyave", False, "nyave_fight"],
         ["sw ocean nyave", "sw ocean nyave trade", False, "guard_notebook"],
         ["sw ocean west", "sw ocean frog phi", False, "cannon"],
@@ -290,9 +291,9 @@ def make_overworld_logic():
         ["nw ocean", "frog warps", False, None],
         ["nw ocean", "nw ocean frog n", False, "cannon"],
         ["nw ocean", "gust", True, None],
-        ["nw ocean", "bannan", False, None],
-        ["nw ocean", "zauz", False, None],
-        ["nw ocean", "uncharted", False, None],
+        ["nw ocean", "bannan", True, None],
+        ["nw ocean", "zauz", True, None],
+        ["nw ocean", "uncharted", True, None],
         ["nw ocean", "ghost ship", False, "ghost_ship"],
         ["nw ocean", "porl", False, None],
         ["porl", "porl item", False, "sword"],
@@ -354,14 +355,16 @@ def make_overworld_logic():
         # ================= SE Ocean ====================
 
         ["sw ocean east", "se ocean", False, "se_ocean"],
-        ["se ocean east", "sw ocean east", False, "sea_chart", "SW"],
+        ["se ocean", "sw ocean east", False, "sea_chart", "SW"],
         ["se ocean", "frog warps", False, None],
         ["se ocean", "se ocean frogs", False, "cannon"],
         ["se ocean", "goron", False, "can_pass_sea_monsters"],
+        ["goron", "se ocean", False, None],
         ["se ocean", "se ocean trade", False, "kaleidoscope"],
         ["se ocean", "iof", False, "can_pass_sea_monsters"],
-        ["se ocean", "harrow", False, "sword"],
-        ["se ocean", "ds", False, None],
+        ["iof", "se ocean", False, None],
+        ["se ocean", "harrow", True, None],
+        ["se ocean", "ds", True, None],
         ["se ocean", "pirate ambush", False, "beat_gs"],
 
         # ================= Goron Island ====================
@@ -391,7 +394,8 @@ def make_overworld_logic():
 
         # ================= Harrow Island ====================
 
-        ["harrow", "harrow dig", False, "shovel"],
+        ["harrow", "harrow sword", False, "sword"],
+        ["harrow sword", "harrow dig", False, "shovel"],
         ["harrow dig", "harrow dig 2", False, "sea_chart", "NE"],
 
         # ================= Dee Ess Island ====================
@@ -431,14 +435,14 @@ def make_overworld_logic():
 
         # ================= NE Ocean ====================
 
-        ["sw ocean west", "frog warps", False, None],
         ["se ocean", "ne ocean", False, "sea_chart", "NE"],
         ["ne ocean", "se ocean", False, "sea_chart", "SE"],
+        ["ne ocean", "frog warps", False, None],
         ["ne ocean", "ne ocean frog", False, "cannon"],
         ["ne ocean", "ne ocean combat", False, "can_kill_blue_chu"],
-        ["ne ocean", "iotd", False, None],
-        ["ne ocean", "maze", False, "sword"],
-        ["ne ocean", "ruins port", False, "regal_necklace"],
+        ["ne ocean", "iotd", True, None],
+        ["ne ocean", "maze", True, None],
+        ["ne ocean inner", "ruins port", True, None],
         ["ne ocean", "pirate ambush", False, "beat_gs"],
 
         # ================= IotD ====================
@@ -466,10 +470,11 @@ def make_overworld_logic():
 
         # ================= Maze Island ====================
 
-        ["maze", "maze east", False, "explosives"],
-        ["maze", "maze normal", False, "bow"],
+        ["maze", "maze sword", False, "sword"],
+        ["maze sword", "maze east", False, "explosives"],
+        ["maze sword", "maze normal", False, "bow"],
         ["maze normal", "maze expert", False, "grapple"],
-        ["maze", "maze dig", False, "shovel"],
+        ["maze sword", "maze dig", False, "shovel"],
 
         # ========== Fishing ====================
 
@@ -487,6 +492,7 @@ def make_overworld_logic():
         ["se ocean", "se ocean salvage", False, "salvage"],
         ["ne ocean", "ne ocean salvage", False, "salvage"],
         ["ne ocean", "ne ocean inner", False, "regal_necklace"],
+        ["ne ocean inner", "ne ocean", False, None],
         ["ne ocean inner", "ne ocean salvage inner", False, "salvage"],
         ["ne ocean", "nw ocean corner salvage", False, "salvage_behind_bannan"],
 

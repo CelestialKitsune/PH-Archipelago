@@ -7,6 +7,8 @@ class EntranceGroups(IntEnum):
     RIGHT = 2
     UP = 3
     DOWN = 4
+    INSIDE = 5
+    OUTSIDE = 6
     # Areas
     HOUSE = 1 << 3
     CAVE = 2 << 3
@@ -29,7 +31,9 @@ OPPOSITE_ENTRANCE_GROUPS = {
     EntranceGroups.UP: EntranceGroups.DOWN,
     EntranceGroups.DOWN: EntranceGroups.UP,
     0: 0,
-    EntranceGroups.NONE: EntranceGroups.NONE
+    EntranceGroups.NONE: EntranceGroups.NONE,
+    EntranceGroups.INSIDE: EntranceGroups.OUTSIDE,
+    EntranceGroups.OUTSIDE: EntranceGroups.INSIDE
 }
 
 ENTRANCE_DATA = {
@@ -299,15 +303,7 @@ ENTRANCE_DATA = {
         "two_way": False
     },
     # ========== Gust ============
-    "Ocean NW Isle of Gust": {
-        "return_name": "Gust Disembark",
-        "entrance": (0x0, 0x1, 0x0),
-        "exit": (0xE, 0x0, 0x0),
-        "entrance_region": "nw ocean",
-        "exit_region": "gust",
-        "type": EntranceGroups.ISLAND,
-        "direction": EntranceGroups.NONE,
-    },
+
 
 
 
@@ -452,6 +448,164 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.WARP_PORTAL,
         "direction": EntranceGroups.NONE,
         "two_way": False
+    },
+
+    # ============= SW Ocean ==================
+
+    "Ocean SW Mercay": {
+        "return_name": "Mercay SE Boat",
+        "entrance": (0x0, 0x0, 0x2),
+        "exit": (0xB, 0x3, 0x2),
+        "entrance_region": "sw ocean east",
+        "exit_region": "mercay se",
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SW Cannon": {
+        "return_name": "Cannon Boat",
+        "entrance_region": "sw ocean east",
+        "exit_region": "cannon island",
+        "entrance": (0x0, 0x0, 0x4),
+        "exit": (0x13, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SW Ember": {
+        "return_name": "Ember Boat",
+        "entrance_region": "sw ocean east",
+        "exit_region": "ember port",
+        "entrance": (0x0, 0x0, 0x3),
+        "exit": (0xD, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SW Molida": {
+        "return_name": "Molida Boat",
+        "entrance_region": "sw ocean west",
+        "exit_region": "molida island",
+        "entrance": (0x0, 0x0, 0x1),
+        "exit": (0xC, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SW Spirit": {
+        "return_name": "Spirit Boat",
+        "entrance_region": "sw ocean west",
+        "exit_region": "spirit island",
+        "entrance": (0x0, 0x0, 0x5),
+        "exit": (0x17, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+
+    # ============= NW Ocean ==================
+
+    "Ocean NW Gust": {
+        "return_name": "Gust Boat",
+        "entrance_region": "nw ocean",
+        "exit_region": "gust",
+        "entrance": (0x0, 0x1, 0x0),
+        "exit": (0xE, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean NW Bannan": {
+        "return_name": "Bannan Boat",
+        "entrance_region": "nw ocean",
+        "exit_region": "bannan",
+        "entrance": (0x0, 0x1, 0x3),
+        "exit": (0x14, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean NW Zauz": {
+        "return_name": "Zauz Boat",
+        "entrance_region": "nw ocean",
+        "exit_region": "zauz island",
+        "entrance": (0x0, 0x1, 0x4),
+        "exit": (0x16, 0x0, 0x1),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean NW Uncharted": {
+        "return_name": "Uncharted Boat",
+        "entrance_region": "nw ocean",
+        "exit_region": "uncharted",
+        "entrance": (0x0, 0x1, 0x7),
+        "exit": (0x1A, 0x0, 0x1),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+
+    # ============= SE Ocean ==================
+
+    "Ocean SE Goron": {
+        "return_name": "Goron Boat",
+        "entrance_region": "se ocean",
+        "exit_region": "goron",
+        "entrance": (0x0, 0x2, 0x2),
+        "exit": (0x10, 0x2, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SE Harrow": {
+        "return_name": "Harrow Boat",
+        "entrance_region": "se ocean",
+        "exit_region": "harrow",
+        "entrance": (0x0, 0x2, 0x4),
+        "exit": (0x18, 0x0, 0x1),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SE Dee Ess": {
+        "return_name": "Dee Ess Boat",
+        "entrance_region": "se ocean",
+        "exit_region": "ds",
+        "entrance": (0x0, 0x2, 0x5),
+        "exit": (0x1B, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean SE Frost": {
+        "return_name": "Frost Boat",
+        "entrance_region": "se ocean",
+        "exit_region": "iof",
+        "entrance": (0x0, 0x2, 0x3),
+        "exit": (0xF, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+
+    # ============= NE Ocean ==================
+
+    "Ocean NE Dead": {
+        "return_name": "Dead Boat",
+        "entrance_region": "ne ocean",
+        "exit_region": "iotd",
+        "entrance": (0x0, 0x3, 0x1),
+        "exit": (0x15, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+    "Ocean NE Ruins": {
+        "return_name": "Ruins Boat",
+        "entrance_region": "ne ocean inner",
+        "exit_region": "ruins port",
+        "entrance": (0x0, 0x3, 0x2),
+        "exit": (0x11, 0x0, 0x0),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
+    },
+
+
+    "Ocean NE Maze": {
+        "return_name": "Maze Boat",
+        "entrance_region": "ne ocean",
+        "exit_region": "maze",
+        "entrance": (0x0, 0x3, 0x3),
+        "exit": (0x19, 0x0, 0x1),
+        "type": EntranceGroups.ISLAND,
+        "direction": EntranceGroups.INSIDE,
     },
 
 

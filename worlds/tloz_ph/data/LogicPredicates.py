@@ -448,9 +448,9 @@ def ph_can_farm_rupees(state: CollectionState, player: int):
         all([
             state.has("_has_treasure_teller", player),  # Can Sell Treasure
             any([
-                all([  # Can Farm Phantoms in TotOK
-                    ph_has_phantom_sword(state, player),
-                    ph_has_spirit(state, player, "Power")
+                all([
+                    state.has("_can_farm_totok", player),
+                    ph_has_phantom_sword(state, player)  # QoL require sword for logic
                 ]),
                 all([  # Can Farm Minigames
                     ph_option_randomize_minigames(state, player),
@@ -460,13 +460,12 @@ def ph_can_farm_rupees(state: CollectionState, player: int):
                         state.has("_can_play_goron_race", player),
                     ])
                 ])
-            ])
+            ]),
         ]),
         all([  # Can farm harrow (and chooses to play with harrow)
             state.has("_can_play_harrow", player),
             ph_option_randomize_harrow(state, player)
         ]),
-
     ])
 
 

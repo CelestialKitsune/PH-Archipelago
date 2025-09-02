@@ -22,13 +22,13 @@ DYNAMIC_ENTRANCES = {
                               "Temple of Fire 1F Maze Chest"],
     },
     "Shortcut to Temple of Wind": {
-        "entrance": "Ocean NW Isle of Gust",
+        "entrance": "Ocean NW Gust",
         "destination": "ToW Entrance",
         "has_slot_data": [("dungeon_shortcuts", 1)],
         "has_locations": LOCATION_GROUPS["Isle of Gust"],
     },
     "Shortcut to Temple of Wind no digging": {
-        "entrance": "Ocean NW Isle of Gust",
+        "entrance": "Ocean NW Gust",
         "destination": "ToW Entrance",
         "has_slot_data": [("dungeon_shortcuts", 1), ("randomize_digs", 0)],
         "has_locations": [

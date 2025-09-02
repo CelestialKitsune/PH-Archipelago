@@ -320,6 +320,7 @@ REGIONS = [
 
     # Harrow Island
     "harrow",
+    "harrow sword",
     "harrow dig",
     "harrow dig 2",
 
@@ -383,6 +384,7 @@ REGIONS = [
 
     # Maze Island
     "maze",
+    "maze sword",
     "maze east",
     "maze normal",
     "maze expert",

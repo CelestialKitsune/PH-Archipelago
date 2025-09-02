@@ -483,6 +483,17 @@ class PhantomHourglassShuffleDungeonEntrances(Toggle):
     display_name = "shuffle_dungeon_entrances"
     default = 0
 
+class PhantomHourglassShuffleIslands(Toggle):
+    """
+    EXPERIMENTAL!!! Use at your own risk!
+    Shuffle what island port leads to which island overworld.
+    Does not include ghost ship or travellers ships.
+    Currently incompatible with boat requires sea chart.
+    Full entrance rando coming soon!
+    """
+    display_name = "shuffle_island_entrances"
+    default = 0
+
 @dataclass
 class PhantomHourglassOptions(PerGameCommonOptions):
     # Accessibility
@@ -543,6 +554,7 @@ class PhantomHourglassOptions(PerGameCommonOptions):
 
     # ER
     shuffle_dungeon_entrances: PhantomHourglassShuffleDungeonEntrances
+    shuffle_island_entrances: PhantomHourglassShuffleIslands
 
     # Cosmetic
     additional_metal_names: PhantomHourglassAdditionalMetalNames
@@ -608,7 +620,8 @@ ph_option_groups = [
         PhantomHourglassTimeIncrement
     ]),
     OptionGroup("Entrance Randomizer Options", [
-        PhantomHourglassShuffleDungeonEntrances
+        PhantomHourglassShuffleDungeonEntrances,
+        PhantomHourglassShuffleIslands
     ]),
     OptionGroup("Cosmetic Options", [
         PhantomHourglassAdditionalMetalNames
