@@ -304,7 +304,15 @@ ENTRANCE_DATA = {
     },
     # ========== Gust ============
 
-
+    "Fake temp": {
+        "return_name": "Temp Fake",
+        "entrance": (0x40, 0x1, 0x0),
+        "exit": (0x40, 0x0, 0x0),
+        "entrance_region": "nope",
+        "exit_region": "epon",
+        "type": EntranceGroups.NONE,
+        "direction": EntranceGroups.NONE,
+        },
 
 
         # ========== Temple of Wind ============

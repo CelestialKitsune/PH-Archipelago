@@ -843,12 +843,12 @@ DYNAMIC_FLAGS = {
     },
     # Dungeons and metals
     "Goron temple metals": {
-        # "on_scenes": [0x2000],
+        "on_scenes": [0x2000, 0x2E00, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006],
         "unset_if_true": [(0x1B558B, 0x40)],
         "reset_flags": ["RESET Goron temple metals"]
     },
     "RESET Goron temple metals": {
-        "on_scenes": [0x1000],
+        # "on_scenes": [0x1000],
         "has_items": [("Crimzonine", 1)],
         "set_if_true": [(0x1B558B, 0x40)]
     },
