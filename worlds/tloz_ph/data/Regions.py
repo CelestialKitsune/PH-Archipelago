@@ -138,7 +138,6 @@ REGIONS = [
     "beat bellumbeck",
 
     # SW Ocean
-    "sw ocean",
     "sw ocean east",
     "sw ocean west",
     "sw ocean crest salvage",
@@ -146,6 +145,7 @@ REGIONS = [
     "sw ocean frog phi",
     "sw ocean nyave",
     "sw ocean nyave trade",
+    "frog warps",
 
     # Cannon Island
     "cannon island",

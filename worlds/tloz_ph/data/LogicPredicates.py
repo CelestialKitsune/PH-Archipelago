@@ -192,13 +192,13 @@ def ph_has_cyclone_slate(state: CollectionState, player: int):
     return state.has("Cyclone Slate", player)
 
 
-# Does not mean you can logically get back, use the other frogs
+# Does not mean you can logically get back
 def ph_has_frog(state: CollectionState, player: int, glyph: str, quadrant: str):
     return all([
         ph_has_sea_chart(state, player, quadrant),
         ph_has_cyclone_slate(state, player),
         any([
-            state.has(f"Frog Glyph {glyph}", player),
+            state.has(f"Golden Frog Glyph {glyph}", player),
             ph_option_start_with_frogs(state, player)
         ])
     ])
@@ -211,11 +211,6 @@ def ph_has_frog_x(state: CollectionState, player: int):
 def ph_has_frog_phi(state: CollectionState, player: int):
     return all([
         ph_has_frog(state, player, "Phi", "SW"),
-        # any([  # Remove cause warp to start
-        #     ph_has_cannon(state, player),
-        #     ph_has_frog_x(state, player),
-        #     ph_has_sea_chart(state, player, "NW")
-        # ])
     ])
 
 
@@ -234,6 +229,12 @@ def ph_has_frog_w(state: CollectionState, player: int):
 def ph_has_frog_square(state: CollectionState, player: int):
     return ph_has_frog(state, player, "Square", "NE")
 
+
+def ph_has_se_frogs(state, player):
+    return any([
+        ph_has_frog_omega(state, player),
+        ph_has_frog_w(state, player)
+    ])
 
 def ph_has_treasure_map(state, player, number):
     map_name = ITEM_GROUPS["Treasure Maps"][number - 1]
@@ -2369,6 +2370,7 @@ RULE_DICT = {
     "frog_omega": ph_has_frog_omega,
     "frog_w": ph_has_frog_w,
     "frog_square": ph_has_frog_square,
+    "frog_se": ph_has_se_frogs,
     "treasure_map": ph_has_treasure_map,
     # Combind States
     "explosives": ph_has_explosives,

@@ -21,7 +21,6 @@ def make_overworld_logic():
         ["mercay oshus", "mercay oshus gem", False, "oshus_gem"],
         ["mercay oshus", "mercay oshus phantom blade", False, "can_make_phantom_sword"],
         ["mercay oshus phantom blade", "mercay oshus gem", False, None],
-        ["mercay se", "sw ocean", False, "sea_chart", "SW"],
 
         # ER
         ["mercay island", "mercay sw", False, None],
@@ -131,10 +130,10 @@ def make_overworld_logic():
 
         # ============ Shops ====================
 
-        ["mercay island", "shop power gem", False, "can_buy_gem"],
-        ["mercay island", "shop quiver", False, "can_buy_quiver"],
-        ["mercay island", "shop bombchu bag", False, "can_buy_chu_bag"],
-        ["mercay island", "shop heart container", False, "can_buy_heart"],
+        ["mercay shop", "shop power gem", False, "can_buy_gem"],
+        ["mercay shop", "shop quiver", False, "can_buy_quiver"],
+        ["mercay shop", "shop bombchu bag", False, "can_buy_chu_bag"],
+        ["mercay shop", "shop heart container", False, "can_buy_heart"],
 
         ["sw ocean east", "beedle", False, None],
         ["beedle", "beedle gem", False, "beedle_shop", 500],
@@ -151,7 +150,7 @@ def make_overworld_logic():
 
         # ============ SW Ocean =================
 
-        ["mercay island", "sw ocean east", False, "boat_access"],
+        ["mercay se", "sw ocean east", False, "boat_access"],
         ["sw ocean east", "cannon island", False, None],
         ["sw ocean east", "ember port", True, None],
         ["sw ocean east", "sw ocean crest salvage", False, "salvage_courage_crest"],
@@ -162,6 +161,15 @@ def make_overworld_logic():
         ["sw ocean nyave", "sw ocean nyave trade", False, "guard_notebook"],
         ["sw ocean west", "sw ocean frog phi", False, "cannon"],
         ["sw ocean east", "sw ocean frog x", False, "cannon"],
+        ["sw ocean west", "frog warps", False, None],
+        ["sw ocean east", "frog warps", False, None],
+
+        # ============= Frog Warps ==================
+        ["frog warps", "sw ocean west", False, "frog_phi"],
+        ["frog warps", "sw ocean east", False, "frog_x"],
+        ["frog warps", "nw ocean", False, "frog_n"],
+        ["frog warps", "ne ocean", False, "frog_square"],
+        ["frog warps", "se ocean", False, "frog_se"],
 
         # ============ Cannon Island ===============
 
@@ -278,8 +286,8 @@ def make_overworld_logic():
         # ============ Ocean NW ===============
         ["sw ocean west", "nw ocean", False, "sea_chart", "NW"],
         ["nw ocean", "sw ocean west", False, "sea_chart", "SW"],
-        ["nw ocean", "sw ocean east", False, None],
-        ["sw ocean east", "nw ocean", False, "frog_n"],
+        ["nw ocean", "sw ocean east", False, "sea_chart", "SW"],
+        ["nw ocean", "frog warps", False, None],
         ["nw ocean", "nw ocean frog n", False, "cannon"],
         ["nw ocean", "gust", True, None],
         ["nw ocean", "bannan", False, None],
@@ -345,7 +353,9 @@ def make_overworld_logic():
 
         # ================= SE Ocean ====================
 
-        ["sw ocean", "se ocean", False, "se_ocean"],
+        ["sw ocean east", "se ocean", False, "se_ocean"],
+        ["se ocean east", "sw ocean east", False, "sea_chart", "SW"],
+        ["se ocean", "frog warps", False, None],
         ["se ocean", "se ocean frogs", False, "cannon"],
         ["se ocean", "goron", False, "can_pass_sea_monsters"],
         ["se ocean", "se ocean trade", False, "kaleidoscope"],
@@ -421,7 +431,7 @@ def make_overworld_logic():
 
         # ================= NE Ocean ====================
 
-        ["sw ocean", "ne ocean", False, "frog_square"],
+        ["sw ocean west", "frog warps", False, None],
         ["se ocean", "ne ocean", False, "sea_chart", "NE"],
         ["ne ocean", "se ocean", False, "sea_chart", "SE"],
         ["ne ocean", "ne ocean frog", False, "cannon"],
@@ -463,7 +473,7 @@ def make_overworld_logic():
 
         # ========== Fishing ====================
 
-        ["sw ocean", "fishing", False, "fishing_rod"],
+        ["frog warps", "fishing", False, "fishing_rod"],
         ["fishing", "fishing bcl", False, "big_catch_lure"],
         ["fishing", "fishing rsf", False, "can_catch_rsf"],
         ["fishing", "fishing shadows", False, "swordfish_shadows"],
