@@ -505,7 +505,7 @@ class PhantomHourglassClient(DSZeldaClient):
             if stage == 41 and ctx.slot_data["logic"] <= 1:
                 flags = SPAWN_B3_REAPLING_FLAGS
 
-            print(f"Setting Stage flags for {STAGES[stage]}, "
+            print(f"\tSetting Stage flags for {STAGES[stage]}, "
                   f"adr: {hex(self.stage_address)}")
             await write_memory_values(ctx, self.stage_address, flags)
 
@@ -700,39 +700,41 @@ class PhantomHourglassClient(DSZeldaClient):
                     self.last_deathlink = ctx.last_death_link
 
     def add_special_er_data(self, ctx, er_map, scene, detect_data, exit_data):
-        def change_detect_data(v):
-            detect_list = list(detect_data)
-            detect_list[0] = v
-            return tuple(detect_list)
-
+        # all lowered water scenes on ruins need to account for funny scene detections
         if scene & 0xFF00 == 0x1100:
-            if detect_data[0] == 0x11:
-                detect_data = change_detect_data(0x12)
-                print(f"detect data {hex(scene)} => {detect_data}")
-                er_map[scene][detect_data] = exit_data
+            high_scene = 0x1200 + (scene & 0xFF)
+            er_map.setdefault(high_scene, {})
+            # detecting 11s in scene 12s
+            print(f"\tnew home scene: {high_scene}")
+            er_map[high_scene][detect_data] = exit_data
+            if detect_data.exit_stage == 0x11:
+                new_detect = detect_data.copy()
+                new_detect.set_exit_stage(0x12)
+                er_map[high_scene][new_detect] = exit_data
 
-            scene = 0x1200 + (scene & 0xFF)
-            er_map.setdefault(scene, {})
-            er_map[scene][detect_data] = exit_data
-        if detect_data[0] == 0x11:
-            detect_data = change_detect_data(0x12)
-            print(f"detect data {hex(scene)} => {detect_data}")
-            er_map[scene][detect_data] = exit_data
+        if detect_data.exit_stage == 0x11:
+            new_detect = detect_data.copy()
+            new_detect.set_exit_stage(0x12)
+            print(f"\tnew detect scene: {new_detect} {new_detect.entrance} {new_detect.exit}")
+            # detect scene turns to 12
+            er_map[scene][new_detect] = exit_data
 
         return er_map
 
     async def lower_water(self, ctx):
         if await read_memory_value(ctx, 0x1B5582) & 0x4:
-            print(self.er_map)
             for scene, data in self.er_map.items():
                 for detect_data, exit_data in data.items():
-                    if exit_data[0] == 0x11:
-                        exit_data[0] = 0x12
+                    if exit_data.stage == 0x11:
+                        exit_data.set_stage(0x12)
                         self.er_map[scene][detect_data] = exit_data
             self.lowered_water = True
 
-    async def conditional_er(self, ctx, conditions) -> bool:
-        if "ruins_water" in conditions:
-            logger.info(f"This entrance is flooded (Isle of Ruins)")
-            return False
+    async def conditional_er(self, ctx, exit_data) -> bool:
+        print(f"\tcond. {exit_data.name} {exit_data.extra_data}")
+        if "conditional" in exit_data.extra_data:
+            # Bounce back if the entrance connects to a lower room
+            if "ruins_water" in exit_data.extra_data["conditional"] and not self.lowered_water:
+                logger.info(f"This entrance is flooded (Isle of Ruins)")
+                return False
         return True

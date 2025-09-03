@@ -182,8 +182,8 @@ ENTRANCE_DATA = {
         "exit": (0xD, 0x14, 0x0),
         "entrance_region": "ember astrid",
         "exit_region": "ember astrid basement",
-        "type": EntranceGroups.STAIRS,
-        "direction": EntranceGroups.DOWN,
+        "type": EntranceGroups.CAVE,
+        "direction": EntranceGroups.OUTSIDE,
     },
     "Ember Kayo House": {
         "return_name": "Inside Kayo House",
@@ -631,7 +631,7 @@ ENTRANCE_DATA = {
         "entrance": (0x12, 0x0, 0xFC),
         "exit": (0x12, 0x1, 0xFB),
         "coords": (-63750, -164, -4815),
-        "extra_data": {"conditional": "ruins_water"},
+        "extra_data": {"conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
@@ -697,7 +697,7 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
     },
-    "Ruins NW East Pyramid": {
+    "Ruins NE East Pyramid": {
         "return_name": "Doylan's Exit",
         "entrance_region": "ruins ne doylan bridge",
         "exit_region": "doylan temple",
@@ -723,7 +723,7 @@ ENTRANCE_DATA = {
         "exit": (0x12, 0x2, 0xFB),
         "coords": (213590, -164, 4784),
         "extra_data": {"x_min": 144990,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
@@ -746,7 +746,7 @@ ENTRANCE_DATA = {
         "exit": (0x12, 0x2, 0xFE),
         "coords": (8192, -164, -43675),
         "extra_data": {"z_min": -80000,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
     },
@@ -758,7 +758,7 @@ ENTRANCE_DATA = {
         "exit": (0x12, 0x2, 0xFE),
         "coords": (4784, -164, -120000),
         "extra_data": {"z_max": -80000,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
     },
@@ -770,7 +770,7 @@ ENTRANCE_DATA = {
         "exit": (0x12, 0x2, 0xFB),
         "coords": (13000, -164, 4784),
         "extra_data": {"x_max": 70000,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
@@ -783,7 +783,7 @@ ENTRANCE_DATA = {
         "coords": (100700, -164, 4784),
         "extra_data": {"x_min": 70000,
                        "x_max": 101000,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
@@ -791,8 +791,8 @@ ENTRANCE_DATA = {
         "return_name": "Ruins SE Shortcut Bridge",
         "entrance_region": "ruins sw port cliff",
         "exit_region": "ruins se return bridge west",
-        "entrance": (0x12, 0x0, 0xFD),
-        "exit": (0x12, 0x3, 0xFE),
+        "entrance": (0x11, 0x0, 0xFD),
+        "exit": (0x11, 0x3, 0xFE),
         "coords": (4784, 9666, 51500),
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.RIGHT,
@@ -803,7 +803,7 @@ ENTRANCE_DATA = {
         "exit_region": "max",
         "entrance": (0x12, 0x3, 0x1),
         "exit": (0x23, 0x0, 0x1),
-        "extra_data": {"conditional": "ruins_water"},
+        "extra_data": {"conditional": ["ruins_water"]},
         "type": EntranceGroups.HOUSE,
         "direction": EntranceGroups.UP,
     },
@@ -816,33 +816,10 @@ ENTRANCE_DATA = {
         "coords": (123000, -164, 4784),
         "extra_data": {"x_max": 140000,
                        "x_min": 101000,
-                       "conditional": "ruins_water"},
+                       "conditional": ["ruins_water"]},
         "type": EntranceGroups.OVERWORLD,
         "direction": EntranceGroups.UP,
     },
-
-
-
-    # "Mercay SE -> Mercay NE": {
-    #     "entrance": (0xB, 0x3, 0x7),
-    #     "exit": (0xB, 0x11, 0x1),
-    #     "two_way": True
-    # },
-    # "Mercay NE -> Freedle Tunnel": {
-    #     "entrance": (0xB, 0x2, 0x2),
-    #     "exit": (0xB, 0x12, 0x3),
-    #     "two_way": True
-    # },
-    # "Freedle Island -> Freedle Tunnel": {
-    #     "entrance": (0xB, 0x2, 0x3),
-    #     "exit": (0xB, 0x12, 0x2),
-    #     "two_way": True
-    # },
-    # "Mercay NE -> Mercay NE": {
-    #     "entrance": (0xB, 0x3, 0x7),
-    #     "exit": (0xB, 0x11, 0x1),
-    #     "two_way": True
-    # },
 
 
 }
@@ -869,11 +846,23 @@ class PhantomHourglassEntrance(object):
         self.category_group = data["type"]
         self.direction = data["direction"]
         self.coords: tuple | None = data.get("coords", None)
-        self.extra_data: dict | None = data.get("extra_data", None)
+        self.extra_data: dict = data.get("extra_data", {})
 
         self.stage, self.room, _ = self.entrance
+        self.scene: int = self.get_scene()
+        self.exit_scene: int = self.get_exit_scene()
+        self.exit_stage = self.exit[0]
+        self.y = self.coords[1] if self.coords else None
 
         self.vanilla_reciprocal = None  # Paired location
+
+        self.copy_number = 0
+
+    def get_scene(self):
+        return self.stage * 0x100 + self.room
+
+    def get_exit_scene(self):
+        return self.exit[0] * 0x100 + self.exit[1]
 
     def is_pairing(self, r1, r2) -> bool:
         return r1 == self.entrance_region and r2 == self.exit_region
@@ -881,22 +870,44 @@ class PhantomHourglassEntrance(object):
     def get_y(self):
         return self.coords[1] if self.coords else None
 
-    def detect_exit_simple(self, stage, scene, entrance):
-        return self.exit == (stage, scene, entrance)
+    def detect_exit_simple(self, stage, room, entrance):
+        return self.exit == (stage, room, entrance)
 
-    def detect_exit(self, stage, scene, entrance, coords):
-        if self.detect_exit_simple(stage, scene, entrance):
+    def detect_exit_scene(self, scene, entrance):
+        return self.exit_scene == scene and entrance == self.exit[2]
+
+    def detect_exit(self, scene, entrance, coords, y_offest):
+        if self.detect_exit_scene(scene, entrance):
             x_max = self.extra_data.get("x_max", 0x8FFFFFFF)
             x_min = self.extra_data.get("x_min", -0x8FFFFFFF)
             z_max = self.extra_data.get("z_max", 0x8FFFFFFF)
             z_min = self.extra_data.get("z_min", -0x8FFFFFFF)
-            if coords["y"] == y and x_max > coords["x"] > x_min and z_max > coords["z"] > z_min:
+            y = self.coords[1] if self.coords else coords["y"] - y_offest
+            if coords["y"] - y_offest == y and x_max > coords["x"] > x_min and z_max > coords["z"] > z_min:
                 return True
         return False
 
+    def set_stage(self, new_stage):
+        self.stage = new_stage
+        self.scene = self.get_scene()
+        self.entrance = tuple([new_stage] + list(self.entrance[1:]))
+
+    def set_exit_stage(self, new_stage):
+        self.exit = tuple([new_stage] + list(self.exit[1:]))
+        self.exit_scene = self.get_exit_scene()
+        self.exit_stage = self.exit[0]
+
+    def copy(self):
+        res = PhantomHourglassEntrance(f"{self.name}{self.copy_number+1}", self.data)
+        res.copy_number = self.copy_number + 1
+        return res
+
+    def __str__(self):
+        return self.name
 
 
-ENTRANCES = {}
+
+ENTRANCES: dict[str, "PhantomHourglassEntrance"] = {}
 counter = {}
 i = 0
 for name, data in ENTRANCE_DATA.items():
