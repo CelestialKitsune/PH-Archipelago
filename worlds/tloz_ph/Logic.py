@@ -612,7 +612,7 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
         make_overworld_logic()
     ]
 
-    test_entrances = {(e["entrance_region"], e["exit_region"]): e for e in ENTRANCES.values()}
+    test_entrances = {(e.entrance_region, e.exit_region): e for e in ENTRANCES.values()}
 
     # Create connections
     for logic_array in all_logic:

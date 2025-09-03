@@ -125,6 +125,7 @@ class PhantomHourglassWorld(World):
     location_id_to_alias: Dict[int, str]
     tracker_world = {"map_page_folder": "tracker", "map_page_maps": "maps/maps.json",
                      "map_page_locations": "locations/locations.json"}
+    found_entrances_datastorage_key = "ph_checked_entrances"
 
     def __init__(self, multiworld, player):
         super().__init__(multiworld, player)
@@ -745,3 +746,7 @@ class PhantomHourglassWorld(World):
     @staticmethod
     def interpret_slot_data(slot_data: dict[str, any]):
         return slot_data
+
+    # UT reconnect entrances
+    def reconnect_found_entrances(self, key, stored_data):
+        print("UT Tried to defer entrances!")

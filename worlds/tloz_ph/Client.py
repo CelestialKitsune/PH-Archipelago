@@ -738,3 +738,7 @@ class PhantomHourglassClient(DSZeldaClient):
                 logger.info(f"This entrance is flooded (Isle of Ruins)")
                 return False
         return True
+
+    # fixes conflict with bizhawk_UT
+    async def game_watcher(self, ctx: "BizHawkClientContext") -> None:
+        await super().game_watcher(ctx)
