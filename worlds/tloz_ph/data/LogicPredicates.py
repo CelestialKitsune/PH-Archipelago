@@ -1063,6 +1063,15 @@ def ph_oshus_gem(state, player):
         ph_can_make_phantom_sword(state, player)
     ])
 
+def ph_ruins_lower_water(state, player):
+    return state.has("_ruins_lower_water", player)
+
+def ph_ruins_geozards(state, player):
+    return any([
+        ph_has_cave_damage(state, player),
+        ph_ruins_lower_water(state, player)
+    ])
+
 # Tof
 
 def ph_tof_maze(state, player):
@@ -2486,6 +2495,8 @@ RULE_DICT = {
     "enter_ruins": ph_enter_ruins,
     "salvage_behind_bannan": ph_salvage_behind_bannan,
     "oshus_gem": ph_oshus_gem,
+    "ruins_geozards": ph_ruins_geozards,
+    "ruins_water": ph_ruins_lower_water,
     # ToF
     "tof_3f": ph_tof_3f,
     "tof_maze": ph_tof_maze,

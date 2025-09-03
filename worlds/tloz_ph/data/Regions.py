@@ -367,12 +367,49 @@ REGIONS = [
     "iotd dig",
     "iotd cave",
 
-    # Isle of Ruins
-    "ruins",
-    "ruins cave",
+    # ruins er
     "ruins port",
-    "ruins dig",
-    "ruins water",
+    "ruins geozard cave east",
+    "ruins geozard cave west",
+    "ruins sw maze upper",
+    "ruins sw maze lower",
+    "ruins sw maze lower exit",
+    "ruins sw port cliff",
+
+    "ruins nw maze lower exit",
+    "ruins nw maze upper exit",
+    "ruins nw maze lower chest",
+    "ruins nw boulders",
+    "ruins nw dig",
+    "ruins nw across bridge",
+    "ruins nw cave",
+    "ruins nw alcove",
+    "ruins nw port cliff",
+    "ruins nw lower",
+    "ruins nw return",
+
+    "bremeur",
+    "bremeur kings key",
+
+    "ruins ne doylan bridge",
+    "ruins ne lower",
+    "ruins ne behind temple",
+    "ruins ne enter upper",
+    "doylan temple",
+    "doylan chamber",
+    "ruins ne secret chest",
+    "ruins ne geozards",
+    "ruins ne outside temple",
+
+    "ruins se lower",
+    "ruins se return bridge east",
+    "ruins se return bridge west",
+    "ruins se outside max",
+    "max",
+    "ruins se coast",
+    "ruins se path to temple",
+
+
 
     # Mutoh's Temple
     "mutoh",

@@ -453,11 +453,57 @@ def make_overworld_logic():
 
         # ================= Isle of Ruins ====================
 
-        ["ruins port", "ruins cave", True, None],
-        ["ruins cave", "ruins", True, "cave_damage"],
-        ["ruins", "ruins dig", False, "shovel"],
-        ["ruins", "ruins water", False, "kings_key"],
-        ["ruins water", "mutoh", True, None],
+        ["ruins port", "ruins geozard cave east", True, None],
+        ["ruins geozard cave east", "ruins geozard cave west", True, "ruins_geozards"],
+        ["ruins geozard cave west", "ruins sw maze upper", True, None],
+        ["ruins sw maze upper", "ruins port", False, None],
+        ["ruins sw maze upper", "ruins sw maze lower", False, "ruins_water"],
+        ["ruins sw port cliff", "ruins sw maze upper", False, None],
+        ["ruins sw maze lower", "ruins sw maze lower exit", True, "ruins_water"],
+        ["ruins sw maze lower exit", "ruins nw maze lower exit", True, None],
+        ["ruins sw maze upper", "ruins nw maze upper exit", True, None],
+        ["ruins sw maze lower", "ruins nw maze lower chest", True, "ruins_water"],
+
+        ["ruins nw maze lower exit", "ruins nw boulders", False, None],
+        ["ruins nw maze upper exit", "ruins nw boulders", False, None],
+        ["ruins nw boulders", "ruins nw dig", False, None],
+        ["ruins nw port cliff", "ruins nw maze lower chest", False, "ruins_water"],
+        ["ruins nw boulders", "ruins nw across bridge", True, None],
+        ["ruins nw boulders", "bremeur", True, None],
+        ["bremeur", "bremeur kings key", False, "kings_key"],
+        ["ruins nw boulders", "ruins nw port cliff", False, None],
+        ["ruins nw port cliff", "ruins sw port cliff", True, None],
+        ["ruins nw boulders", "ruins nw lower", False, "ruins_water"],
+        ["ruins nw across bridge", "ruins nw cave", True, "ruins_water"],  # this means cave might not be in logic while accessible...
+        ["ruins nw across bridge", "ruins nw alcove", False, "ruins_water"],
+        ["ruins nw across bridge", "ruins ne enter upper", True, None],
+        ["ruins nw return", "ruins nw boulders", False, None],
+        ["ruins nw lower", "ruins ne lower", True, "ruins_water"],
+
+        ["ruins ne enter upper", "ruins ne doylan bridge", False, None],
+        ["ruins ne doylan bridge", "ruins ne lower", False, "ruins_water"],
+        ["ruins ne doylan bridge", "ruins ne behind temple", True, "ruins_water"],
+        ["ruins ne doylan bridge", "ruins nw return", True, None],
+        ["ruins ne doylan bridge", "doylan temple", True, None],
+        ["doylan temple", "doylan chamber", True, None],
+        ["ruins ne lower", "ruins nw alcove", True, "ruins_water"],
+        ["ruins ne lower", "ruins ne behind temple", True, "grapple"],
+        ["ruins ne lower", "ruins se lower", True, "ruins_water"],
+        ["ruins ne behind temple", "ruins se coast", True, "ruins_water"],
+        ["ruins ne outside temple", "ruins ne behind temple", False, "ruins_water"],
+        ["ruins ne outside temple", "mutoh", True, None],
+        ["ruins ne outside temple", "ruins ne geozards", False, "ruins_water"],
+        ["ruins ne geozards", "ruins ne outside temple", False, "damage"],
+
+        ["ruins se lower", "ruins ne secret chest", True, "ruins_water"],
+        ["ruins se lower", "ruins se return bridge east", True, "ruins_water"],
+        ["ruins se return bridge west", "ruins se return bridge east", False, "hammer"],
+        ["ruins se return bridge east", "ruins se return bridge west", False, None],
+        ["ruins se lower", "ruins se outside max", True, "ruins_water"],
+        ["ruins se return bridge west", "ruins sw port cliff", True, None],
+        ["ruins se outside max", "max", True, None],
+        ["ruins se lower", "ruins se path to temple", False, None],
+        ["ruins se path to temple", "ruins ne geozards", True, "ruins_water"],
 
         # ================= Mutoh's Temple ====================
 
@@ -555,18 +601,18 @@ def create_connections(multiworld: MultiWorld, player: int, origin_name: str, op
 
         if entrance_key in test_entrances:
             # Set entrance data
-            entrance_data = ENTRANCES[test_entrances[entrance_key]]
-            rando_type_bool = entrance_data.get("two_way", True)
+            entrance_data = test_entrances[entrance_key]
+            rando_type_bool = entrance_data.two_way
             entrance.randomization_type = EntranceType.TWO_WAY if rando_type_bool else EntranceType.ONE_WAY
-            entrance.randomization_group = entrance_data["direction"] | (entrance_data["type"])
-            entrance.name = test_entrances[entrance_key]
+            entrance.randomization_group = entrance_data.direction | entrance_data.category_group
+            entrance.name = entrance_data.name
             multiworld.worlds[player].entrances[entrance.name] = entrance
 
     all_logic = [
         make_overworld_logic()
     ]
 
-    test_entrances = {(e["entrance_region"], e["exit_region"]): name for name, e in ENTRANCES.items()}
+    test_entrances = {(e["entrance_region"], e["exit_region"]): e for e in ENTRANCES.values()}
 
     # Create connections
     for logic_array in all_logic:

@@ -105,6 +105,7 @@ class PhantomHourglassClient(DSZeldaClient):
         self.last_potions = [0, 0]
         self.last_ship_parts = []
         self.at_sea = False
+        self.lowered_water = False
 
     async def check_game_version(self, ctx: "BizHawkClientContext") -> bool:
         rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [ROM_ADDRS["game_identifier"]]))[0]
@@ -301,7 +302,10 @@ class PhantomHourglassClient(DSZeldaClient):
         await self.update_treasure_tracker(ctx)
 
     async def process_in_game(self, ctx, read_result: dict):
-        pass
+
+        # Detect lowering of water and update ER Map
+        if not self.lowered_water and self.current_stage == 0x24:
+            await self.lower_water(ctx)
 
     async def detect_warp_to_start(self, ctx, read_result: dict):
         # Opened clog warp to start check
@@ -330,7 +334,9 @@ class PhantomHourglassClient(DSZeldaClient):
         self.save_slot = await read_memory_value(ctx, RAM_ADDRS["save_slot"][0], silent=True)
         self.update_metal_count(ctx)
         self.set_ending_room(ctx)
+        await self.lower_water(ctx)
         await write_memory_value(ctx,0x0EC754, 2, overwrite=True)  # Set text speed to fast, no matter settings
+
 
     async def watched_intro_cs(self, ctx):
         return await read_memory_value(ctx, 0x1b55a8, silent=True) & 2
@@ -693,3 +699,40 @@ class PhantomHourglassClient(DSZeldaClient):
                     await ctx.send_death(ctx.player_names[ctx.slot] + " may have disappointed the Ocean King.")
                     self.last_deathlink = ctx.last_death_link
 
+    def add_special_er_data(self, ctx, er_map, scene, detect_data, exit_data):
+        def change_detect_data(v):
+            detect_list = list(detect_data)
+            detect_list[0] = v
+            return tuple(detect_list)
+
+        if scene & 0xFF00 == 0x1100:
+            if detect_data[0] == 0x11:
+                detect_data = change_detect_data(0x12)
+                print(f"detect data {hex(scene)} => {detect_data}")
+                er_map[scene][detect_data] = exit_data
+
+            scene = 0x1200 + (scene & 0xFF)
+            er_map.setdefault(scene, {})
+            er_map[scene][detect_data] = exit_data
+        if detect_data[0] == 0x11:
+            detect_data = change_detect_data(0x12)
+            print(f"detect data {hex(scene)} => {detect_data}")
+            er_map[scene][detect_data] = exit_data
+
+        return er_map
+
+    async def lower_water(self, ctx):
+        if await read_memory_value(ctx, 0x1B5582) & 0x4:
+            print(self.er_map)
+            for scene, data in self.er_map.items():
+                for detect_data, exit_data in data.items():
+                    if exit_data[0] == 0x11:
+                        exit_data[0] = 0x12
+                        self.er_map[scene][detect_data] = exit_data
+            self.lowered_water = True
+
+    async def conditional_er(self, ctx, conditions) -> bool:
+        if "ruins_water" in conditions:
+            logger.info(f"This entrance is flooded (Isle of Ruins)")
+            return False
+        return True

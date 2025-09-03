@@ -432,7 +432,7 @@ ENTRANCE_DATA = {
         "entrance": (0x12, 0x0, 0x2),
         "exit": (0x12, 0xA, 0x1),
         "entrance_region": "ruins port",
-        "exit_region": "ruins cave",
+        "exit_region": "ruins geozard cave east",
         "type": EntranceGroups.CAVE,
         "direction": EntranceGroups.UP,
     },
@@ -442,7 +442,7 @@ ENTRANCE_DATA = {
     "Ruins Enter Temple": {
         "return_name": "MT Entrance",
         "entrance": (0x12, 0x2, 0x2),
-        "exit": (0x21, 0x0, 0x0),
+        "exit": (0x21, 0x0, 0x1),
         "entrance_region": "ruins water",
         "exit_region": "mutoh",
         "type": EntranceGroups.DUNGEON_ENTRANCE,
@@ -604,8 +604,6 @@ ENTRANCE_DATA = {
         "type": EntranceGroups.ISLAND,
         "direction": EntranceGroups.INSIDE,
     },
-
-
     "Ocean NE Maze": {
         "return_name": "Maze Boat",
         "entrance_region": "ne ocean",
@@ -616,7 +614,212 @@ ENTRANCE_DATA = {
         "direction": EntranceGroups.INSIDE,
     },
 
-
+    # More ruins
+    "Ruins Port Cliff Cave": {
+        "return_name": "Ruins Geozard Cave Exit West",
+        "entrance_region": "ruins sw maze upper",
+        "exit_region": "ruins geozard cave west",
+        "entrance": (0x11, 0x0, 0x3),
+        "exit": (0x11, 0xA, 0x2),
+        "type": EntranceGroups.CAVE,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SW Maze Lower North": {
+        "return_name": "Ruins NW Maze Chest South",
+        "entrance_region": "ruins sw maze lower",
+        "exit_region": "ruins nw maze lower chest",
+        "entrance": (0x12, 0x0, 0xFC),
+        "exit": (0x12, 0x1, 0xFB),
+        "coords": (-63750, -164, -4815),
+        "extra_data": {"conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SW Lower Maze Exit": {
+        "return_name": "Ruins NW Lower Maze Exit",
+        "entrance_region": "ruins sw maze lower exit",
+        "exit_region": "ruins nw maze lower exit",
+        "entrance": (0x11, 0x0, 0xFC),
+        "exit": (0x11, 0x1, 0xFB),
+        "coords": (-194200, 9666, -4815),
+        "extra_data": {"x_max": -150000},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SW Port Cliff North": {
+        "return_name": "Ruins NW Port Cliff South",
+        "entrance_region": "ruins sw port cliff",
+        "exit_region": "ruins nw port cliff",
+        "entrance": (0x11, 0x0, 0xFC),
+        "exit": (0x11, 0x1, 0xFB),
+        "coords": (-46050, 4751, -4815),
+        "extra_data": {"x_min": -70000},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SW Upper Maze Exit": {
+        "return_name": "Ruins NW Upper Maze Exit",
+        "entrance_region": "ruins sw maze upper",
+        "exit_region": "ruins nw maze upper exit",
+        "entrance": (0x11, 0x0, 0xFC),
+        "exit": (0x11, 0x1, 0xFB),
+        "coords": (-174425, 4751, -4815),
+        "extra_data": {"x_max": -70000},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins NW Pyramid": {
+        "return_name": "Bremeur Exit",
+        "entrance_region": "ruins nw boulders",
+        "exit_region": "bremeur",
+        "entrance": (0x11, 0x1, 0x1),
+        "exit": (0x24, 0x0, 0x1),
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins NW Cave": {
+        "return_name": "Ruins Cave Exit",
+        "entrance_region": "ruins nw across bridge",
+        "exit_region": "ruins nw cave",
+        "entrance": (0x12, 0x1, 0x2),
+        "exit": (0x12, 0xB, 0x1),
+        "type": EntranceGroups.CAVE,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins NW Across Bridge East": {
+        "return_name": "Ruins NE Doylan Bridge One-Way West",
+        "entrance_region": "ruins nw across bridge",
+        "exit_region": "ruins ne enter upper",
+        "entrance": (0x11, 0x1, 0xFD),
+        "exit": (0x11, 0x2, 0xFE),
+        "coords": (4784, 9666, -62640),
+        "extra_data": {"z_min": -110000},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.RIGHT,
+    },
+    "Ruins NW East Pyramid": {
+        "return_name": "Doylan's Exit",
+        "entrance_region": "ruins ne doylan bridge",
+        "exit_region": "doylan temple",
+        "entrance": (0x11, 0x2, 0x1),
+        "exit": (0x22, 0x0, 0x1),
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+    "Doylan's Staircase": {
+        "return_name": "Doylan's Chamber Exit",
+        "entrance_region": "doylan temple",
+        "exit_region": "doylan chamber",
+        "entrance": (0x22, 0x0, 0x2),
+        "exit": (0x22, 0x1, 0x1),
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SE Coast North": {
+        "return_name": "Ruins NE Coast South",
+        "entrance_region": "ruins se coast",
+        "exit_region": "ruins ne behind temple",
+        "entrance": (0x12, 0x3, 0xFC),
+        "exit": (0x12, 0x2, 0xFB),
+        "coords": (213590, -164, 4784),
+        "extra_data": {"x_min": 144990,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins NW Upper One-Way East": {
+        "return_name": "Ruins NE Doylan's Bridge Exit West",
+        "entrance_region": "ruins nw return",
+        "exit_region": "ruins ne doylan bridge",
+        "entrance": (0x11, 0x1, 0xFD),
+        "exit": (0x11, 0x2, 0xFE),
+        "coords": (4784, 9666, -150700),
+        "extra_data": {"z_max": -110000},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.RIGHT,
+    },
+    "Ruins NW Alcove East": {
+        "return_name": "Ruins NE Lower East South",
+        "entrance_region": "ruins nw alcove",
+        "exit_region": "ruins ne lower",
+        "entrance": (0x12, 0x1, 0xFD),
+        "exit": (0x12, 0x2, 0xFE),
+        "coords": (8192, -164, -43675),
+        "extra_data": {"z_min": -80000,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.RIGHT,
+    },
+    "Ruins NW Lower East": {
+        "return_name": "Ruins NE Lower East North",
+        "entrance_region": "ruins nw lower",
+        "exit_region": "ruins ne lower",
+        "entrance": (0x12, 0x1, 0xFD),
+        "exit": (0x12, 0x2, 0xFE),
+        "coords": (4784, -164, -120000),
+        "extra_data": {"z_max": -80000,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.RIGHT,
+    },
+    "Ruins SE North West": {
+        "return_name": "Ruins NE South",
+        "entrance_region": "ruins se lower",
+        "exit_region": "ruins ne lower",
+        "entrance": (0x12, 0x3, 0xFC),
+        "exit": (0x12, 0x2, 0xFB),
+        "coords": (13000, -164, 4784),
+        "extra_data": {"x_max": 70000,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SE North Secret": {
+        "return_name": "Ruins NE Secret Chest South",
+        "entrance_region": "ruins se lower",
+        "exit_region": "ruins ne secret chest",
+        "entrance": (0x12, 0x3, 0xFC),
+        "exit": (0x12, 0x2, 0xFB),
+        "coords": (100700, -164, 4784),
+        "extra_data": {"x_min": 70000,
+                       "x_max": 101000,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SW East": {
+        "return_name": "Ruins SE Shortcut Bridge",
+        "entrance_region": "ruins sw port cliff",
+        "exit_region": "ruins se return bridge west",
+        "entrance": (0x12, 0x0, 0xFD),
+        "exit": (0x12, 0x3, 0xFE),
+        "coords": (4784, 9666, 51500),
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.RIGHT,
+    },
+    "Ruins SE Pyramid": {
+        "return_name": "Max's Exit",
+        "entrance_region": "ruins se outside max",
+        "exit_region": "max",
+        "entrance": (0x12, 0x3, 0x1),
+        "exit": (0x23, 0x0, 0x1),
+        "extra_data": {"conditional": "ruins_water"},
+        "type": EntranceGroups.HOUSE,
+        "direction": EntranceGroups.UP,
+    },
+    "Ruins SE Path to Temple North": {
+        "return_name": "Ruins NE Path to Temple South",
+        "entrance_region": "ruins se path to temple",
+        "exit_region": "ruins ne geozards",
+        "entrance": (0x12, 0x3, 0xFC),
+        "exit": (0x12, 0x2, 0xFB),
+        "coords": (123000, -164, 4784),
+        "extra_data": {"x_max": 140000,
+                       "x_min": 101000,
+                       "conditional": "ruins_water"},
+        "type": EntranceGroups.OVERWORLD,
+        "direction": EntranceGroups.UP,
+    },
 
 
 
@@ -651,15 +854,57 @@ OPPOSITES = {
     "right": "left"
 }
 
+class PhantomHourglassEntrance(object):
+
+    def __init__(self, name, data):
+        self.data = data
+
+        self.name: str = name
+        self.id: int | None = data.get("id", None)
+        self.entrance: tuple = data["entrance"]
+        self.exit: tuple = data["exit"]
+        self.entrance_region: str = data["entrance_region"]
+        self.exit_region: str = data["exit_region"]
+        self.two_way: bool = data.get("two_way", True)
+        self.category_group = data["type"]
+        self.direction = data["direction"]
+        self.coords: tuple | None = data.get("coords", None)
+        self.extra_data: dict | None = data.get("extra_data", None)
+
+        self.stage, self.room, _ = self.entrance
+
+        self.vanilla_reciprocal = None  # Paired location
+
+    def is_pairing(self, r1, r2) -> bool:
+        return r1 == self.entrance_region and r2 == self.exit_region
+
+    def get_y(self):
+        return self.coords[1] if self.coords else None
+
+    def detect_exit_simple(self, stage, scene, entrance):
+        return self.exit == (stage, scene, entrance)
+
+    def detect_exit(self, stage, scene, entrance, coords):
+        if self.detect_exit_simple(stage, scene, entrance):
+            x_max = self.extra_data.get("x_max", 0x8FFFFFFF)
+            x_min = self.extra_data.get("x_min", -0x8FFFFFFF)
+            z_max = self.extra_data.get("z_max", 0x8FFFFFFF)
+            z_min = self.extra_data.get("z_min", -0x8FFFFFFF)
+            if coords["y"] == y and x_max > coords["x"] > x_min and z_max > coords["z"] > z_min:
+                return True
+        return False
+
+
+
 ENTRANCES = {}
 counter = {}
 i = 0
 for name, data in ENTRANCE_DATA.items():
-    ENTRANCES[name] = data
-    ENTRANCES[name]["id"] = i
+    ENTRANCES[name] = PhantomHourglassEntrance(name, data)
+    ENTRANCES[name].id = i
     # print(f"{i} {ENTRANCES[name]['entrance_region']} -> {ENTRANCES[name]['exit_region']}")
     i += 1
-    point = data["entrance_region"] + "<=>" + data ["exit_region"]
+    point = data["entrance_region"] + "<=>" + data["exit_region"]
     counter.setdefault(point, 0)
     counter[point] += 1
 
@@ -678,12 +923,20 @@ for name, data in ENTRANCE_DATA.items():
         }
         if "extra_data" in data:
             reverse_data["extra_data"] = data["extra_data"]
-        ENTRANCES[reverse_name] = reverse_data
+        if reverse_name in ENTRANCES:
+            print(f"DUPLICATE ENTRANCE!!! {reverse_name}")
+        ENTRANCES[reverse_name] = PhantomHourglassEntrance(reverse_name, reverse_data)
+
+        ENTRANCES[name].vanilla_reciprocal = ENTRANCES[reverse_name]
+        ENTRANCES[reverse_name].vanilla_reciprocal = ENTRANCES[name]
+
         # print(f"{i} {ENTRANCES[reverse_name]['entrance_region']} -> {ENTRANCES[reverse_name]['exit_region']}")
         i += 1
         point = reverse_data["entrance_region"] + "<=>" + reverse_data["exit_region"]
         counter.setdefault(point, 0)
         counter[point] += 1
+
+
 
 
 # print({key: value for key, value in counter.items() if value != 1})

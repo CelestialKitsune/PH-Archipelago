@@ -339,7 +339,8 @@ class PhantomHourglassWorld(World):
         self.create_event("totok b1 phantom", "_can_farm_totok")
         # Shop stuff
         self.create_event("mercay treasure teller", "_has_treasure_teller")
-
+        # Switch states etc
+        self.create_event("bremeur kings key", "_ruins_lower_water")
         # Goal
         self.create_event("goal", "_beaten_game")
 
@@ -373,19 +374,23 @@ class PhantomHourglassWorld(World):
     def connect_entrances(self) -> None:
         do_er = True   # Sneaky beta setting
         coupled = True
+        full_er = True  # alpha setting!
         if do_er:
+
             # Filter entrances to disconnect by yaml settings
-            print(f"island? {self.options.shuffle_island_entrances}")
             randomized_entrances = []
-            if self.options.shuffle_dungeon_entrances:
-                randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.DUNGEON_ENTRANCE]
-            if self.options.shuffle_island_entrances:
-                randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.ISLAND]
+            if full_er:  # Randomize everything, dev setting
+                randomized_entrances = [e for e in self.entrances.values()]
+            else:
+                if self.options.shuffle_dungeon_entrances:
+                    randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.DUNGEON_ENTRANCE]
+                if self.options.shuffle_island_entrances:
+                    randomized_entrances += [e for e in self.entrances.values() if e.randomization_group & EntranceGroups.AREA_MASK == EntranceGroups.ISLAND]
 
             # Disconnect entrances to shuffle
             for entrance in randomized_entrances:
                 entrance_rando.disconnect_entrance_for_randomization(entrance)
-                print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
+                # print(f"disconnected {entrance.name}, parent {entrance.parent_region}, child {entrance.connected_region}, group {entrance.randomization_group}")
 
             def get_target_groups(g: int) -> list[int]:
                 direction = g & EntranceGroups.DIRECTION_MASK
@@ -393,11 +398,11 @@ class PhantomHourglassWorld(World):
                 return list({OPPOSITE_ENTRANCE_GROUPS[direction] | area})
 
             groups = {direction | area << 3: get_target_groups(direction | area << 3) for direction in range(0, 7) for area in range(0, 11)}
-            for i in groups.items():
-                print(f"\t{i}")
+            # for i in groups.items():
+            #     print(f"\t{i}")
             # Manually connect entrances if UT
             if getattr(self.multiworld, "generation_is_fake", False):
-                entrance_id_to_region = {data["id"]: data["entrance_region"] for data in ENTRANCES.values()}
+                entrance_id_to_region = {d.id: d.entrance_region for d in ENTRANCES.values()}
                 for plando_entrance, plando_exit in self.ut_pairings.items():
                     reg1 = self.get_region(entrance_id_to_region[int(plando_entrance)])
                     reg2 = self.get_region(entrance_id_to_region[plando_exit])
@@ -716,7 +721,7 @@ class PhantomHourglassWorld(World):
         pairings = {}
         if self.er_placement_state:
             for e1, e2 in self.er_placement_state.pairings:
-                pairings[ENTRANCES[e1]["id"]] = ENTRANCES[e2]["id"]
+                pairings[ENTRANCES[e1].id] = ENTRANCES[e2].id
         slot_data["er_pairings"] = pairings
 
         return slot_data

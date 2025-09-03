@@ -6,10 +6,10 @@ from .data.Entrances import ENTRANCES
 def build_entrance_id_to_data():
     entrances, exits = {}, {}
     for i in ENTRANCES.values():
-        coords = i.get("coords", None)
+        coords = i.coords
         coords = list(coords) if coords else [None]
-        entrances[i["id"]] = list(i["entrance"]) + coords
-        exits[i["id"]] = list(i["exit"]) + coords
+        entrances[i.id] = list(i.entrance) + coords
+        exits[i.id] = list(i.exit) + coords
     return entrances, exits
 
 def build_hint_scene_to_watches() -> dict[int, list[str]]:
