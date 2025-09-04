@@ -878,6 +878,9 @@ class PhantomHourglassEntrance(object):
 
     def detect_exit(self, scene, entrance, coords, y_offest):
         if self.detect_exit_scene(scene, entrance):
+            if entrance < 0xF0:
+                return True
+            # Continuous entrance check
             x_max = self.extra_data.get("x_max", 0x8FFFFFFF)
             x_min = self.extra_data.get("x_min", -0x8FFFFFFF)
             z_max = self.extra_data.get("z_max", 0x8FFFFFFF)
@@ -904,6 +907,14 @@ class PhantomHourglassEntrance(object):
 
     def __str__(self):
         return self.name
+
+    def debug_print(self):
+        print(f"Debug print for entrance {self.name}")
+        print(f"\tentrance {self.entrance}")
+        print(f"\texit {self.exit}")
+        print(f"\tcoords {self.coords}")
+        print(f"\textra_data {self.extra_data}")
+
 
 
 

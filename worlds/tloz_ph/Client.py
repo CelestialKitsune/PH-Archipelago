@@ -106,6 +106,7 @@ class PhantomHourglassClient(DSZeldaClient):
         self.last_ship_parts = []
         self.at_sea = False
         self.lowered_water = False
+        self.visited_entrances = set()
 
     async def check_game_version(self, ctx: "BizHawkClientContext") -> bool:
         rom_name_bytes = (await bizhawk.read(ctx.bizhawk_ctx, [ROM_ADDRS["game_identifier"]]))[0]
@@ -113,6 +114,7 @@ class PhantomHourglassClient(DSZeldaClient):
         print(f"Rom Name: {rom_name}")
         if rom_name != "ZELDA_DS:PHAZEP":  # EU
             if rom_name == "ZELDA_DS:PHAZEE":  # US
+                logger.error("You are using a US rom that is not supported yet. sorry!")
                 self.version_offset = -64
             return False
         return True
@@ -336,6 +338,7 @@ class PhantomHourglassClient(DSZeldaClient):
         self.set_ending_room(ctx)
         await self.lower_water(ctx)
         await write_memory_value(ctx,0x0EC754, 2, overwrite=True)  # Set text speed to fast, no matter settings
+        await self.update_stored_entrances(ctx)
 
 
     async def watched_intro_cs(self, ctx):
@@ -491,6 +494,10 @@ class PhantomHourglassClient(DSZeldaClient):
         if not count_spirit_gems(data):
             print(f"\t{data['name']} does not have enough spirit packs")
             return False
+        if not data.get("has_lowered_water", False):
+            if not self.lowered_water:
+                print(f"\t{data['name']} has not lowered water")
+                return False
         return True
 
     async def set_stage_flags(self, ctx, stage):
@@ -723,6 +730,7 @@ class PhantomHourglassClient(DSZeldaClient):
 
     async def lower_water(self, ctx):
         if await read_memory_value(ctx, 0x1B5582) & 0x4:
+            print(f"Water has been lowered...")
             for scene, data in self.er_map.items():
                 for detect_data, exit_data in data.items():
                     if exit_data.stage == 0x11:
@@ -738,6 +746,32 @@ class PhantomHourglassClient(DSZeldaClient):
                 logger.info(f"This entrance is flooded (Isle of Ruins)")
                 return False
         return True
+
+    async def update_stored_entrances(self, ctx):
+        storage_key = f"ph_checked_entrances_{ctx.slot}"
+        stored_entrances = await ctx.send_msgs([{
+                "cmd": "Get",
+                "keys": [storage_key],
+            }])
+        print(f"fetched datapackage: {stored_entrances}")
+        if stored_entrances:
+            self.visited_entrances = set(stored_entrances)
+
+    # UT store entrances to remove
+    async def store_visited_entrances(self, ctx: "BizHawkClientContext", detect_data, exit_data):
+        old_visited_entrances = self.visited_entrances.copy()
+        storage_key = f"ph_checked_entrances_{ctx.slot}"
+        self.visited_entrances.add(detect_data.id)
+        self.visited_entrances.add(exit_data.id)
+        print(f"sending entrances: {self.visited_entrances-old_visited_entrances}")
+        if len(old_visited_entrances) != len(self.visited_entrances):
+            await ctx.send_msgs([{
+                "cmd": "Set",
+                "key": storage_key,
+                "default": set(),
+                "operations": [{"operation": "update", "value": list(self.visited_entrances-old_visited_entrances)}]
+            }])
+
 
     # fixes conflict with bizhawk_UT
     async def game_watcher(self, ctx: "BizHawkClientContext") -> None:

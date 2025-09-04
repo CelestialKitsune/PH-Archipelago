@@ -478,6 +478,7 @@ def make_overworld_logic():
         ["ruins nw across bridge", "ruins nw alcove", False, "ruins_water"],
         ["ruins nw across bridge", "ruins ne enter upper", True, None],
         ["ruins nw return", "ruins nw boulders", False, None],
+        ["ruins nw across bridge", "ruins nw return",  False, "hard_logic"],
         ["ruins nw lower", "ruins ne lower", True, "ruins_water"],
 
         ["ruins ne enter upper", "ruins ne doylan bridge", False, None],

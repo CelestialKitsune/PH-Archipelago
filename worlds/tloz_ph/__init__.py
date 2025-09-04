@@ -125,7 +125,7 @@ class PhantomHourglassWorld(World):
     location_id_to_alias: Dict[int, str]
     tracker_world = {"map_page_folder": "tracker", "map_page_maps": "maps/maps.json",
                      "map_page_locations": "locations/locations.json"}
-    found_entrances_datastorage_key = "ph_checked_entrances"
+    found_entrances_datastorage_key = "ph_checked_entrances_{player}"
 
     def __init__(self, multiworld, player):
         super().__init__(multiworld, player)
@@ -143,6 +143,7 @@ class PhantomHourglassWorld(World):
 
         self.entrances = {}
         self.er_placement_state = None
+        self.ut_connected_entrances = set()
 
     def generate_early(self):
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
@@ -403,11 +404,7 @@ class PhantomHourglassWorld(World):
             #     print(f"\t{i}")
             # Manually connect entrances if UT
             if getattr(self.multiworld, "generation_is_fake", False):
-                entrance_id_to_region = {d.id: d.entrance_region for d in ENTRANCES.values()}
-                for plando_entrance, plando_exit in self.ut_pairings.items():
-                    reg1 = self.get_region(entrance_id_to_region[int(plando_entrance)])
-                    reg2 = self.get_region(entrance_id_to_region[plando_exit])
-                    reg1.connect(reg2)
+                pass
             # Do ER!
             else:
                 self.er_placement_state = entrance_rando.randomize_entrances(self, coupled, groups)
@@ -749,4 +746,19 @@ class PhantomHourglassWorld(World):
 
     # UT reconnect entrances
     def reconnect_found_entrances(self, key, stored_data):
-        print("UT Tried to defer entrances!")
+        print(f"UT Tried to defer entrances! key {key}")
+        if stored_data:
+            entrance_id_to_region = {d.id: d.entrance_region for d in ENTRANCES.values()}
+            new_entrances = set(stored_data) - self.ut_connected_entrances
+            print(f"new entrances: {new_entrances}")
+            for i in new_entrances:
+
+                pairing = self.ut_pairings.get(str(i), None)
+                if pairing is not None:
+                    print(
+                        f"\tconnecting {i}: {entrance_id_to_region[i]} to {pairing}: {entrance_id_to_region[pairing]}")
+                    reg1 = self.get_region(entrance_id_to_region[i])
+                    reg2 = self.get_region(entrance_id_to_region[pairing])
+                    reg1.connect(reg2)
+            self.ut_connected_entrances |= new_entrances
+

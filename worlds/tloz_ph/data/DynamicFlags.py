@@ -1010,31 +1010,15 @@ DYNAMIC_FLAGS = {
         "unset_if_true": [(0x1B55A2, 0x40)]
     },
     # Doyland
-    "Doyland has lowered water": {
+    "Doyland lower water": {
         "on_scenes": [0x2201],
-        "check_bits": {0x1B5582: 0x4},
-        "unset_if_true": [(0x1B5582, 0x4)],
-        "set_if_true": [(0x1B5590, 0x02)]  # Water state memory
+        "not_has_locations": ["Isle of Ruins Doylan's Item"],
+        "unset_if_true": [(0x1B5582, 0x4), (0x1B55A9, 0x30)],
+        "reset_flags": ["RESET Doyland lowered water"]
     },
-    "Doyland memory bit": {
-        "on_scenes": [0x2200],
-        "not_last_scenes": [0x2201],
-        "unset_if_true": [(0x1B5590, 0x02)],  # Memory of water
-    },
-    "RESET Doyland has lowered water": {
-        "on_scenes": [0x2200],
-        "not_last_scenes": [0x1102, 0x1202],
-        "check_bits": {0x1B5590: 0x02},  # Memory of water level
+    "RESET Doyland lowered water": {
+        "has_lowered_water": True,
         "set_if_true": [(0x1B5582, 0x4)],  # Water level
-        "unset_if_true": [(0x1B5590, 0x02)],
-    },
-    "RESET Doyland memory bit": {
-        "on_scenes": [0x1102, 0x1202],
-        "set_if_true": [(0x1B5590, 0x02)],  # Memory of water
-    },
-    "Doylan post temple item": {
-        "on_scenes": [0x2201],
-        "unset_if_true": [(0x1B55A9, 0x30)],
     },
     "Ice Field pre-dungeon": {
         "on_scenes": [0xF03, 0xF01],
