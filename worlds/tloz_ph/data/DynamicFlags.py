@@ -489,15 +489,20 @@ DYNAMIC_FLAGS = {
         "has_slot_data": [["boat_requires_sea_chart", 0]],
         "set_if_true": [(0x1B5580, 0x4)],
     },
+    "Always Spawn linebeck 2 port rando": {
+        "on_scenes": [0xB03],
+        "has_slot_data": [["boat_requires_sea_chart", 0], ["shuffle_island_entrances", 1]],
+        "set_if_true": [(0x1B5580, 0x4)],
+    },
     "Spawn Linebeck if setting": {
         "on_scenes": [0xB03],
-        "has_slot_data": [["boat_requires_sea_chart", 1]],
+        "has_slot_data": [["boat_requires_sea_chart", 1], ["shuffle_island_entrances", 0]],
         "has_items": [("SW Sea Chart", 1)],
         "set_if_true": [(0x1B5580, 0x4)],
     },
     "Despawn Linebeck if setting": {
         "on_scenes": [0xB03],
-        "has_slot_data": [["boat_requires_sea_chart", 1]],
+        "has_slot_data": [["boat_requires_sea_chart", 1], ["shuffle_island_entrances", 0]],
         "has_items": [("SW Sea Chart", 0)],
         "unset_if_true": [(0x1B5580, 0x4)],
     },

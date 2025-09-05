@@ -147,6 +147,24 @@ REGIONS = [
     "sw ocean nyave trade",
     "frog warps",
 
+    # Ocean ER
+    "mercay boat",
+    "cannon boat",
+    "ember boat",
+    "molida boat",
+    "spirit boat",
+    "gust boat",
+    "bannan boat",
+    "uncharted boat",
+    "zauz boat",
+    "goron boat",
+    "frost boat",
+    "harrow boat",
+    "ds boat",
+    "dead boat",
+    "maze boat",
+    "ruins boat",
+
     # Cannon Island
     "cannon island",
     "cannon island salvage arm",

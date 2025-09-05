@@ -118,7 +118,7 @@ class PhantomHourglassWorld(World):
     location_name_to_id = build_location_name_to_id_dict()
     item_name_to_id = build_item_name_to_id_dict()
     item_name_groups = ITEM_GROUPS
-    origin_region_name = "mercay island"
+    origin_region_name = "mercay sw"
 
     glitches_item_name = "_UT_Glitched_logic"
     ut_can_gen_without_yaml = True
@@ -169,8 +169,6 @@ class PhantomHourglassWorld(World):
             self.pick_required_dungeons()
             if self.options.shuffle_dungeon_entrances:
                 self.options.dungeon_shortcuts.value = 0
-            if self.options.shuffle_island_entrances:
-                self.options.boat_requires_sea_chart.value = 0
 
         self.restrict_non_local_items()
 
@@ -378,7 +376,7 @@ class PhantomHourglassWorld(World):
     def connect_entrances(self) -> None:
         do_er = True   # Sneaky beta setting
         coupled = True
-        full_er = True  # alpha setting!
+        full_er = False  # dev setting!
         if do_er:
 
             # Filter entrances to disconnect by yaml settings
@@ -750,27 +748,6 @@ class PhantomHourglassWorld(World):
     def reconnect_found_entrances(self, key, stored_data):
         print(f"UT Tried to defer entrances! key {key}")
 
-        def remove_dangling_exit(region: Region) -> None:
-            # find the disconnected exit and remove references to it
-            for _exit in region.exits:
-                if not _exit.connected_region:
-                    print(f"\t\tremoving {_exit} from {region}")
-                    break
-            else:
-                return
-            region.exits.remove(_exit)
-
-        def remove_dangling_entrance(region: Region) -> None:
-            # find the disconnected entrance and remove references to it
-            for _entrance in region.entrances:
-                if not _entrance.parent_region:
-                    print(f"\t\tremoving {_entrance} from {region}")
-                    break
-            else:
-                return
-            region.entrances.remove(_entrance)
-
-
         # Create a lookup for disconnected entrances if you haven't already.
         if not self.disconnected_entrances_map:
             entrance_name_to_id = {name: e.id for name, e in ENTRANCES.items()}
@@ -778,7 +755,6 @@ class PhantomHourglassWorld(World):
                                                for e in region.entrances if not e.parent_region}
             self.disconnected_exits_map = {entrance_name_to_id[e.name]: e for region in self.get_regions()
                                                for e in region.exits if not e.connected_region}
-
 
         if stored_data:
             new_entrances = set(stored_data) - self.ut_connected_entrances

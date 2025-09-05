@@ -494,7 +494,7 @@ class PhantomHourglassClient(DSZeldaClient):
         if not count_spirit_gems(data):
             print(f"\t{data['name']} does not have enough spirit packs")
             return False
-        if not data.get("has_lowered_water", False):
+        if data.get("has_lowered_water", False):
             if not self.lowered_water:
                 print(f"\t{data['name']} has not lowered water")
                 return False
@@ -739,13 +739,34 @@ class PhantomHourglassClient(DSZeldaClient):
             self.lowered_water = True
 
     async def conditional_er(self, ctx, exit_data) -> bool:
-        print(f"\tcond. {exit_data.name} {exit_data.extra_data}")
+        print(f"\tcond. {exit_data.name} {exit_data.extra_data} lowered water: {self.lowered_water}")
         if "conditional" in exit_data.extra_data:
             # Bounce back if the entrance connects to a lower room
-            if "ruins_water" in exit_data.extra_data["conditional"] and not self.lowered_water:
+            if ("ruins_water" in exit_data.extra_data["conditional"] and not self.lowered_water
+                    and exit_data.room < 0x9):
                 logger.info(f"This entrance is flooded (Isle of Ruins)")
                 return False
+            # Can't enter the sea without the correct chart
+            print(f"{exit_data.extra_data['conditional']}, {exit_data.stage}, {ctx.slot_data['boat_requires_sea_chart']}")
+            if "need_sea_chart" in exit_data.extra_data["conditional"] and exit_data.stage == 0 and ctx.slot_data["boat_requires_sea_chart"]:
+                quadrant = exit_data.room
+                chart = ITEM_GROUPS["Sea Charts"][quadrant]
+                print(f"chart: {chart} {item_count(ctx, chart)}")
+                if not item_count(ctx, chart):
+                    logger.info(f"Missing correct sea chart ({chart})")
+                    return False
         return True
+
+    async def conditional_bounce(self, ctx, scene, entrance) -> "PhantomHourglassEntrance" or None:
+        if scene in [0, 1, 2, 3] and ctx.slot_data["boat_requires_sea_chart"]:
+            chart = ITEM_GROUPS["Sea Charts"][scene]
+            if not item_count(ctx, chart):
+                for e in self.entrances.values():
+                    if e.detect_exit_scene(scene, entrance):
+                        logger.info(f"Missing correct sea chart ({chart})")
+                        return e
+
+        return None
 
     async def update_stored_entrances(self, ctx):
         storage_key = f"ph_checked_entrances_{ctx.slot}"
