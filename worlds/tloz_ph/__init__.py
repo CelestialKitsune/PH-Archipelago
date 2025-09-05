@@ -425,8 +425,6 @@ class PhantomHourglassWorld(World):
                 classification = ItemClassification.useful
         if name == "Heart Container" and self.options.ph_heart_time == 0:
             classification = ItemClassification.useful
-        if name == "Phantom Hourglass" and self.options.ph_time_logic.value == 5:
-            classification = ItemClassification.useful
 
         ap_code = self.item_name_to_id[name]
         return Item(name, classification, ap_code, self.player)

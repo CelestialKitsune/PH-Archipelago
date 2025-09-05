@@ -317,7 +317,7 @@ class PhantomHourglassClient(DSZeldaClient):
                     logger.info(f"Primed a warp to start. Enter a transition to warp to {STAGES[0xB]}.")
                 self.warp_to_start_flag = True
             else:
-                if self.warp_to_start_flag and await read_memory_value(ctx, *RAM_ADDRS["opened_clog"]):
+                if self.warp_to_start_flag and await read_memory_value(ctx, *RAM_ADDRS["opened_clog"], silent=True):
                     logger.info("Canceled warp to start.")
                     self.warp_to_start_flag = False
 
@@ -729,7 +729,7 @@ class PhantomHourglassClient(DSZeldaClient):
         return er_map
 
     async def lower_water(self, ctx):
-        if await read_memory_value(ctx, 0x1B5582) & 0x4:
+        if await read_memory_value(ctx, 0x1B5582, silent=True) & 0x4:
             print(f"Water has been lowered...")
             for scene, data in self.er_map.items():
                 for detect_data, exit_data in data.items():
