@@ -959,7 +959,7 @@ for name, data in ENTRANCE_DATA.items():
         counter[point] += 1
 
 
-
+entrance_id_to_region = {d.id: d.entrance_region for d in ENTRANCES.values()}
 
 # print({key: value for key, value in counter.items() if value != 1})
 

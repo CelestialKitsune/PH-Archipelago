@@ -20,7 +20,7 @@ from .data.Constants import *
 from .data.Items import ITEMS_DATA
 from .data.Regions import REGIONS
 from .data.LogicPredicates import *
-from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS, ENTRANCES
+from .data.Entrances import EntranceGroups, OPPOSITE_ENTRANCE_GROUPS, ENTRANCES, entrance_id_to_region
 
 from .Client import PhantomHourglassClient  # Unused, but required to register with BizHawkClient
 
@@ -144,6 +144,8 @@ class PhantomHourglassWorld(World):
         self.entrances = {}
         self.er_placement_state = None
         self.ut_connected_entrances = set()
+        self.disconnected_entrances_map = {}
+        self.disconnected_exits_map = {}
 
     def generate_early(self):
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
@@ -747,18 +749,54 @@ class PhantomHourglassWorld(World):
     # UT reconnect entrances
     def reconnect_found_entrances(self, key, stored_data):
         print(f"UT Tried to defer entrances! key {key}")
+
+        def remove_dangling_exit(region: Region) -> None:
+            # find the disconnected exit and remove references to it
+            for _exit in region.exits:
+                if not _exit.connected_region:
+                    print(f"\t\tremoving {_exit} from {region}")
+                    break
+            else:
+                return
+            region.exits.remove(_exit)
+
+        def remove_dangling_entrance(region: Region) -> None:
+            # find the disconnected entrance and remove references to it
+            for _entrance in region.entrances:
+                if not _entrance.parent_region:
+                    print(f"\t\tremoving {_entrance} from {region}")
+                    break
+            else:
+                return
+            region.entrances.remove(_entrance)
+
+
+        # Create a lookup for disconnected entrances if you haven't already.
+        if not self.disconnected_entrances_map:
+            entrance_name_to_id = {name: e.id for name, e in ENTRANCES.items()}
+            self.disconnected_entrances_map = {entrance_name_to_id[e.name]: e for region in self.get_regions()
+                                               for e in region.entrances if not e.parent_region}
+            self.disconnected_exits_map = {entrance_name_to_id[e.name]: e for region in self.get_regions()
+                                               for e in region.exits if not e.connected_region}
+
+
         if stored_data:
-            entrance_id_to_region = {d.id: d.entrance_region for d in ENTRANCES.values()}
             new_entrances = set(stored_data) - self.ut_connected_entrances
             print(f"new entrances: {new_entrances}")
-            for i in new_entrances:
 
+            for i in new_entrances:
                 pairing = self.ut_pairings.get(str(i), None)
                 if pairing is not None:
-                    print(
-                        f"\tconnecting {i}: {entrance_id_to_region[i]} to {pairing}: {entrance_id_to_region[pairing]}")
-                    reg1 = self.get_region(entrance_id_to_region[i])
-                    reg2 = self.get_region(entrance_id_to_region[pairing])
-                    reg1.connect(reg2)
+                    dangling_entrance = self.disconnected_entrances_map.get(i, None)
+                    dangling_exit = self.disconnected_exits_map.get(i, None)
+
+                    entrance_region = self.get_region(entrance_id_to_region[i])
+                    exit_region = self.get_region(entrance_id_to_region[pairing])
+
+                    exit_region.connect(entrance_region)
+                    dangling_exit.connect(entrance_region)
+                    dangling_entrance.connect(exit_region)
+
+                    self.disconnected_entrances_map.pop(i)
             self.ut_connected_entrances |= new_entrances
 
