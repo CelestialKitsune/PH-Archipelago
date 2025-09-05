@@ -118,6 +118,11 @@ def ph_has_triforce_crest(state: CollectionState, player: int):
     return any([state.has("Triforce Crest", player),
                 not ph_option_triforce_crest(state, player)])
 
+def ph_require_sea_chart(state, player, chart):
+    return any([
+        not ph_option_boat_requires_sea_chart(state, player),
+        ph_has_sea_chart(state, player, chart)
+    ])
 
 # ========= Sea Items =============
 
@@ -730,6 +735,8 @@ def ph_option_goal_metal_hunt(state: CollectionState, player: int):
 def ph_option_goal_midway(state: CollectionState, player: int):
     return state.multiworld.worlds[player].options.goal_requirements == "triforce_door"
 
+def ph_option_island_shuffle(state, player):
+    return state.multiworld.worlds[player].options.shuffle_island_entrances
 
 def ph_can_pass_sea_monsters(state, player):
     return any([
@@ -984,7 +991,8 @@ def ph_totok_b13_door(state: CollectionState, player: int):
 def ph_boat_access(state, player):
     return any([
         not ph_option_boat_requires_sea_chart(state, player),
-        ph_has_sea_chart(state, player, "SW")
+        ph_has_sea_chart(state, player, "SW"),
+        ph_option_island_shuffle(state, player)
     ])
 
 def ph_can_enter_mp(state, player):
@@ -1061,6 +1069,15 @@ def ph_oshus_gem(state, player):
     return any([
         state.has("_beat_tow", player),
         ph_can_make_phantom_sword(state, player)
+    ])
+
+def ph_ruins_lower_water(state, player):
+    return state.has("_ruins_lower_water", player)
+
+def ph_ruins_geozards(state, player):
+    return any([
+        ph_has_cave_damage(state, player),
+        ph_ruins_lower_water(state, player)
     ])
 
 # Tof
@@ -2439,6 +2456,8 @@ RULE_DICT = {
     "bellum_access_bellumbeck": ph_goal_option_spawn_bellumbeck,
     "instant_goal": ph_goal_option_instant_goal,
     "boat_needs_sea_chart": ph_option_boat_requires_sea_chart,
+    "require_chart": ph_require_sea_chart,
+    "require_sea_chart": ph_require_sea_chart,
     "vanilla_fog": ph_option_fog_vanilla,
     "open_ghost_ship": ph_option_fog_open,
     "randomize_harrow": ph_option_randomize_harrow,
@@ -2486,6 +2505,8 @@ RULE_DICT = {
     "enter_ruins": ph_enter_ruins,
     "salvage_behind_bannan": ph_salvage_behind_bannan,
     "oshus_gem": ph_oshus_gem,
+    "ruins_geozards": ph_ruins_geozards,
+    "ruins_water": ph_ruins_lower_water,
     # ToF
     "tof_3f": ph_tof_3f,
     "tof_maze": ph_tof_maze,

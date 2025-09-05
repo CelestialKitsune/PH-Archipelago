@@ -489,15 +489,20 @@ DYNAMIC_FLAGS = {
         "has_slot_data": [["boat_requires_sea_chart", 0]],
         "set_if_true": [(0x1B5580, 0x4)],
     },
+    "Always Spawn linebeck 2 port rando": {
+        "on_scenes": [0xB03],
+        "has_slot_data": [["boat_requires_sea_chart", 0], ["shuffle_island_entrances", 1]],
+        "set_if_true": [(0x1B5580, 0x4)],
+    },
     "Spawn Linebeck if setting": {
         "on_scenes": [0xB03],
-        "has_slot_data": [["boat_requires_sea_chart", 1]],
+        "has_slot_data": [["boat_requires_sea_chart", 1], ["shuffle_island_entrances", 0]],
         "has_items": [("SW Sea Chart", 1)],
         "set_if_true": [(0x1B5580, 0x4)],
     },
     "Despawn Linebeck if setting": {
         "on_scenes": [0xB03],
-        "has_slot_data": [["boat_requires_sea_chart", 1]],
+        "has_slot_data": [["boat_requires_sea_chart", 1], ["shuffle_island_entrances", 0]],
         "has_items": [("SW Sea Chart", 0)],
         "unset_if_true": [(0x1B5580, 0x4)],
     },
@@ -1010,31 +1015,15 @@ DYNAMIC_FLAGS = {
         "unset_if_true": [(0x1B55A2, 0x40)]
     },
     # Doyland
-    "Doyland has lowered water": {
+    "Doyland lower water": {
         "on_scenes": [0x2201],
-        "check_bits": {0x1B5582: 0x4},
-        "unset_if_true": [(0x1B5582, 0x4)],
-        "set_if_true": [(0x1B5590, 0x02)]  # Water state memory
+        "not_has_locations": ["Isle of Ruins Doylan's Item"],
+        "unset_if_true": [(0x1B5582, 0x4), (0x1B55A9, 0x30)],
+        "reset_flags": ["RESET Doyland lowered water"]
     },
-    "Doyland memory bit": {
-        "on_scenes": [0x2200],
-        "not_last_scenes": [0x2201],
-        "unset_if_true": [(0x1B5590, 0x02)],  # Memory of water
-    },
-    "RESET Doyland has lowered water": {
-        "on_scenes": [0x2200],
-        "not_last_scenes": [0x1102, 0x1202],
-        "check_bits": {0x1B5590: 0x02},  # Memory of water level
+    "RESET Doyland lowered water": {
+        "has_lowered_water": True,
         "set_if_true": [(0x1B5582, 0x4)],  # Water level
-        "unset_if_true": [(0x1B5590, 0x02)],
-    },
-    "RESET Doyland memory bit": {
-        "on_scenes": [0x1102, 0x1202],
-        "set_if_true": [(0x1B5590, 0x02)],  # Memory of water
-    },
-    "Doylan post temple item": {
-        "on_scenes": [0x2201],
-        "unset_if_true": [(0x1B55A9, 0x30)],
     },
     "Ice Field pre-dungeon": {
         "on_scenes": [0xF03, 0xF01],
